@@ -37,6 +37,19 @@ public class InputSystem_Manager : MonoBehaviour
         actions.UI.Disable();
     }
 
+    /// <summary>
+    /// Player‚ÌƒIƒ“ƒIƒt
+    /// </summary>
+    public void PlayerOn()
+    {
+        actions.Player.Enable();
+    }
+
+    public void PlayerOff()
+    {
+        actions.Player.Disable();
+    }
+
     // Update is called once per frame
     void Update()
     {

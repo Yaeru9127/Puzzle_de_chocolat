@@ -6,8 +6,6 @@ public class GetMouseManager : MonoBehaviour
 {
     private InputSystem_Actions actions;
     private InputSystem_Manager inputmanager;
-
-    private float holidStartTime;
     private bool isHolding;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,6 +15,7 @@ public class GetMouseManager : MonoBehaviour
         inputmanager = this.gameObject.transform.GetComponent<InputSystem_Manager>();
 
         actions = inputmanager.GetActions();
+        inputmanager.PlayerOff();
         inputmanager.UIOn();
 
         isHolding = false;
@@ -24,46 +23,34 @@ public class GetMouseManager : MonoBehaviour
 
     private void GetMouseHold()
     {
-        //ホールド押しはじめを検知
-        if (actions.UI.Click.WasPressedThisFrame())
+        //ホールドを検知
+        if (actions.UI.Click.phase == InputActionPhase.Performed)
         {
-            isHolding = true;
-            holidStartTime = Time.time;
+            if (!isHolding)
+            {
+                isHolding = true;
+                //マウスの位置をワールド座標に落とし込む
+                Vector2 mouse = actions.UI.Point.ReadValue<Vector2>();
+                Vector2 world = Camera.main.ScreenToWorldPoint(mouse);
+
+                //その位置に当たり判定を設置
+                Collider2D collider = Physics2D.OverlapPoint(world);
+
+                //当たったオブジェクトがお菓子かどうか
+                //(判定条件は仮)
+                if (collider != null && collider.gameObject.GetComponent<Sweets>())
+                {
+                    Debug.Log(collider.name);
+                }
+                else
+                {
+                    Debug.Log("none");
+                }
+            }
         }
-        //ホールドを話した瞬間
-        else if (actions.UI.Click.WasReleasedThisFrame())
+        //ホールドを離したとき or クリックしていないとき
+        else if (actions.UI.Click.phase == InputActionPhase.Canceled || actions.UI.Click.phase == InputActionPhase.Waiting)
         {
-            isHolding = false;
-
-            //離した位置をワールド座標に変換してその位置にオブジェクトがあるか確認する
-            Vector2 mouse = actions.UI.Point.ReadValue<Vector2>();
-            Vector2 world = Camera.main.ScreenToWorldPoint(mouse);
-            RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                Debug.Log($"{hit.collider.name}");
-            }
-            else
-            {
-                Debug.Log("not hit");
-            }
-        }
-    }
-
-    private void HoldTimeCheck()
-    {
-        if (isHolding && Time.time - holidStartTime >= 0.2f)
-        {
-            Vector2 mouse = actions.UI.Point.ReadValue<Vector2>();
-            Vector2 world = Camera.main.ScreenToWorldPoint(mouse);
-            RaycastHit2D hit = Physics2D.Raycast(world, Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                Debug.Log("hold is hit");
-            }
-
             isHolding = false;
         }
     }
@@ -72,6 +59,5 @@ public class GetMouseManager : MonoBehaviour
     void Update()
     {
         GetMouseHold();
-        HoldTimeCheck();
     }
 }

@@ -605,9 +605,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Click"",
                     ""type"": ""PassThrough"",
                     ""id"": ""3c7022bf-7922-4f7c-a998-c437916075ad"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": ""Hold(duration=0.2,pressPoint=1)"",
+                    ""interactions"": ""Hold(duration=0.2,pressPoint=0.2)"",
                     ""initialStateCheck"": true
                 },
                 {
