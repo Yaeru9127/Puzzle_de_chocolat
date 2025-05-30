@@ -314,7 +314,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 303571073}
-  - component: {fileID: 303571072}
   - component: {fileID: 303571074}
   m_Layer: 0
   m_Name: MouseGetEmpty
@@ -323,18 +322,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &303571072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 303571071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fe4cf28cdca70343b1c50ce877469c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &303571073
 Transform:
   m_ObjectHideFlags: 0
@@ -868,6 +855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1135783464}
   - component: {fileID: 1135783463}
+  - component: {fileID: 1135783465}
   m_Layer: 0
   m_Name: TileParent
   m_TagString: Untagged
@@ -928,6 +916,18 @@ Transform:
   - {fileID: 990194633}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1135783465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135783462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1d6bcd642a8bf479740ccbcdc254d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1150409702
 GameObject:
   m_ObjectHideFlags: 0
