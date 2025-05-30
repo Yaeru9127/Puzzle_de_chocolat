@@ -14,13 +14,16 @@ public class RandomCandySet : MonoBehaviour
         RandomSet();
     }
 
+    //（テスト）お菓子をランダムなタイルに設置する関数
     private void RandomSet()
     {
+        //自分の子オブジェクトのタイルをリストに追加
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
             tiles.Add(this.gameObject.transform.GetChild(i));
         }
 
+        //ランダムな場所に設置
         int rand = Random.Range(0, tiles.Count);
         Instantiate(potato, tiles[rand].position, Quaternion.identity);
     }

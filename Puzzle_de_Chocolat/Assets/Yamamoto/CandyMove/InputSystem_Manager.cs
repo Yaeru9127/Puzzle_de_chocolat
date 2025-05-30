@@ -25,16 +25,26 @@ public class InputSystem_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// InputSystem‚ÌƒIƒ“ƒIƒt
+    /// UI
     /// </summary>
-    public void UIOn()
+    public void UIClickOn()
     {
-        actions.UI.Enable();
+        actions.UI.Click.Enable();
     }
 
-    public void UIOff()
+    public void UIClickOff()
     {
-        actions.UI.Disable();
+        actions.UI.Click.Disable();
+    }
+
+    public void UIPointOn()
+    {
+        actions.UI.Point.Enable();
+    }
+
+    public void UIPointOff()
+    {
+        actions.UI.Point.Disable();
     }
 
     /// <summary>

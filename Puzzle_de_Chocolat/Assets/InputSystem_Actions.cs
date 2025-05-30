@@ -594,7 +594,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Point"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""32b35790-4ed0-4e9a-aa41-69ac6d629449"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
