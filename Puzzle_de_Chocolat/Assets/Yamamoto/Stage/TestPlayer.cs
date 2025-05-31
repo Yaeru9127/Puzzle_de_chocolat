@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Cysharp.Threading.Tasks;
+//using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Threading.Tasks;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -92,20 +91,20 @@ public class TestPlayer : MonoBehaviour
     }
 
     //次のマスを取得する関数
-    private async UniTask GetNextMass()
+    /*private async UniTask GetNextMass()
     {
         Tile tilescript = nowmass.GetComponent<Tile>();
         await MoveMass(tilescript.ReturnNextMass(direction.ToString()));
-    }
+    }*/
 
-    private async UniTask MoveMass(GameObject next)
+    /*private async UniTask MoveMass(GameObject next)
     {
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
         //移動が完了するまで待つ
         this.gameObject.transform.DOMove(pos, 1.5f);
-    }
+    }*/
 
     //テスト
     private void RandomMassSet()
@@ -128,7 +127,7 @@ public class TestPlayer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isMove = true;
-            GetNextMass();
+            //GetNextMass();
         }
     }
 }

@@ -30,33 +30,27 @@ public class Tile : MonoBehaviour
         foreach (var dir in direction)
         {
             //当たり判定で取得
-            Vector2 check = (Vector2)this.gameObject.transform.position;
-            Collider2D[] hits = Physics2D.OverlapBoxAll(check,
-                this.gameObject.GetComponent<SpriteRenderer>().bounds.size, 0);
+            Vector2 distance = this.gameObject.GetComponent<SpriteRenderer>().bounds.size;
 
+            //自身の場所 + SpriteRendererのサイズをかけた場所 * Vector2の上下左右方向 = 当たり判定ポイント
+            Vector2 center = (Vector2)this.gameObject.transform.position + distance * dir;
+            Collider2D hitobj = Physics2D.OverlapPoint(center);
 
-            foreach (var hit in hits)
+            //当たり判定のポイントにあるオブジェクトを格納
+            if (hitobj != null && hitobj.gameObject != this.gameObject)
             {
-                if (hit != null && hit.gameObject != this.gameObject && !neighbor.ContainsKey(hit.gameObject))
-                {
-                    if ((Mathf.Abs(this.gameObject.transform.position.x) == Mathf.Abs(hit.gameObject.transform.position.x)) || (Mathf.Abs(this.gameObject.transform.position.y) == Mathf.Abs(hit.gameObject.transform.position.y)))
-                    {
-                        Debug.Log($"{this.gameObject.name}, {hit.gameObject.name}");
-                        neighbor.Add(hit.gameObject, dir);
-                    }
-                }
+                //デバッグ
+                //Debug.Log($"{this.gameObject.name}, {hitobj.gameObject.name}");
+
+                neighbor.Add(hitobj.gameObject, dir);
             }
         }
 
-        //デバッグ
-        //foreach (var nei in neighbor.Values)
-        //{
-        //    Debug.Log($"{this.gameObject.name}, {nei}");
-        //}
-        foreach (var nei in neighbor.Keys)
+        /*//デバッグ
+        foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
-            Debug.Log($"{this.gameObject.name}, {nei.name}");
-        }
+            Debug.Log($"{this.gameObject.name}: object => {pair.Key.name}, pos => {pair.Value}");
+        }*/
     }
 
     private void OnDrawGizmos()
