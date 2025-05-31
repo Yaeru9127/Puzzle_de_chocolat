@@ -1,10 +1,25 @@
-using NUnit.Framework;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TileManager : MonoBehaviour
 {
-    
+    public static TileManager tm {  get; private set; }
+    public Dictionary<GameObject, Vector2> tiles = new Dictionary<GameObject, Vector2>();
+
+
+    private void Awake()
+    {
+        if (tm == null)
+        {
+            tm = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+        GetAllMass();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -12,15 +27,29 @@ public class TileManager : MonoBehaviour
         
     }
 
-    private float WidthHeight()
+    private void GetMass()
     {
-        int num = this.gameObject.transform.childCount;
-        float nums = Mathf.Sqrt(num);
 
-        return nums;
     }
 
-    
+    //すべてのマスを取得する関数
+    public void GetAllMass()
+    {
+        //初期化
+        tiles.Clear();
+
+        for (int i = 0; i < this.gameObject.transform.childCount; i++)
+        {
+            Tile tile = this.gameObject.transform.GetChild(i).GetComponent<Tile>(); ;
+            tiles.Add(this.gameObject.transform.GetChild(i).gameObject, tile.GetTilePos());
+        }
+
+        /*//デバッグ用
+        foreach (KeyValuePair<GameObject, Vector2> dictionary in tiles)
+        {
+            Debug.Log($"{dictionary.Key.name}, {dictionary.Value}");
+        }*/
+    }
 
     // Update is called once per frame
     void Update()
