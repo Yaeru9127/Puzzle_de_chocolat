@@ -7,6 +7,9 @@ using DG.Tweening;
 
 public class TestPlayer : MonoBehaviour
 {
+    /// <summary>
+    /// Other Scripts
+    /// </summary>
     private InputSystem_Actions actions;
     private InputSystem_Manager inputmanager;
 
@@ -20,10 +23,7 @@ public class TestPlayer : MonoBehaviour
     }
     public Direction direction;
 
-    public GameObject nowmass;
-
-
-    private bool isMove;
+    public GameObject nowmass;          //今いるマス
 
     private void Awake()
     {
@@ -39,8 +39,6 @@ public class TestPlayer : MonoBehaviour
         inputmanager = this.gameObject.transform.GetComponent<InputSystem_Manager>();
         actions = inputmanager.GetActions();
         inputmanager.PlayerOn();
-
-        isMove = false;
     }
 
     //現在地を取得する関数
@@ -53,7 +51,6 @@ public class TestPlayer : MonoBehaviour
         {
             if (collider != null && collider.gameObject != this.gameObject && collider.GetComponent<Tile>())
             {
-                Debug.Log($"{this.gameObject.name} : {collider.gameObject.name}");
                 nowmass = collider.gameObject;
             }
         }
@@ -90,6 +87,8 @@ public class TestPlayer : MonoBehaviour
 
         //デバッグ
         //Debug.Log(direction);
+
+        GetNextMass();
     }
 
     //次のマスを取得する関数
@@ -99,6 +98,7 @@ public class TestPlayer : MonoBehaviour
         MoveMass(tilescript.ReturnNextMass(direction.ToString()));
     }
 
+    //移動関数（UniTaskで処理したい）
     private void MoveMass(GameObject next)
     {
         Vector3 pos = next.transform.position;
@@ -123,16 +123,18 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //移動
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();
         if (vec2 != Vector2.zero)
         {
             CheckDirection(vec2);
         }
 
+        /*//デバッグ
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isMove = true;
             GetNextMass();
-        }
+        }*/
     }
 }
