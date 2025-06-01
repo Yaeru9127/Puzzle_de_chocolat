@@ -47,11 +47,13 @@ public class TestPlayer : MonoBehaviour
     private void GetNowMass()
     {
         //当たり判定で取得
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(this.gameObject.transform.position, new Vector2(0.1f, 0.1f), 0);
+        Vector2 pos = this.transform.position;
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(pos, new Vector2(0.1f, 0.1f), 0);
         foreach (Collider2D collider in colliders)
         {
-            if (collider != null && collider.gameObject != this.gameObject)
+            if (collider != null && collider.gameObject != this.gameObject && collider.GetComponent<Tile>())
             {
+                Debug.Log($"{this.gameObject.name} : {collider.gameObject.name}");
                 nowmass = collider.gameObject;
             }
         }
@@ -87,24 +89,27 @@ public class TestPlayer : MonoBehaviour
         }
 
         //デバッグ
-        Debug.Log(direction);
+        //Debug.Log(direction);
     }
 
     //次のマスを取得する関数
-    /*private async UniTask GetNextMass()
+    private void GetNextMass()
     {
         Tile tilescript = nowmass.GetComponent<Tile>();
-        await MoveMass(tilescript.ReturnNextMass(direction.ToString()));
-    }*/
+        MoveMass(tilescript.ReturnNextMass(direction.ToString()));
+    }
 
-    /*private async UniTask MoveMass(GameObject next)
+    private void MoveMass(GameObject next)
     {
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
-        //移動が完了するまで待つ
-        this.gameObject.transform.DOMove(pos, 1.5f);
-    }*/
+        this.gameObject.transform.DOMove(pos, 1.5f).OnComplete ( () =>
+        {
+            GetNowMass();
+        });
+        
+    }
 
     //テスト
     private void RandomMassSet()
@@ -127,7 +132,7 @@ public class TestPlayer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isMove = true;
-            //GetNextMass();
+            GetNextMass();
         }
     }
 }

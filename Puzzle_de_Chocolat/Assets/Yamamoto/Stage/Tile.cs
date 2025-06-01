@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     //隣のマスとその"位置関係"のDictionary
-    private static readonly Dictionary<GameObject, Vector2> neighbor = new Dictionary<GameObject, Vector2>();
+    private Dictionary<GameObject, Vector2> neighbor = new Dictionary<GameObject, Vector2>();
     private Vector2 tilepos;        //マスの座標
                                     //位置関係のための配列
     Vector2[] direction = new Vector2[]
@@ -42,7 +42,9 @@ public class Tile : MonoBehaviour
                 //デバッグ
                 //Debug.Log($"{this.gameObject.name}, {hitobj.gameObject.name}");
 
-                neighbor.Add(hitobj.gameObject, dir);
+                //重複していなかったら追加
+                if (!neighbor.ContainsKey(hitobj.gameObject)) neighbor.Add(hitobj.gameObject, dir);
+
             }
         }
 
@@ -53,12 +55,13 @@ public class Tile : MonoBehaviour
         }*/
     }
 
+    /*//デバッグ（当たり判定描画関数）
     private void OnDrawGizmos()
     {
         Vector2 size = this.gameObject.GetComponent<SpriteRenderer>().bounds.size;
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(this.gameObject.transform.position, size);
-    }
+    }*/
 
     //マスのPositionを返す関数
     public Vector2 GetTilePos()
@@ -94,14 +97,20 @@ public class Tile : MonoBehaviour
         {
             if (pair.Value == target)
             {
+                //デバッグ
+                //Debug.Log($"{pair.Key.name} : {pair.Value}");
                 mass = pair.Key;
                 break;
             }
         }
 
-        //デバッグ
+        /*//デバッグ
+        foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
+        {
+            Debug.Log($"{this.gameObject.name} => {pair.Key.name} : {pair.Value}");
+        }
         if (mass == null) Debug.Log("mass is null");
-        else Debug.Log(mass.name);
+        else Debug.Log(mass.name);*/
         return mass;
         
     }
