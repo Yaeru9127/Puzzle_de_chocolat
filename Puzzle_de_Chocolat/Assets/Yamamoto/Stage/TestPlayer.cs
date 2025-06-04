@@ -27,7 +27,7 @@ public class TestPlayer : MonoBehaviour
     public GameObject nowmass;          //今いるマス
     private float speed;                //マス間の移動速度
     private bool onMove;
-    private KeyValuePair<GameObject, Vector2> sweetsobject = new KeyValuePair<GameObject, Vector2>();
+    private GameObject sweets;
 
     private void Awake()
     {
@@ -64,7 +64,6 @@ public class TestPlayer : MonoBehaviour
     private Vector2 SetDirection(string directionstring)
     {
         Vector2 target = Vector2.zero;
-        GameObject mass = null;
 
         //方向に変換
         switch (directionstring)
@@ -80,7 +79,6 @@ public class TestPlayer : MonoBehaviour
         if (target == Vector2.zero)
         {
             Debug.Log("direction is missing!!");
-            return target;
         }
 
         return target;
@@ -93,70 +91,93 @@ public class TestPlayer : MonoBehaviour
     /// <param name="xbutton"></param> Xボタンを押しているか
     private void CheckDirection(Vector2 dir, bool xbutton)
     {
-        //子オブジェクトが存在しない == まだお菓子を見つけていない状態
-        if (this.gameObject.transform.childCount == 0 && sweetsobject.Key == null)
+        onMove = true;
+
+        //左右の入力方向が同じ(たぶんないと思うけど)
+        if (Mathf.Abs(dir.x) == Mathf.Abs(dir.y))
         {
-            onMove = true;
-            //左右の入力方向が同じ(たぶんないと思うけど)
-            if (Mathf.Abs(dir.x) == Mathf.Abs(dir.y))
+            //yの入力値で判断
+            if ((dir.x > 0 && dir.y > 0) || (dir.x < 0 && dir.y > 0)) direction = Direction.Up;
+            else direction = Direction.Down;
+        }
+        //xの方がyより大きい
+        else if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+        {
+            //xの値が大きい => 右
+            if (dir.x > 0) direction = Direction.Right;
+
+            //xの値が小さい => 左
+            else direction = Direction.Left;
+        }
+        //yの方がxより大きい
+        else
+        {
+            //yの値が大きい => 上
+            if (dir.y > 0) direction = Direction.Up;
+
+            //yの値が小さい => 下
+            else direction = Direction.Down;
+        }
+
+        //目の前のマスにお菓子があるか
+        sweets = TileManager.tm.GetForwardMass(nowmass, SetDirection(direction.ToString()));
+        if (sweets != null) sweets.transform.SetParent(this.gameObject.transform);
+        Debug.Log(this.gameObject.transform.childCount);
+        //Xを押していなかったらリセットする
+        if (!xbutton)
+        {
+            if (sweets != null)
             {
-                //yの入力値で判断
-                if ((dir.x > 0 && dir.y > 0) || (dir.x < 0 && dir.y > 0)) direction = Direction.Up;
-                else direction = Direction.Down;
-            }
-            //xの方がyより大きい
-            else if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
-            {
-                //xの値が大きい => 右
-                if (dir.x > 0) direction = Direction.Right;
-
-                //xの値が小さい => 左
-                else direction = Direction.Left;
-            }
-            //yの方がxより大きい
-            else
-            {
-                //yの値が大きい => 上
-                if (dir.y > 0) direction = Direction.Up;
-
-                //yの値が小さい => 下
-                else direction = Direction.Down;
-            }
-
-            //デバッグ
-            //Debug.Log(direction);
-
-            Tile tilescript = nowmass.GetComponent<Tile>();
-
-            //Xを押していたらお菓子のオブジェクトの親を自身（プレイヤーオブジェクト）にする
-            if (xbutton)
-            {
-                sweetsobject = TileManager.tm.GetForwardMass(nowmass, SetDirection(direction.ToString()));
-                if (sweetsobject.Key != null) sweetsobject.Key.transform.SetParent(this.gameObject.transform);
+                sweets.transform.SetParent(null);
+                sweets = null;
             }
         }
-        //else
-        //{
-        //    if (direction == Direction.Up)
-        //    //目の前のマスにお菓子があったらその先のマスを取得
-        //    if (sweetsobject.Key != null)
-        //    {
-        //        TileManager.tm.GetForwardMass(sweetsobject, SetDirection(direction.ToString()));
-        //    }
-        //    //なかったら or Xを押していなかったら
-        //    else
-        //    {
 
-        //    }
-        //}
+        Tile tile = nowmass.GetComponent<Tile>();
+        Vector2 di = SetDirection(direction.ToString());
+        GameObject next = tile.ReturnNextMass(di);
+
+        //子オブジェクトが存在しない && 目の前にお菓子がない
+        if (this.gameObject.transform.childCount == 0 && sweets == null)
+        {
+            //次のマスがある = マスの外側に移動しようとしていない
+            if (next != null)
+            {
+                MoveMass(next);
+            }
+            //マスの外側に移動しようとしている
+            else
+            {
+                return;
+            }
+        }
+        //目の前にお菓子がある
+        else
+        {
+            //お菓子のその先のマスを取得
+            Tile nexttile = next.GetComponent<Tile>();
+
+            //もし先のマスが存在したら
+            if (nexttile.ReturnNextMass(di) != null)
+            {
+                MoveMass(next);
+            }
+            //マスの外側に移動しようとしている
+            else
+            {
+                //初期化する
+                sweets.transform.SetParent(null);
+                sweets = null;
+                return;
+            }
+        }
     }
 
     /// <summary>
     /// 移動関数
     /// </summary>
     /// <param name="next"></param>   次のマスオブジェクト
-    /// <param name="sweets"></param> お菓子オブジェクト
-    private void MoveMass(GameObject next, GameObject sweets)
+    private void MoveMass(GameObject next)
     {
         Vector3 pos = next.transform.position;
         pos.z = -5;
@@ -164,12 +185,6 @@ public class TestPlayer : MonoBehaviour
         this.gameObject.transform.DOMove(pos, speed).SetEase(Ease.Linear).OnComplete(() =>
         {
             GetNowMass();
-
-            //お菓子オブジェクトがあったら
-            if (sweets != null)
-            {
-                sweets.transform.SetParent(null);
-            }
             onMove = false;
         });
     }
@@ -193,12 +208,5 @@ public class TestPlayer : MonoBehaviour
         {
             CheckDirection(vec2, xvalue > 0.7f);
         }
-
-        /*//デバッグ
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            isMove = true;
-            GetNextMass();
-        }*/
     }
 }

@@ -24,35 +24,40 @@ public class TileManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
-    //目の前のマスにあるお菓子の有無を取得する関数
-    public KeyValuePair<GameObject, Vector2> GetForwardMass(GameObject center, Vector2 direction)
+    /// <summary>
+    /// 目の前のマスにあるお菓子の有無を取得する関数
+    /// </summary>
+    /// <param name="center"></param>    基準となるオブジェクト
+    /// <param name="direction"></param> 位置関係の変数
+    /// <returns></returns>
+    public GameObject GetForwardMass(GameObject center, Vector2 direction)
     {
-        KeyValuePair<GameObject, Vector2> kvp = new KeyValuePair<GameObject, Vector2>();
+        GameObject sweets = null;
         Tile tilescript = center.GetComponent<Tile>();
 
         //マスの位置関係Dictionaryから隣接マスを取得
         foreach (KeyValuePair<GameObject, Vector2> pair in tilescript.neighbor)
         {
-            //位置関係が一致する & まだお菓子を見つけていない
-            if (pair.Value == direction && kvp.Key == null)
+            //位置関係が一致する && まだお菓子を見つけていない
+            if (pair.Value == direction && sweets == null)
             {
                 Vector2 distance = pair.Key.GetComponent<SpriteRenderer>().bounds.size;
                 Collider2D[] hits = Physics2D.OverlapPointAll((Vector2)pair.Key.transform.position + distance * pair.Value);
                 foreach (Collider2D hitobj in hits)
                 {
-                    if (hitobj.gameObject.GetComponent<Tile>())
+                    if (hitobj.gameObject.GetComponent<Sweets>())
                     {
-                        kvp = new KeyValuePair<GameObject, Vector2>(hitobj.gameObject, pair.Value);
+                        sweets = hitobj.gameObject;
                         break;
                     }
                 }
             }
         }
-
-        return kvp;
+        Debug.Log(sweets.name);
+        return sweets;
     }
 
     //すべてのマスを取得する関数

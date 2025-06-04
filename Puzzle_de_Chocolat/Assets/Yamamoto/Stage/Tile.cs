@@ -69,7 +69,11 @@ public class Tile : MonoBehaviour
         return tilepos;
     }
 
-    //次のマスを返す関数
+    /// <summary>
+    /// 次のマスを返す関数
+    /// </summary>
+    /// <param name="pos"></param> 位置関係の変数
+    /// <returns></returns>
     public GameObject ReturnNextMass(Vector2 pos)
     {
         GameObject mass = null;
@@ -94,7 +98,6 @@ public class Tile : MonoBehaviour
         if (mass == null) Debug.Log("mass is null");
         else Debug.Log(mass.name);*/
         return mass;
-        
     }
 
     // Update is called once per frame
