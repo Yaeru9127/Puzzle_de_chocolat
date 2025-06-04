@@ -30,33 +30,28 @@ public class TileManager : MonoBehaviour
     /// <summary>
     /// 目の前のマスにあるお菓子の有無を取得する関数
     /// </summary>
-    /// <param name="center"></param>    基準となるオブジェクト
-    /// <param name="direction"></param> 位置関係の変数
+    /// <param name="center"></param>    探すマスのオブジェクト
     /// <returns></returns>
-    public GameObject GetForwardMass(GameObject center, Vector2 direction)
+    public GameObject SearchSweets(GameObject center)
     {
         GameObject sweets = null;
-        Tile tilescript = center.GetComponent<Tile>();
 
-        //マスの位置関係Dictionaryから隣接マスを取得
-        foreach (KeyValuePair<GameObject, Vector2> pair in tilescript.neighbor)
+        //マスの座標に当たり判定を設置
+        Collider2D[] hits = Physics2D.OverlapPointAll((Vector2)center.transform.position);
+        foreach (Collider2D hitobj in hits)
         {
-            //位置関係が一致する && まだお菓子を見つけていない
-            if (pair.Value == direction && sweets == null)
+            //お菓子オブジェクトがあったら
+            if (hitobj.gameObject.GetComponent<Sweets>())
             {
-                Vector2 distance = pair.Key.GetComponent<SpriteRenderer>().bounds.size;
-                Collider2D[] hits = Physics2D.OverlapPointAll((Vector2)pair.Key.transform.position + distance * pair.Value);
-                foreach (Collider2D hitobj in hits)
-                {
-                    if (hitobj.gameObject.GetComponent<Sweets>())
-                    {
-                        sweets = hitobj.gameObject;
-                        break;
-                    }
-                }
+                sweets = hitobj.gameObject;
+                break;
             }
         }
-        Debug.Log(sweets.name);
+
+        /*//デバッグ
+        if (sweets == null) Debug.Log("sweets is null");
+        else Debug.Log("sweets is not null");*/
+
         return sweets;
     }
 

@@ -78,9 +78,10 @@ public class Tile : MonoBehaviour
     {
         GameObject mass = null;
 
-        //方向と位置関係からオブジェクトを探す
+        //位置関係からオブジェクトを探す
         foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
+            //位置関係が一致したときのオブジェクト
             if (pair.Value == pos)
             {
                 //デバッグ
@@ -91,12 +92,9 @@ public class Tile : MonoBehaviour
         }
 
         /*//デバッグ
-        foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
-        {
-            Debug.Log($"{this.gameObject.name} => {pair.Key.name} : {pair.Value}");
-        }
         if (mass == null) Debug.Log("mass is null");
         else Debug.Log(mass.name);*/
+
         return mass;
     }
 

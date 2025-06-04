@@ -119,64 +119,36 @@ public class TestPlayer : MonoBehaviour
             else direction = Direction.Down;
         }
 
-        //目の前のマスにお菓子があるか
-        sweets = TileManager.tm.GetForwardMass(nowmass, SetDirection(direction.ToString()));
-        if (sweets != null) sweets.transform.SetParent(this.gameObject.transform);
-        Debug.Log(this.gameObject.transform.childCount);
-        //Xを押していなかったらリセットする
-        if (!xbutton)
-        {
-            if (sweets != null)
-            {
-                sweets.transform.SetParent(null);
-                sweets = null;
-            }
-        }
-
-        Tile tile = nowmass.GetComponent<Tile>();
         Vector2 di = SetDirection(direction.ToString());
-        GameObject next = tile.ReturnNextMass(di);
+        Tile tile = nowmass.GetComponent<Tile>();
 
-        //子オブジェクトが存在しない && 目の前にお菓子がない
-        if (this.gameObject.transform.childCount == 0 && sweets == null)
+        //目の前のマスを取得
+        GameObject next = tile.ReturnNextMass(di);
+        /*//デバッグ
+        if (next == null) Debug.Log("next is null");
+        else Debug.Log("next is not null");*/
+
+        GameObject movemass;
+        sweets = TileManager.tm.SearchSweets(next);
+
+        //お菓子が目の前にない
+        if (sweets == null)
         {
-            //次のマスがある = マスの外側に移動しようとしていない
-            if (next != null)
-            {
-                MoveMass(next);
-            }
-            //マスの外側に移動しようとしている
-            else
-            {
-                return;
-            }
+            movemass = tile.ReturnNextMass(di);
         }
-        //目の前にお菓子がある
+        //お菓子が目の前にある
         else
         {
-            //お菓子のその先のマスを取得
-            Tile nexttile = next.GetComponent<Tile>();
-
-            //もし先のマスが存在したら
-            if (nexttile.ReturnNextMass(di) != null)
-            {
-                MoveMass(next);
-            }
-            //マスの外側に移動しようとしている
-            else
-            {
-                //初期化する
-                sweets.transform.SetParent(null);
-                sweets = null;
-                return;
-            }
+            //お菓子を自身の子オブジェクトに設定
+            sweets.transform.SetParent(this.gameObject.transform);
+            /*向いている方向か逆の方向に空きマスがあるか*/
         }
     }
 
     /// <summary>
     /// 移動関数
     /// </summary>
-    /// <param name="next"></param>   次のマスオブジェクト
+    /// <param name="next"></param>   移動先のマスオブジェクト
     private void MoveMass(GameObject next)
     {
         Vector3 pos = next.transform.position;
