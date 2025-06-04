@@ -5,10 +5,10 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     //隣のマスとその"位置関係"のDictionary
-    private Dictionary<GameObject, Vector2> neighbor = new Dictionary<GameObject, Vector2>();
+    public Dictionary<GameObject, Vector2> neighbor = new Dictionary<GameObject, Vector2>();
     private Vector2 tilepos;        //マスの座標
                                     //位置関係のための配列
-    Vector2[] direction = new Vector2[]
+    private Vector2[] direction = new Vector2[]
     {
         Vector2.up, Vector2.down, Vector2.left, Vector2.right
     };
@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour
             //当たり判定で取得
             Vector2 distance = this.gameObject.GetComponent<SpriteRenderer>().bounds.size;
 
-            //自身の場所 + SpriteRendererのサイズをかけた場所 * Vector2の上下左右方向 = 当たり判定ポイント
+            //自身の場所 + SpriteRendererのサイズ * Vector2の上下左右方向 = 当たり判定ポイント
             Vector2 center = (Vector2)this.gameObject.transform.position + distance * dir;
             Collider2D hitobj = Physics2D.OverlapPoint(center);
 
@@ -70,32 +70,14 @@ public class Tile : MonoBehaviour
     }
 
     //次のマスを返す関数
-    public GameObject ReturnNextMass(string direction)
+    public GameObject ReturnNextMass(Vector2 pos)
     {
-        Vector2 target = Vector2.zero;
         GameObject mass = null;
-
-        //方向に変換
-        switch (direction)
-        {
-            case "Up": target = Vector2.up; break;
-            case "Down": target = Vector2.down; break;
-            case "Left": target = Vector2.left; break;
-            case "Right": target = Vector2.right; break;
-            default: target = Vector2.zero; break;
-        }
-
-        //nullチェック
-        if (target == Vector2.zero)
-        {
-            Debug.Log("direction is missing!!");
-            return mass;
-        }
 
         //方向と位置関係からオブジェクトを探す
         foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
-            if (pair.Value == target)
+            if (pair.Value == pos)
             {
                 //デバッグ
                 //Debug.Log($"{pair.Key.name} : {pair.Value}");
