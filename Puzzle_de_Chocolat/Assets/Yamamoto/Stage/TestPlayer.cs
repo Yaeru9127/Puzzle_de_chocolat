@@ -15,7 +15,7 @@ public class TestPlayer : MonoBehaviour
     /// </summary>
     private InputSystem_Actions actions;
     private InputSystem_Manager inputmanager;
-    private TileManager tm = TileManager.tm;
+    private TileManager tm;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -31,6 +31,7 @@ public class TestPlayer : MonoBehaviour
     private float speed;                //マス間の移動速度
     private bool onMove;
     private GameObject sweets;
+
     private void Awake()
     {
         
@@ -39,6 +40,7 @@ public class TestPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        tm = TileManager.tm;
         GetNowMass();
 
         inputmanager = this.gameObject.transform.GetComponent<InputSystem_Manager>();
@@ -125,9 +127,14 @@ public class TestPlayer : MonoBehaviour
             else directo = Vector2.down;
         }
 
+        if (directo == Vector2.zero)
+        {
+            onMove = false;
+            return;
+        }
+
         Tile nowtile = nowmass.GetComponent<Tile>();
-        GameObject nexttileobj;
-        nexttileobj = nowtile.ReturnNextMass(directo);
+        GameObject nexttileobj = nowtile.ReturnNextMass(directo);
         TryMove(nexttileobj, xbutton);
     }
 
@@ -139,44 +146,57 @@ public class TestPlayer : MonoBehaviour
     private void TryMove(GameObject next, float X)
     {
         //次のマスにあるお菓子を取得
-        GameObject sweets = tm.GetSweets(next.transform.position).gameObject;
-
+        Sweets sweetsscript = tm.GetSweets(next.transform.position);
+        if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
+        else Debug.Log("sweetsscript is null");
         //次のマスにお菓子があったら
-        if (sweets != null)
+        if (sweetsscript != null)
         {
             //X or Shiftを押していたら
             if (X > 0.5f)
             {
+                sweets = sweetsscript.gameObject;
                 sweets.transform.SetParent(this.gameObject.transform);
             }
             //X or Shiftを押していなかったら
             else
             {
+                Debug.Log("sweets is not null");
                 onMove = false;
                 return;
             }
         }
 
-        MoveMass(next);
+        MoveMass(next).Forget();
     }
 
     /// <summary>
     /// 移動関数
     /// </summary>
     /// <param name="next"></param>   移動先のマスオブジェクト
-    private void MoveMass(GameObject next)
+    private async UniTask MoveMass(GameObject next)
     {
+        Debug.Log("in MoveMass");
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
-        this.gameObject.transform.DOMove(pos, speed).SetEase(Ease.Linear).OnComplete(() =>
-        {
-            //現在地を更新
-            GetNowMass();
+        await this.gameObject.transform.DOMove(pos, speed)
+            .SetEase(Ease.Linear)
+            .AsyncWaitForCompletion();
 
-            //移動フラグ更新
-            onMove = false;
-        });
+        //現在地を更新
+        GetNowMass();
+
+        if (sweets != null && this.gameObject.transform.childCount != 0)
+        {
+            sweets.transform.SetParent(tm.gameObject.transform);
+            sweets = null;
+        }
+
+        tm.SearchSweets();
+
+        //移動フラグ更新
+        onMove = false;
     }
 
     // Update is called once per frame

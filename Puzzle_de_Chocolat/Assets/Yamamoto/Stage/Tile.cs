@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Tile : MonoBehaviour
 {
@@ -34,17 +35,20 @@ public class Tile : MonoBehaviour
 
             //自身の場所 + SpriteRendererのサイズ * Vector2の上下左右方向 = 当たり判定ポイント
             Vector2 center = (Vector2)this.gameObject.transform.position + distance * dir;
-            Collider2D hitobj = Physics2D.OverlapPoint(center);
+            Collider2D[] hitobj = Physics2D.OverlapPointAll(center);
 
-            //当たり判定のポイントにあるオブジェクトを格納
-            if (hitobj != null && hitobj.gameObject != this.gameObject)
+            foreach (var hitobj2 in hitobj)
             {
-                //デバッグ
-                //Debug.Log($"{this.gameObject.name}, {hitobj.gameObject.name}");
+                //当たり判定のポイントにあるオブジェクトを格納
+                if (hitobj2 != null && hitobj2.gameObject != this.gameObject && hitobj2.GetComponent<Tile>())
+                {
+                    //デバッグ
+                    //Debug.Log($"{this.gameObject.name}, {hitobj.gameObject.name}");
 
-                //重複していなかったら追加
-                if (!neighbor.ContainsKey(hitobj.gameObject)) neighbor.Add(hitobj.gameObject, dir);
+                    //重複していなかったら追加
+                    if (!neighbor.ContainsKey(hitobj2.gameObject)) neighbor.Add(hitobj2.gameObject, dir);
 
+                }
             }
         }
 
@@ -71,12 +75,12 @@ public class Tile : MonoBehaviour
     public GameObject ReturnNextMass(Vector2 pos)
     {
         GameObject mass = null;
-
+        
         //位置関係からオブジェクトを探す
         foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
             //位置関係が一致したときのオブジェクト
-            if (pair.Value == pos)
+            if (pair.Key.GetComponent<Tile>() && pair.Value == pos)
             {
                 //デバッグ
                 //Debug.Log($"{pair.Key.name} : {pair.Value}");
@@ -88,7 +92,6 @@ public class Tile : MonoBehaviour
         /*//デバッグ
         if (mass == null) Debug.Log("mass is null");
         else Debug.Log(mass.name);*/
-
         return mass;
     }
 

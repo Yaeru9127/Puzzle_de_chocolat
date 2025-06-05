@@ -22,12 +22,13 @@ public class TileManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        GetAllMass();
+        
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        GetAllMass();
         SearchSweets();
     }
 
@@ -37,10 +38,13 @@ public class TileManager : MonoBehaviour
     /// <param name="pos"></param> 探すマスの座標
     public Sweets GetSweets(Vector2 pos)
     {
-        Sweets sweetsscript = null;
-        sweets.TryGetValue(pos, out sweetsscript);
+        Sweets returnsweetts = null;
+        foreach (Vector2 sweetspos in sweets.Keys)
+        {
+            if (pos == sweetspos) returnsweetts = sweets[sweetspos];
+        }
 
-        return sweetsscript;
+        return returnsweetts;
     }
 
     /// <summary>
@@ -49,6 +53,8 @@ public class TileManager : MonoBehaviour
     /// <returns></returns>
     public void SearchSweets()
     {
+        sweets.Clear();
+
         //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
@@ -57,6 +63,12 @@ public class TileManager : MonoBehaviour
                 sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
             }
         }
+
+        /*//デバッグ
+        foreach (var sw in sweets)
+        {
+            Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
+        }*/
     }
 
     //すべてのマスを取得する関数
@@ -75,7 +87,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        /*//デバッグ用
+        /*//デバッグ
         foreach (KeyValuePair<GameObject, Vector2> dictionary in tiles)
         {
             Debug.Log($"{dictionary.Key.name}, {dictionary.Value}");
