@@ -4,8 +4,12 @@ using System.Collections.Generic;
 public class TileManager : MonoBehaviour
 {
     public static TileManager tm {  get; private set; }
+
+    //マスオブジェクト格納のDictionary(オブジェクト, "位置関係")
     public Dictionary<GameObject, Vector2> tiles = new Dictionary<GameObject, Vector2>();
 
+    //お菓子オブジェクト格納のDictionary
+    public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
     private void Awake()
     {
@@ -24,35 +28,35 @@ public class TileManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        SearchSweets();
     }
 
     /// <summary>
-    /// 目の前のマスにあるお菓子の有無を取得する関数
+    /// お菓子の配列の中から目的のお菓子を見つけ出す関数
     /// </summary>
-    /// <param name="center"></param>    探すマスのオブジェクト
-    /// <returns></returns>
-    public GameObject SearchSweets(GameObject center)
+    /// <param name="pos"></param> 探すマスの座標
+    public Sweets GetSweets(Vector2 pos)
     {
-        GameObject sweets = null;
+        Sweets sweetsscript = null;
+        sweets.TryGetValue(pos, out sweetsscript);
 
-        //マスの座標に当たり判定を設置
-        Collider2D[] hits = Physics2D.OverlapPointAll((Vector2)center.transform.position);
-        foreach (Collider2D hitobj in hits)
+        return sweetsscript;
+    }
+
+    /// <summary>
+    /// マス上のすべてのお菓子を取得する関数
+    /// </summary>
+    /// <returns></returns>
+    public void SearchSweets()
+    {
+        //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
+        for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            //お菓子オブジェクトがあったら
-            if (hitobj.gameObject.GetComponent<Sweets>())
+            if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
             {
-                sweets = hitobj.gameObject;
-                break;
+                sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
             }
         }
-
-        /*//デバッグ
-        if (sweets == null) Debug.Log("sweets is null");
-        else Debug.Log("sweets is not null");*/
-
-        return sweets;
     }
 
     //すべてのマスを取得する関数
@@ -61,10 +65,14 @@ public class TileManager : MonoBehaviour
         //初期化
         tiles.Clear();
 
+        //自身の子オブジェクトの中からTileスクリプトを持つオブジェクトを探す
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            Tile tile = this.gameObject.transform.GetChild(i).GetComponent<Tile>(); ;
-            tiles.Add(this.gameObject.transform.GetChild(i).gameObject, tile.GetTilePos());
+            if (this.gameObject.transform.GetChild(i).GetComponent<Tile>())
+            {
+                Tile tile = this.gameObject.transform.GetChild(i).GetComponent<Tile>(); ;
+                tiles.Add(this.gameObject.transform.GetChild(i).gameObject, tile.gameObject.transform.position);
+            }
         }
 
         /*//デバッグ用

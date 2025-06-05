@@ -25,7 +25,8 @@ public class RandomCandySet : MonoBehaviour
 
         //ƒ‰ƒ“ƒ_ƒ€‚ÈêŠ‚Éİ’u
         int rand = Random.Range(0, tiles.Count);
-        Instantiate(potato, tiles[rand].position, Quaternion.identity);
+        var sweets = Instantiate(potato, tiles[rand].position, Quaternion.identity);
+        sweets.transform.SetParent(this.gameObject.transform);
     }
 
     // Update is called once per frame

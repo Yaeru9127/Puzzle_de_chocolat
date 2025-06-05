@@ -63,12 +63,6 @@ public class Tile : MonoBehaviour
         Gizmos.DrawWireCube(this.gameObject.transform.position, size);
     }*/
 
-    //マスのPositionを返す関数
-    public Vector2 GetTilePos()
-    {
-        return tilepos;
-    }
-
     /// <summary>
     /// 次のマスを返す関数
     /// </summary>

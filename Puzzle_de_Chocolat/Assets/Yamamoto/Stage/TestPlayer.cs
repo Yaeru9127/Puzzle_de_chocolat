@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
+using System.Threading.Tasks;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class TestPlayer : MonoBehaviour
     /// </summary>
     private InputSystem_Actions actions;
     private InputSystem_Manager inputmanager;
+    private TileManager tm = TileManager.tm;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -28,7 +31,6 @@ public class TestPlayer : MonoBehaviour
     private float speed;                //マス間の移動速度
     private bool onMove;
     private GameObject sweets;
-
     private void Awake()
     {
         
@@ -37,13 +39,12 @@ public class TestPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        RandomMassSet();
         GetNowMass();
 
         inputmanager = this.gameObject.transform.GetComponent<InputSystem_Manager>();
         actions = inputmanager.GetActions();
         inputmanager.PlayerOn();
-        speed = 1f;
+        speed = 0.5f;
         onMove = false;
     }
 
@@ -61,6 +62,11 @@ public class TestPlayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 方向設定関数
+    /// </summary>
+    /// <param name="directionstring"></param> enumをstringに変える
+    /// <returns></returns>
     private Vector2 SetDirection(string directionstring)
     {
         Vector2 target = Vector2.zero;
@@ -89,60 +95,69 @@ public class TestPlayer : MonoBehaviour
     /// </summary>
     /// <param name="dir"></param>     入力値
     /// <param name="xbutton"></param> Xボタンを押しているか
-    private void CheckDirection(Vector2 dir, bool xbutton)
+    private void CheckDirection(Vector2 dir, float xbutton)
     {
-        onMove = true;
-
+        if (!onMove) onMove = true;
+        Vector2 directo = Vector2.zero;
         //左右の入力方向が同じ(たぶんないと思うけど)
         if (Mathf.Abs(dir.x) == Mathf.Abs(dir.y))
         {
             //yの入力値で判断
-            if ((dir.x > 0 && dir.y > 0) || (dir.x < 0 && dir.y > 0)) direction = Direction.Up;
-            else direction = Direction.Down;
+            if ((dir.x > 0 && dir.y > 0) || (dir.x < 0 && dir.y > 0)) directo = Vector2.up;
+            else directo = Vector2.down;
         }
         //xの方がyより大きい
         else if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
         {
             //xの値が大きい => 右
-            if (dir.x > 0) direction = Direction.Right;
+            if (dir.x > 0) directo = Vector2.right;
 
             //xの値が小さい => 左
-            else direction = Direction.Left;
+            else directo = Vector2.left;
         }
         //yの方がxより大きい
         else
         {
             //yの値が大きい => 上
-            if (dir.y > 0) direction = Direction.Up;
+            if (dir.y > 0) directo = Vector2.up;
 
             //yの値が小さい => 下
-            else direction = Direction.Down;
+            else directo = Vector2.down;
         }
 
-        Vector2 di = SetDirection(direction.ToString());
-        Tile tile = nowmass.GetComponent<Tile>();
+        Tile nowtile = nowmass.GetComponent<Tile>();
+        GameObject nexttileobj;
+        nexttileobj = nowtile.ReturnNextMass(directo);
+        TryMove(nexttileobj, xbutton);
+    }
 
-        //目の前のマスを取得
-        GameObject next = tile.ReturnNextMass(di);
-        /*//デバッグ
-        if (next == null) Debug.Log("next is null");
-        else Debug.Log("next is not null");*/
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="next"></param> 移動先のマスの座標
+    /// <param name="X"></param>    X or Shiftのボタンの押している値
+    private void TryMove(GameObject next, float X)
+    {
+        //次のマスにあるお菓子を取得
+        GameObject sweets = tm.GetSweets(next.transform.position).gameObject;
 
-        GameObject movemass;
-        sweets = TileManager.tm.SearchSweets(next);
-
-        //お菓子が目の前にない
-        if (sweets == null)
+        //次のマスにお菓子があったら
+        if (sweets != null)
         {
-            movemass = tile.ReturnNextMass(di);
+            //X or Shiftを押していたら
+            if (X > 0.5f)
+            {
+                sweets.transform.SetParent(this.gameObject.transform);
+            }
+            //X or Shiftを押していなかったら
+            else
+            {
+                onMove = false;
+                return;
+            }
         }
-        //お菓子が目の前にある
-        else
-        {
-            //お菓子を自身の子オブジェクトに設定
-            sweets.transform.SetParent(this.gameObject.transform);
-            /*向いている方向か逆の方向に空きマスがあるか*/
-        }
+
+        MoveMass(next);
     }
 
     /// <summary>
@@ -156,18 +171,12 @@ public class TestPlayer : MonoBehaviour
 
         this.gameObject.transform.DOMove(pos, speed).SetEase(Ease.Linear).OnComplete(() =>
         {
+            //現在地を更新
             GetNowMass();
+
+            //移動フラグ更新
             onMove = false;
         });
-    }
-
-    //テスト
-    private void RandomMassSet()
-    {
-        int num = Random.Range(0, TileManager.tm.tiles.Count);
-        KeyValuePair<GameObject, Vector2> pair = TileManager.tm.tiles.ElementAt(num);
-        this.gameObject.transform.position = new Vector3(pair.Value.x, pair.Value.y, -5);
-        nowmass = pair.Key;
     }
 
     // Update is called once per frame
@@ -178,7 +187,7 @@ public class TestPlayer : MonoBehaviour
         float xvalue = actions.Player.CandyMove.ReadValue<float>();
         if (vec2 != Vector2.zero && !onMove)
         {
-            CheckDirection(vec2, xvalue > 0.7f);
+            CheckDirection(vec2, xvalue);
         }
     }
 }
