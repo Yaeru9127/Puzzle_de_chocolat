@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      harinezumikun_01_0: -2595733633814132121
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

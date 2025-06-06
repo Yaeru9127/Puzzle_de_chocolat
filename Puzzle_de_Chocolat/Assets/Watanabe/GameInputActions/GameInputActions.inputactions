@@ -1,0 +1,45 @@
+{
+    "name": "GameInputActions",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "ef2e0d2b-efd3-485f-a9c4-9f690bc541df",
+            "actions": [
+                {
+                    "name": "DestroyCandy",
+                    "type": "Button",
+                    "id": "fffb152f-f40e-468a-a732-1ff5b3620213",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0fb9f5f2-de5c-4002-b1b6-28da73ef0e59",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DestroyCandy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "21ab3cb2-db50-4238-81d0-634f8b8fb451",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DestroyCandy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
