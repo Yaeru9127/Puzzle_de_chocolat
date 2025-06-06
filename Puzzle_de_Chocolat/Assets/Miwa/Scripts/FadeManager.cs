@@ -1,68 +1,93 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEditor.Experimental.GraphView;
 
 
 public class FadeManager : MonoBehaviour
 {
-    [Header("フェードパネル")] public Image FadePanel;
-    [Header("フェード速度")] public float FadeTaime = 1.0f;//Fadeにかける時間の設定
-    private bool isFading = false;
-     
-    public static FadeManager instance { get; private set; }
-    
-    void Awake()
+    public static FadeManager Instance { get; private set; }
+
+    [SerializeField] private Image fadePanel;//fadeするときに使うUI
+    [SerializeField] private float fadeDuration = 1.0f;//fadeの持続時間
+    [SerializeField] private Ease fadeEase = Ease.Linear;
+
+
+
+    private void Awake()
     {
-        if (instance ==null)
+        if (Instance == null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            Instance = this;
         }
         else
         {
             Destroy(gameObject);
         }
-        if (FadePanel !=null)
+        if (fadePanel != null)
         {
-            Color panelColor = FadePanel.color;
-            FadePanel.alphaHitTestMinimumThreshold = 1f;
-            FadePanel.color = panelColor;
-
-            FadePanel.gameObject.SetActive(true);
-            StaretFadein();
+            Color panelColor = fadePanel.color;
+            panelColor.a = 0f;
+            fadePanel.color = panelColor;
+            fadePanel.gameObject.SetActive(true);
         }
-    }
-    
-    public void StaretFadein()
-    {
-        if (isFading) return;
-        isFading = true; //fadeが開始
-        FadePanel.DOFade(endValue: 1f, duration: 0f).OnComplete(() =>
-        {
-            
-            isFading = false;  //fadeが終了
 
-            FadePanel.gameObject.SetActive(false);
+    }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Start()
+    {
+        FadeIn();
+    }
+
+    public void FadeIn(System.Action onComplete = null)
+    {
+        if (fadePanel == null)
+        {
+            Debug.LogWarning("FadePanelが設定されていません");
+            onComplete?.Invoke();
+            return;
+        }
+
+        if (!fadePanel.gameObject.activeSelf)
+        {
+            fadePanel.gameObject.SetActive(true);
+        }
+
+        fadePanel.DOFade(0f, fadeDuration).SetEase(fadeEase).OnComplete(() =>
+        {
+            fadePanel.gameObject.SetActive(false);
+            onComplete?.Invoke();
         });
 
     }
-    //fadooutしてシーンをロードする
-    public void StartFadeoutAndLoadScene(string game)
-    {
-        if (isFading) return;
-        isFading = true; //fadeが開始
-        FadePanel.DOFade(endValue: 0f, duration: 1f).OnComplete(() =>
-        {
-            SceneManager.LoadScene("game");
-            isFading = false;
-        });
 
+    public void FadeOut(System.Action onComplete = null)
+    {
+        if (fadePanel == null)
+        {
+            Debug.LogWarning("FadePanelが設定されてません");
+            onComplete?.Invoke();
+            return;
+        }
+
+        if (!fadePanel.gameObject.activeSelf)
+        {
+            fadePanel.gameObject.SetActive(true);
+        }
+
+        fadePanel.DOFade(1f, fadeDuration).SetEase(fadeEase).OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
     }
 
-    public bool IsFading()
+
+    public void FadegameLodScene(string game)
     {
-        return isFading;
+        FadeOut(() =>
+        {
+            SceneManager.LoadScene(game);
+        });
     }
 }
