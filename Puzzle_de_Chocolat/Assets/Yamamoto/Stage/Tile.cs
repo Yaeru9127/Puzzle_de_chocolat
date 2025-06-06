@@ -7,8 +7,7 @@ public class Tile : MonoBehaviour
 {
     //隣のマスとその"位置関係"のDictionary
     public Dictionary<GameObject, Vector2> neighbor = new Dictionary<GameObject, Vector2>();
-    private Vector2 tilepos;        //マスの座標
-                                    //位置関係のための配列
+    //位置関係のための配列
     private Vector2[] direction = new Vector2[]
     {
         Vector2.up, Vector2.down, Vector2.left, Vector2.right
@@ -16,7 +15,7 @@ public class Tile : MonoBehaviour
 
     private void Awake()
     {
-        tilepos = this.gameObject.transform.position;
+        
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
