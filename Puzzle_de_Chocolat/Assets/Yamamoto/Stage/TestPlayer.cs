@@ -4,9 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -118,7 +117,7 @@ public class TestPlayer : MonoBehaviour
             else directo = Vector2.left;
         }
         //yの方がxより大きい
-        else
+        else if (Mathf.Abs(dir.y) > Mathf.Abs(dir.x))
         {
             //yの値が大きい => 上
             if (dir.y > 0) directo = Vector2.up;
@@ -127,6 +126,7 @@ public class TestPlayer : MonoBehaviour
             else directo = Vector2.down;
         }
 
+        //入力値が0だったらreturn
         if (directo == Vector2.zero)
         {
             onMove = false;
@@ -135,30 +135,103 @@ public class TestPlayer : MonoBehaviour
 
         Tile nowtile = nowmass.GetComponent<Tile>();
         GameObject nexttileobj = nowtile.ReturnNextMass(directo);
-        TryMove(nexttileobj, xbutton);
+        TryMove(nexttileobj, xbutton, directo);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="next"></param> 移動先のマスの座標
+    /// <param name="next"></param> 移動先のマス
     /// <param name="X"></param>    X or Shiftのボタンの押している値
-    private void TryMove(GameObject next, float X)
+    /// <param name="dire"></param> 入力された移動方向
+    private void TryMove(GameObject next, float X, Vector2 dire)
     {
         //次のマスにあるお菓子を取得
-        Sweets sweetsscript = tm.GetSweets(next.transform.position);
+        Sweets sweetsscript;
+        sweetsscript = tm.GetSweets(next.transform.position);
+
+        //進行方向にお菓子がない場合、後ろのマスを検索する
+        GameObject backmass = null;
+        if (sweetsscript == null)
+        {
+            //後ろの位置関係Vector2を取得
+            Vector2 reverse = Vector2.zero;
+            if (dire == Vector2.up) reverse = Vector2.down;
+            else if (dire == Vector2.down) reverse = Vector2.up;
+            else if (dire == Vector2.left) reverse = Vector2.right;
+            else if (dire == Vector2.right) reverse = Vector2.left;
+            backmass = nowmass.GetComponent<Tile>().ReturnNextMass(reverse);
+
+            if (backmass != null)
+            {
+                //後ろのマスを取得後、そのマスにお菓子があるかを探す
+                if (reverse != Vector2.zero)
+                {
+                    GameObject nextback = nowmass.GetComponent<Tile>().ReturnNextMass(reverse);
+
+                    //後ろのマスが存在する場合
+                    if (nextback != null)
+                    {
+                        //後ろのマスにお菓子があるかを探す
+                        sweetsscript = tm.GetSweets(nextback.transform.position);
+                    }
+                }
+                else //方向が上下左右ではない場合（たぶんないけど）
+                {
+                    onMove = false;
+                    return;
+                }
+                
+            }
+        }
+
+        /*//デバッグ
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
-        else Debug.Log("sweetsscript is null");
+        else Debug.Log("sweetsscript is null");*/
+
+        Tile nextnexttile;
+        GameObject nextnextmass = null;
+
         //次のマスにお菓子があったら
         if (sweetsscript != null)
         {
             //X or Shiftを押していたら
             if (X > 0.5f)
             {
+                //後ろのマス変数がnull => 後ろのマスを探していない
+                if (backmass == null)
+                {
+                    //お菓子の先のマスを取得
+                    nextnexttile = next.GetComponent<Tile>();
+                    nextnextmass = nextnexttile.ReturnNextMass(dire);
+                }
+                //後ろのマス変数がnull以外 => 後ろのマスにお菓子がある
+                else if (backmass != null)
+                {
+                    //自分の後ろのマスを取得
+                    nextnexttile = backmass.GetComponent<Tile>();
+                    nextnextmass = backmass;
+                }
+
+                //お菓子の先のマスがない or 後ろにマスがない
+                if (nextnextmass == null)
+                {
+                    onMove = false;
+                    return;
+                }
+
+                nextnextmass = next;
+
+                //お菓子を自身の子オブジェクトにする
                 sweets = sweetsscript.gameObject;
                 sweets.transform.SetParent(this.gameObject.transform);
             }
-            //X or Shiftを押していなかったら
+            //X or Shiftを押していない && お菓子オブジェクトがある
+            else if (X > 0.5f && sweetsscript == null)
+            {
+
+            }
+            //X or Shiftを押していない or お菓子オブジェクトがない
             else
             {
                 Debug.Log("sweets is not null");
@@ -166,8 +239,12 @@ public class TestPlayer : MonoBehaviour
                 return;
             }
         }
+        else
+        {
+            nextnextmass = next;
+        }
 
-        MoveMass(next).Forget();
+        MoveMass(nextnextmass).Forget();
     }
 
     /// <summary>
@@ -176,7 +253,6 @@ public class TestPlayer : MonoBehaviour
     /// <param name="next"></param>   移動先のマスオブジェクト
     private async UniTask MoveMass(GameObject next)
     {
-        Debug.Log("in MoveMass");
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
