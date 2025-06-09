@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.Rendering.Universal;
 
 public class Sweets : MonoBehaviour
 {
@@ -25,6 +24,7 @@ public class Sweets : MonoBehaviour
     public Material material;
 
     private string name;        //製菓後の名前変数
+    public bool canEat;         //食べれるかの判定用
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -109,6 +109,22 @@ public class Sweets : MonoBehaviour
             Destroy(this.gameObject);
         }
         else Debug.Log("dont get sprite");
+    }
+
+    /// <summary>
+    /// お菓子を食べる関数
+    /// </summary>
+    public void EatSweets()
+    {
+        //このお菓子が食べれたら
+        if (canEat)
+        {
+            Debug.Log("delicious!!!");
+            Destroy(this.gameObject);
+
+            //お菓子の位置を更新
+            sm.SearchSweets();
+        }
     }
 
     // Update is called once per frame

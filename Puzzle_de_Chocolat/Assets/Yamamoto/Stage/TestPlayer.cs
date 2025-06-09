@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
+using static UnityEngine.Rendering.DebugUI;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -29,8 +26,8 @@ public class TestPlayer : MonoBehaviour
 
     public GameObject nowmass;          //今いるマス
     private float speed;                //マス間の移動速度
-    private bool onMove;
-    private GameObject sweets;
+    private GameObject sweets;          //一時的なお菓子変数
+    private bool inProcess;             //処理中フラグ
 
     private void Awake()
     {
@@ -48,17 +45,19 @@ public class TestPlayer : MonoBehaviour
         actions = inputmanager.GetActions();
         inputmanager.PlayerOn();
         speed = 0.5f;
-        onMove = false;
+        inProcess = false;
     }
 
     /// <summary>
     /// 入力値から向きを算出する関数
     /// </summary>
-    /// <param name="dir"></param>     入力値
-    /// <param name="xbutton"></param> Xボタンを押しているか
-    private void CheckDirection(Vector2 dir, float xbutton)
+    /// <param name="dir"></param>         入力値
+    /// <param name="button"></param>      (X or Shift) or (A or C)ボタンを押しているか
+    /// <param name="difference"></param>  移動 or 食べる の判定値
+    /// difference = 0 : 移動  difference = 1 : 食べる
+    private void CheckDirection(Vector2 dir, float button, int difference)
     {
-        if (!onMove) onMove = true;
+        if (!inProcess) inProcess = true;
         Vector2 directo = Vector2.zero;
         //左右の入力方向が同じ(たぶんないと思うけど)
         if (Mathf.Abs(dir.x) == Mathf.Abs(dir.y))
@@ -89,26 +88,41 @@ public class TestPlayer : MonoBehaviour
         //入力値が0だったらreturn
         if (directo == Vector2.zero)
         {
-            onMove = false;
+            inProcess = false;
             return;
         }
 
+        //入力方向にある次のマスを取得
         Tile nowtile = nowmass.GetComponent<Tile>();
         GameObject nexttileobj = nowtile.ReturnNextMass(directo);
 
-        //次のマスが存在する場合
-        if (nexttileobj != null)
+        /*次のマスが存在する場合*/
+        //移動
+        if (nexttileobj != null && difference == 0)
         {
             //デバッグ
             //Debug.Log($"next mass is {nexttileobj}");
 
-            TryMove(nexttileobj, xbutton, directo);
+            TryMove(nexttileobj, button, directo);
+        }
+        //食べる
+        else if (nexttileobj != null && difference == 1)
+        {
+            //食べるお菓子のスクリプトを取得
+            Sweets eatnext = sm.GetSweets(nexttileobj.transform.position);
+
+            //nullじゃなかったら食べる処理へ
+            if (eatnext != null) eatnext.EatSweets();
+            else Debug.Log("script of to eat is null");
+
+            inProcess = false;
+            return;
         }
         //次のマスが存在しない場合
         else
         {
             Debug.Log($"next mass is null");
-            onMove = false;
+            inProcess = false;
             return;
         }
     }
@@ -148,7 +162,7 @@ public class TestPlayer : MonoBehaviour
                 }
                 else //方向が上下左右ではない場合（たぶんないけど）
                 {
-                    onMove = false;
+                    inProcess = false;
                     return;
                 }
             }
@@ -202,7 +216,7 @@ public class TestPlayer : MonoBehaviour
                 //お菓子の先のマスがない or 後ろにマスがない
                 if (nextnextmass == null)
                 {
-                    onMove = false;
+                    inProcess = false;
                     return;
                 }
 
@@ -220,7 +234,7 @@ public class TestPlayer : MonoBehaviour
                 {
                     if ((Vector2)next.transform.position == pair.Key)
                     {
-                        onMove = false;
+                        inProcess = false;
                         return;
                     }
                 }
@@ -254,12 +268,10 @@ public class TestPlayer : MonoBehaviour
             //作れる = true  作れない = false
             if (!sweetsscript.TryMake(beyond))
             {
-                onMove = false;
+                inProcess = false;
                 return;
             }
         }
-
-        
 
         //移動先の場所の設定
         Vector3 pos = next.transform.position;
@@ -288,19 +300,32 @@ public class TestPlayer : MonoBehaviour
         //お菓子の位置を更新
         sm.SearchSweets();
 
-        //移動フラグ更新
-        onMove = false;
+        /*工程数をひとつ減らす*/
+        Debug.Log("decrease remaining num");
+
+        //処理フラグ更新
+        inProcess = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //ユーザー入力を受け取る
+        Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
+        float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //X or Shift
+        float avalue = actions.Player.Eat.ReadValue<float>();           //A or KeyCode.C
+
         //移動
-        Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();
-        float xvalue = actions.Player.CandyMove.ReadValue<float>();
-        if (vec2 != Vector2.zero && !onMove)
+        if (vec2 != Vector2.zero && !inProcess)
         {
-            CheckDirection(vec2, xvalue);
+            CheckDirection(vec2, xvalue, 0);
         }
+        //食べる
+        else if (avalue > 0.5f && !inProcess)
+        {
+            CheckDirection(vec2, avalue, 1);
+        }
+        
+
     }
 }

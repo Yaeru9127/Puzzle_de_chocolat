@@ -1818,6 +1818,10 @@ PrefabInstance:
       value: Potate_0
       objectReference: {fileID: 0}
     - target: {fileID: 4976897931133834840, guid: ac15c3e8458f96d448210b9e7cc175a0, type: 3}
+      propertyPath: canEat
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4976897931133834840, guid: ac15c3e8458f96d448210b9e7cc175a0, type: 3}
       propertyPath: material
       value: 0
       objectReference: {fileID: 0}

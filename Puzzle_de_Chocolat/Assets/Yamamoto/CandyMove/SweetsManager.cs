@@ -48,6 +48,8 @@ public class SweetsManager : MonoBehaviour
     public Sweets GetSweets(Vector2 pos)
     {
         Sweets returnsweetts = null;
+
+        //座標で検索
         foreach (Vector2 sweetspos in sweets.Keys)
         {
             if (pos == sweetspos) returnsweetts = sweets[sweetspos];
