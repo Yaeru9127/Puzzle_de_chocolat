@@ -20,79 +20,41 @@ public class Sweets : MonoBehaviour
     }
     public Material material;
 
+    public bool canmake;        //お菓子の作れるフラグ
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //初期化
         sm = SweetsManager.sm;
         tm = TileManager.tm;
+        canmake = false;
     }
 
     /// <summary>
     /// お菓子を作れるかチェックする関数
     /// </summary>
-    public GameObject TryMake()
+    /// <param name="comparison"></param> 比較するスクリプト
+    public bool TryMake(Sweets comparison)
     {
         Debug.Log("in TryMake");
-        Sweets sweets = null;   //移動先のお菓子のスクリプト
-        GameObject movedsweets = null;
 
-        GameObject now = tm.GetNowMass(this.gameObject);    //今いるマスを探す
+        //材料を比較して作れるかどうかを決める
+        //（材料が同じだったらfalseのままreturn）
 
-        //移動先のマスに別のお菓子があるか調べる
-        foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
-        {
-            //アタッチされているスクリプトが違う && 座標が同じ
-            if ((this.gameObject.GetComponent<Sweets>() != pair.Value) && ((Vector2)this.transform.position == pair.Key))
-            {
-                sweets = pair.Value;
-                movedsweets = sweets.gameObject;
-            }
-        }
+        /*比較条件は今後のレシピの増減によって変わる*/
+        //バター
+        if (material == Material.Butter && comparison.material == Material.Butter) return false;
+        //砂糖
+        else if (material == Material.Sugar && comparison.material == Material.Sugar) return false;
+        //卵
+        else if (material == Material.Egg && comparison.material == Material.Egg) return false;
+        //牛乳
+        else if (material == Material.Milk && comparison.material == Material.Milk) return false;
 
-        //移動先のマスにお菓子がない場合
-        if (sweets == null)
-        {
-            return movedsweets;
-        }
-        //移動先のマスにお菓子がある場合
-        else
-        {
-            //材料を比較して作れるかどうかを決める
-            /*比較条件は今後のレシピの増減によって変わる*/
-            switch (material)
-            {
-                case Material.Butter:
-                    if (sweets.material == Material.Butter)
-                    {
-                        movedsweets = null;
-                        return movedsweets;
-                    }
-                    break;
-                case Material.Sugar:
-                    if (sweets.material == Material.Sugar)
-                    {
-                        movedsweets = null;
-                        return movedsweets;
-                    }
-                    break;
-                case Material.Egg:
-                    if (sweets.material == Material.Egg)
-                    {
-                        movedsweets = null;
-                        return movedsweets;
-                    }
-                    break;
-                case Material.Milk:
-                    if (sweets.material == Material.Milk)
-                    {
-                        movedsweets = null;
-                        return movedsweets;
-                    }
-                    break;
-            }
-        }
 
-        return movedsweets;
+        //ここまでくるということは材料が違うものであるということ
+        return true;
     }
 
     /// <summary>
@@ -102,6 +64,13 @@ public class Sweets : MonoBehaviour
     public void MakeSweets(GameObject comparison)
     {
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!canmake) return;
+
+        /*お菓子の合体処理*/
     }
 
     // Update is called once per frame

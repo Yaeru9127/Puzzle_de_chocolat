@@ -100,7 +100,8 @@ public class TestPlayer : MonoBehaviour
         if (nexttileobj != null)
         {
             //デバッグ
-            //Debug.Log($"next mass is {nexttileobj}");
+            Debug.Log($"next mass is {nexttileobj}");
+
             TryMove(nexttileobj, xbutton, directo);
         }
         //次のマスが存在しない場合
@@ -120,23 +121,11 @@ public class TestPlayer : MonoBehaviour
     /// <param name="dire"></param> 入力された移動方向
     private void TryMove(GameObject next, float X, Vector2 dire)
     {
-        GameObject movedsweets = null;
-
-        //移動先のマスにお菓子があったら
-        foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
-        {
-            if ((Vector2)next.transform.position == pair.Key)
-            {
-                onMove = false;
-                return;
-            }
-        }
-
-        //次のマスにあるお菓子を取得
+        //目の前のマスにあるお菓子を取得
         Sweets sweetsscript;
         sweetsscript = sm.GetSweets(next.transform.position);
 
-        //進行方向にお菓子がない場合、後ろのマスを検索する
+        //目の前にお菓子がない場合、後ろのマスを検索する
         GameObject backmass = null;
         if (sweetsscript == null)
         {
@@ -148,18 +137,14 @@ public class TestPlayer : MonoBehaviour
             else if (dire == Vector2.right) reverse = Vector2.left;
             backmass = nowmass.GetComponent<Tile>().ReturnNextMass(reverse);
 
+            //後ろのマスがある
             if (backmass != null)
             {
-                //後ろのマスを取得後、そのマスにお菓子があるかを探す
+                //向いている方向と逆方向のマスにお菓子があるかを探す
                 if (reverse != Vector2.zero)
                 {
-                    GameObject nextback = nowmass.GetComponent<Tile>().ReturnNextMass(reverse);
-                    //後ろのマスが存在する場合
-                    if (nextback != null)
-                    {
-                        //後ろのマスにお菓子があるかを探す
-                        sweetsscript = sm.GetSweets(nextback.transform.position);
-                    }
+                    Debug.Log("search in reverse direction mass");
+                    sweetsscript = sm.GetSweets(backmass.transform.position);
                 }
                 else //方向が上下左右ではない場合（たぶんないけど）
                 {
@@ -167,40 +152,53 @@ public class TestPlayer : MonoBehaviour
                     return;
                 }
             }
-            
+            else Debug.Log("back mass is null");
         }
 
-        /*//デバッグ
+        //デバッグ
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
-        else Debug.Log("sweetsscript is null");*/
+        else Debug.Log("sweetsscript is null");
 
-        Tile nextnexttile;
         GameObject nextnextmass = null;
+        Sweets nextnextsweets = null;
 
         //前か後ろのマスにお菓子があったら
         if (sweetsscript != null)
         {
-            //X or Shiftを押していたら
+            //X or Shiftを押している
             if (X > 0.5f)
             {
+                //----------------------------------------------------
+                //向いている方向にお菓子を移動させる
                 //後ろのマス変数がnull => 後ろのマスを探していない
                 if (backmass == null)
                 {
+                    /*↓お菓子の先のマスにお菓子があるか探す*/
                     //お菓子の先のマスを取得
-                    nextnexttile = next.GetComponent<Tile>();
-                    nextnextmass = nextnexttile.ReturnNextMass(dire);
+                    nextnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
 
                     //お菓子の先のマスのお菓子を取得
-                    movedsweets = sweets.GetComponent<Sweets>().TryMake();
+                    foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
+                    {
+                        //お菓子の座標と (Vector2)お菓子のその先のマスの座標を比較
+                        if (pair.Key == (Vector2)nextnextmass.transform.position)
+                        {
+                            nextnextsweets = pair.Value;
+
+                            break;
+                        }
+                    }
                 }
+                //----------------------------------------------------
+                //向いている方向とは逆方向に移動する
                 //後ろのマス変数がnull以外 => 後ろのマスにお菓子がある
                 else if (backmass != null)
                 {
                     //自分の後ろのマスを取得
-                    nextnexttile = backmass.GetComponent<Tile>();
                     nextnextmass = backmass;
                 }
 
+                //----------------------------------------------------
                 //お菓子の先のマスがない or 後ろにマスがない
                 if (nextnextmass == null)
                 {
@@ -214,15 +212,20 @@ public class TestPlayer : MonoBehaviour
                 sweets = sweetsscript.gameObject;
                 sweets.transform.SetParent(this.gameObject.transform);
             }
-            //X or Shiftを押していない && お菓子オブジェクトがない
-            else if (X > 0.5f && sweetsscript == null)
-            {
-                Debug.Log("sweets is not null");
-                onMove = false;
-                return;
-            }
+            //X or Shiftを押していない
             else
             {
+                //移動先のマスにお菓子があるか探す
+                foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
+                {
+                    if ((Vector2)next.transform.position == pair.Key)
+                    {
+                        onMove = false;
+                        return;
+                    }
+                }
+
+                //移動先のマスにお菓子がない
                 nextnextmass = next;
             }
         }
@@ -231,22 +234,35 @@ public class TestPlayer : MonoBehaviour
             nextnextmass = next;
         }
 
-        MoveMass(nextnextmass, movedsweets).Forget();
+        MoveMass(nextnextmass, sweetsscript, nextnextsweets).Forget();
     }
 
     /// <summary>
     /// 移動関数
     /// </summary>
-    /// <param name="next"></param>   移動先のマスオブジェクト
-    private async UniTask MoveMass(GameObject next, GameObject canmake)
+    /// <param name="next"></param>         移動先のマスオブジェクト
+    /// <param name="sweetsscript"></param> 移動させるお菓子スクリプト
+    /// <param name="beyond"></param> 移動先のマスにあるお菓子スクリプト
+    /// canmake = null ; 移動させるお菓子の先のマスにお菓子がない
+    /// canmake != null; 移動させるお菓子の先のマスにお菓子がある
+    private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
     {
-        //"移動先のマスのお菓子"と"移動させるお菓子"でお菓子が作れないなら
-        if (canmake == null)
+        //移動先のマスにお菓子オブジェクトがある
+        if (beyond != null)
         {
-            onMove = false;
-            return;
+            //"移動するお菓子"と"移動先のお菓子"で作れるか
+            //作れる = true  作れない = false
+            if (!sweetsscript.TryMake(beyond))
+            {
+                onMove = false;
+                return;
+            }
         }
 
+        /*お菓子を作る処理は当たり判定で行う予定（仮）*/
+        if (sweetsscript != null && beyond != null) sweetsscript.canmake = true;
+
+        //移動先の場所の設定
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
@@ -259,11 +275,8 @@ public class TestPlayer : MonoBehaviour
 
         if (sweets != null && this.gameObject.transform.childCount != 0)
         {
-            //お菓子が作れるなら作る
-            if (canmake != null)
-            {
-                sweets.GetComponent<Sweets>().MakeSweets(sweets);
-            }
+
+
             //お菓子オブジェクトの親を初期化
             sweets.transform.SetParent(sm.gameObject.transform);
             sweets = null;

@@ -8,8 +8,12 @@ public class SweetsManager : MonoBehaviour
     //お菓子オブジェクト格納のDictionary<座標, スクリプト>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
+    //合体後のお菓子を格納するDictionary<生成オブジェクト, 名前>
+    public Dictionary<GameObject, string> mixtures = new Dictionary<GameObject, string>();
+
     private void Awake()
     {
+        //初期化
         if (sm == null) sm = this;
         else Destroy(sm);
     }
