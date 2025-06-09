@@ -1,76 +1,114 @@
-using Cysharp.Threading.Tasks;
+ï»¿using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.Rendering.Universal;
 
 public class Sweets : MonoBehaviour
 {
-    /*ƒƒ‚
-     *‚¨‰Ùq‚ÍeƒIƒuƒWƒFƒNƒg‚ğSweetsParent‚Éİ’è‚µ‚Ä¶¬‚·‚é*/
+    /*ãƒ¡ãƒ¢
+     *ãŠè“å­ã¯è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’SweetsParentã«è¨­å®šã—ã¦ç”Ÿæˆã™ã‚‹
+     *è£½è“å¾Œã®Spriteã®å¤§ãã•ã«æ³¨æ„*/
 
     private SweetsManager sm;
     private TileManager tm;
 
-    //‚¨‰ÙqŞ—¿enum
+    //ãŠè“å­ææ–™enum
     public enum Material
     {
         Butter,
         Sugar,
         Egg,
-        Milk
+        Milk,
+        None
     }
     public Material material;
 
-    public bool canmake;        //‚¨‰Ùq‚Ìì‚ê‚éƒtƒ‰ƒO
+    private string name;        //è£½è“å¾Œã®åå‰å¤‰æ•°
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //‰Šú‰»
+        //åˆæœŸåŒ–
         sm = SweetsManager.sm;
         tm = TileManager.tm;
-        canmake = false;
+        name = null;
     }
 
     /// <summary>
-    /// ‚¨‰Ùq‚ğì‚ê‚é‚©ƒ`ƒFƒbƒN‚·‚éŠÖ”
+    /// ãŠè“å­ã‚’ä½œã‚Œã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="comparison"></param> ”äŠr‚·‚éƒXƒNƒŠƒvƒg
+    /// <param name="comparison"></param> æ¯”è¼ƒã™ã‚‹ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
     public bool TryMake(Sweets comparison)
     {
-        Debug.Log("in TryMake");
+        //Debug.Log("in TryMake");
 
-        //Ş—¿‚ğ”äŠr‚µ‚Äì‚ê‚é‚©‚Ç‚¤‚©‚ğŒˆ‚ß‚é
-        //iŞ—¿‚ª“¯‚¶‚¾‚Á‚½‚çfalse‚Ì‚Ü‚Üreturnj
+        //ææ–™ã‚’æ¯”è¼ƒã—ã¦ä½œã‚Œã‚‹ã‹ã©ã†ã‹ã‚’æ±ºã‚ã‚‹
+        //ï¼ˆææ–™ãŒåŒã˜ã ã£ãŸã‚‰falseã®ã¾ã¾returnï¼‰
+        //ï¼ˆææ–™ãŒé•ã£ãŸã‚‰ãƒ¬ã‚·ãƒ”ã®åå‰ã«nameã‚’å¤‰æ›´ï¼‰
+        /*æ¯”è¼ƒæ¡ä»¶ã¯ä»Šå¾Œã®ãƒ¬ã‚·ãƒ”ã®å¢—æ¸›ã«ã‚ˆã£ã¦å¤‰ã‚ã‚‹*/
+        switch (material)
+        {
+            //-----------------------------------------------------------------------
+            //ãƒã‚¿ãƒ¼
+            case Material.Butter:
+                if (comparison.material == Material.Butter) return false;
+                else if (comparison.material == Material.Sugar)name = "pretzel";
+                else if (comparison.material == Material.Egg) name = "baumkuchen";
+                else if (comparison.material == Material.Milk) name = "pannacotta";
+                break;
+            //-----------------------------------------------------------------------
+            //ç ‚ç³–
+            case Material.Sugar:
+                if (comparison.material == Material.Butter) name = "pretzel";
+                else if (comparison.material == Material.Sugar) return false;
+                else if (comparison.material == Material.Egg) name = "canulÃ©";
+                else if (comparison.material == Material.Milk) name = "tiramisu";
+                break;
+            //-----------------------------------------------------------------------
+            //åµ
+            case Material.Egg:
+                if (comparison.material == Material.Butter) name = "baumkuchen";
+                else if (comparison.material == Material.Sugar) name = "canulÃ©";
+                else if (comparison.material == Material.Egg) return false;
+                else if (comparison.material == Material.Milk) name = "macaroon";
+                break;
+            //-----------------------------------------------------------------------
+            //ç‰›ä¹³
+            case Material.Milk:
+                if (comparison.material == Material.Butter) name = "pannacotta";
+                else if (comparison.material == Material.Sugar) name = "tiramisu";
+                else if (comparison.material == Material.Egg) name = "macaroon";
+                else if (comparison.material == Material.Milk) return false;
+                break;
+        }
 
-        /*”äŠrğŒ‚Í¡Œã‚ÌƒŒƒVƒs‚Ì‘Œ¸‚É‚æ‚Á‚Ä•Ï‚í‚é*/
-        //ƒoƒ^[
-        if (material == Material.Butter && comparison.material == Material.Butter) return false;
-        //»“œ
-        else if (material == Material.Sugar && comparison.material == Material.Sugar) return false;
-        //—‘
-        else if (material == Material.Egg && comparison.material == Material.Egg) return false;
-        //‹“û
-        else if (material == Material.Milk && comparison.material == Material.Milk) return false;
-
-
-        //‚±‚±‚Ü‚Å‚­‚é‚Æ‚¢‚¤‚±‚Æ‚ÍŞ—¿‚ªˆá‚¤‚à‚Ì‚Å‚ ‚é‚Æ‚¢‚¤‚±‚Æ
+        //ã“ã“ã¾ã§ãã‚‹ã¨ã„ã†ã“ã¨ã¯ææ–™ãŒé•ã†ã‚‚ã®ã§ã‚ã‚‹ã¨ã„ã†ã“ã¨
         return true;
     }
 
     /// <summary>
-    /// ‚¨‰Ùq‚ğì‚éŠÖ”
+    /// ãŠè“å­ã‚’ä½œã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="comparison"></param> ˆÚ“®æ‚Ì‚¨‰Ùq‚ÌƒIƒuƒWƒFƒNƒg
+    /// <param name="comparison"></param> ç§»å‹•å…ˆã®ãŠè“å­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     public void MakeSweets(GameObject comparison)
     {
+        //è£½è“å¾Œã®Spriteã‚’å–å¾—
+        Sprite changed = sm.GetMakedSprite(name);
 
-    }
+        /*Spriteã®nullãƒã‚§ãƒƒã‚¯*/
+        if (changed != null)
+        {
+            //Spriteã®å¤‰æ›´
+            SpriteRenderer sr = comparison.GetComponent<SpriteRenderer>();
+            sr.sprite = changed;
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!canmake) return;
+            //åå‰ã®åˆæœŸåŒ–
+            name = null;
 
-        /*‚¨‰Ùq‚Ì‡‘Ìˆ—*/
+            Destroy(this.gameObject);
+        }
+        else Debug.Log("dont get sprite");
     }
 
     // Update is called once per frame

@@ -100,7 +100,7 @@ public class TestPlayer : MonoBehaviour
         if (nexttileobj != null)
         {
             //デバッグ
-            Debug.Log($"next mass is {nexttileobj}");
+            //Debug.Log($"next mass is {nexttileobj}");
 
             TryMove(nexttileobj, xbutton, directo);
         }
@@ -143,7 +143,7 @@ public class TestPlayer : MonoBehaviour
                 //向いている方向と逆方向のマスにお菓子があるかを探す
                 if (reverse != Vector2.zero)
                 {
-                    Debug.Log("search in reverse direction mass");
+                    //Debug.Log("search in reverse direction mass");
                     sweetsscript = sm.GetSweets(backmass.transform.position);
                 }
                 else //方向が上下左右ではない場合（たぶんないけど）
@@ -152,12 +152,12 @@ public class TestPlayer : MonoBehaviour
                     return;
                 }
             }
-            else Debug.Log("back mass is null");
+            //else Debug.Log("back mass is null");
         }
 
-        //デバッグ
+        /*//デバッグ
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
-        else Debug.Log("sweetsscript is null");
+        else Debug.Log("sweetsscript is null");*/
 
         GameObject nextnextmass = null;
         Sweets nextnextsweets = null;
@@ -259,8 +259,7 @@ public class TestPlayer : MonoBehaviour
             }
         }
 
-        /*お菓子を作る処理は当たり判定で行う予定（仮）*/
-        if (sweetsscript != null && beyond != null) sweetsscript.canmake = true;
+        
 
         //移動先の場所の設定
         Vector3 pos = next.transform.position;
@@ -275,11 +274,15 @@ public class TestPlayer : MonoBehaviour
 
         if (sweets != null && this.gameObject.transform.childCount != 0)
         {
-
-
-            //お菓子オブジェクトの親を初期化
-            sweets.transform.SetParent(sm.gameObject.transform);
-            sweets = null;
+            //お菓子を作れるとき
+            if (sweetsscript != null && beyond != null) sweetsscript.MakeSweets(beyond.gameObject);
+            //作れないとき
+            else
+            {
+                //お菓子オブジェクトの親を初期化
+                sweets.transform.SetParent(sm.gameObject.transform);
+                sweets = null;
+            }
         }
 
         //お菓子の位置を更新

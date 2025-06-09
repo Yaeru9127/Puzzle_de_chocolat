@@ -1,19 +1,36 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
+
+//åˆä½“å¾Œã®ãŠè“å­ã‚’æ ¼ç´ã™ã‚‹ã‚¯ãƒ©ã‚¹
+[System.Serializable]
+public class SpriteStringPair
+{
+    public Sprite makedSprite;
+    public string makedName;
+}
 
 public class SweetsManager : MonoBehaviour
 {
     public static SweetsManager sm { get; private set; }
 
-    //‚¨‰ÙqƒIƒuƒWƒFƒNƒgŠi”[‚ÌDictionary<À•W, ƒXƒNƒŠƒvƒg>
+    //ãŠè“å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ ¼ç´ã®Dictionary<åº§æ¨™, ã‚¹ã‚¯ãƒªãƒ—ãƒˆ>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
-    //‡‘ÌŒã‚Ì‚¨‰Ùq‚ğŠi”[‚·‚éDictionary<¶¬ƒIƒuƒWƒFƒNƒg, –¼‘O>
-    public Dictionary<GameObject, string> mixtures = new Dictionary<GameObject, string>();
+    //ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼è¨­å®šç”¨ã®List
+    public List<SpriteStringPair> mixtures = new List<SpriteStringPair>();
+
+    /*ãƒ¬ã‚·ãƒ”ã€€ãƒ¡ãƒ¢
+     *ãƒ—ãƒ¬ãƒƒãƒ„ã‚§ãƒ« : pretzel  ãƒã‚¿ãƒ¼ + ç ‚ç³–
+     *ãƒãƒ¼ãƒ ã‚¯ãƒ¼ãƒ˜ãƒ³ : baumkuchen  åµ + ãƒã‚¿ãƒ¼
+     *ãƒ†ã‚£ãƒ©ãƒŸã‚¹ : tiramisu  ç‰›ä¹³ + ç ‚ç³–
+     *ãƒ‘ãƒ³ãƒŠã‚³ãƒƒã‚¿ : pannacotta  ç‰›ä¹³ + ãƒã‚¿ãƒ¼
+     *ãƒã‚«ãƒ­ãƒ³ : macaroon  åµ + ç‰›ä¹³
+     *ã‚«ãƒŒãƒ¬ : canulÃ©  åµ + ç ‚ç³–
+     *Inspecterã®stringã«ã¯ä¸Šè¨˜ã®åå‰ã§è¨­å®šã™ã‚‹ã“ã¨*/
 
     private void Awake()
     {
-        //‰Šú‰»
+        //åˆæœŸåŒ–
         if (sm == null) sm = this;
         else Destroy(sm);
     }
@@ -25,9 +42,9 @@ public class SweetsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‚¨‰Ùq‚Ì”z—ñ‚Ì’†‚©‚ç–Ú“I‚Ì‚¨‰Ùq‚ğŒ©‚Â‚¯o‚·ŠÖ”
+    /// ãŠè“å­ã®é…åˆ—ã®ä¸­ã‹ã‚‰ç›®çš„ã®ãŠè“å­ã‚’è¦‹ã¤ã‘å‡ºã™é–¢æ•°
     /// </summary>
-    /// <param name="pos"></param> ’T‚·ƒ}ƒX‚ÌÀ•W
+    /// <param name="pos"></param> æ¢ã™ãƒã‚¹ã®åº§æ¨™
     public Sweets GetSweets(Vector2 pos)
     {
         Sweets returnsweetts = null;
@@ -40,14 +57,14 @@ public class SweetsManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ}ƒXã‚Ì‚·‚×‚Ä‚Ì‚¨‰Ùq‚ğæ“¾‚·‚éŠÖ”
+    /// ãƒã‚¹ä¸Šã®ã™ã¹ã¦ã®ãŠè“å­ã‚’å–å¾—ã™ã‚‹é–¢æ•°
     /// </summary>
     /// <returns></returns>
     public void SearchSweets()
     {
         sweets.Clear();
 
-        //©g‚ÌqƒIƒuƒWƒFƒNƒg‚Ì’†‚©‚çSweetsƒXƒNƒŠƒvƒg‚ğ‚ÂƒIƒuƒWƒFƒNƒg‚ğ’T‚·
+        //è‡ªèº«ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¸­ã‹ã‚‰Sweetsã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’æŒã¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¢ã™
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
             if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
@@ -56,11 +73,27 @@ public class SweetsManager : MonoBehaviour
             }
         }
 
-        /*//ƒfƒoƒbƒO
+        /*//ãƒ‡ãƒãƒƒã‚°
         foreach (var sw in sweets)
         {
             Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
         }*/
+    }
+
+    public Sprite GetMakedSprite(string name)
+    {
+        Sprite returnsprite = null;
+
+        //åå‰ã§æ¤œç´¢
+        foreach (SpriteStringPair pair in mixtures)
+        {
+            if (pair.makedName == name)
+            {
+                returnsprite = pair.makedSprite;
+            }
+        }
+
+        return returnsprite;
     }
 
     // Update is called once per frame
