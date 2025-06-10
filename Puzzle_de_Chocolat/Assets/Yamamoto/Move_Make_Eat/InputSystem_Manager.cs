@@ -2,7 +2,15 @@ using UnityEngine;
 
 public class InputSystem_Manager : MonoBehaviour
 {
-    InputSystem_Actions actions;
+    public static InputSystem_Manager manager { get; private set; }
+
+    private InputSystem_Actions actions;
+
+    private void Awake()
+    {
+        if (manager == null) manager = this;
+        else Destroy(this.gameObject);
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -16,10 +24,7 @@ public class InputSystem_Manager : MonoBehaviour
     /// <returns></returns>
     public InputSystem_Actions GetActions()
     {
-        if (actions == null)
-        {
-            actions = new InputSystem_Actions();
-        }
+        if (actions == null) actions = new InputSystem_Actions();
 
         return actions;
     }
@@ -27,14 +32,14 @@ public class InputSystem_Manager : MonoBehaviour
     /// <summary>
     /// UI
     /// </summary>
-    public void UIClickOn()
+    public void UIOn()
     {
-        actions.UI.Click.Enable();
+        actions.UI.Enable();
     }
 
-    public void UIClickOff()
+    public void UIOff()
     {
-        actions.UI.Click.Disable();
+        actions.UI.Disable();
     }
 
     public void UIPointOn()

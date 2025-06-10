@@ -10,9 +10,10 @@ public class TestPlayer : MonoBehaviour
     /// Other Scripts
     /// </summary>
     private InputSystem_Actions actions;
-    private InputSystem_Manager inputmanager;
+    private InputSystem_Manager manager;
     private TileManager tm;
     private SweetsManager sm;
+    private ClearCheckController cc;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -37,13 +38,16 @@ public class TestPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //初期化
+        manager = InputSystem_Manager.manager;
         tm = TileManager.tm;
         sm = SweetsManager.sm;
-        nowmass = tm.GetNowMass(this.gameObject);
+        cc = ClearCheckController.cc;
 
-        inputmanager = this.gameObject.transform.GetComponent<InputSystem_Manager>();
-        actions = inputmanager.GetActions();
-        inputmanager.PlayerOn();
+        actions = manager.GetActions();
+        nowmass = tm.GetNowMass(this.gameObject);
+        manager.PlayerOn();
+        manager.UIOff();
         speed = 0.5f;
         inProcess = false;
     }
@@ -303,6 +307,9 @@ public class TestPlayer : MonoBehaviour
 
         /*工程数をひとつ減らす*/
         Debug.Log("decrease remaining num");
+
+        //クリアチェック
+        cc.ClearCheck((Vector2)this.transform.position);
 
         //処理フラグ更新
         inProcess = false;
