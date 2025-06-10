@@ -1505,17 +1505,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mixtures:
-  - makedSprite: {fileID: -2014880716289594431, guid: 37e6d21adf12da540b83bdcb0f48f1eb, type: 3}
+  - makedSweets: {fileID: 481053254476984297, guid: 2d13387a2e8b31241b64e700f0670012, type: 3}
     makedName: pretzel
-  - makedSprite: {fileID: -4925130958772955173, guid: 1c0e1129c418ea948adc48680496a194, type: 3}
+  - makedSweets: {fileID: 4464278574148869464, guid: e20f600dc0dfb6b46ab85b6dff43be8a, type: 3}
     makedName: baumkuchen
-  - makedSprite: {fileID: 5797019973298468222, guid: ad407fde800a4974f9b2299e414f3f69, type: 3}
+  - makedSweets: {fileID: 1921865202083869081, guid: ad39331f80f865e4586f0a0a2f7e10d9, type: 3}
     makedName: tiramisu
-  - makedSprite: {fileID: -3436279586442589761, guid: 6dc8e1d64a83f9341ac1852c54db0fa9, type: 3}
+  - makedSweets: {fileID: 5335590962846733853, guid: 3b1eaf5b9bfcd0249ad48587199831f8, type: 3}
     makedName: pannacotta
-  - makedSprite: {fileID: -275088901936397613, guid: 9ba29a98c0e46334ead1e537bc1022d3, type: 3}
+  - makedSweets: {fileID: 5730845491256503368, guid: 84c17618e5039b04fbdb09757c32509b, type: 3}
     makedName: macaroon
-  - makedSprite: {fileID: -5538429206250102951, guid: 3d5e95aa9091d5d4d9f0c28f4d6e81e7, type: 3}
+  - makedSweets: {fileID: 2618067231599024997, guid: af16c5ff86e3e2b4cb38f0aea83513f0, type: 3}
     makedName: "canul\xE9"
 --- !u!1001 &1458788214
 PrefabInstance:

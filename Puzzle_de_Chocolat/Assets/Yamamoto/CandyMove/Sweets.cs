@@ -15,11 +15,12 @@ public class Sweets : MonoBehaviour
     //お菓子材料enum
     public enum Material
     {
-        Butter,
-        Sugar,
-        Egg,
-        Milk,
-        None
+        Butter,             //バター
+        Sugar,              //砂糖
+        Egg,                //卵
+        Milk,               //牛乳
+        Maked,              //合体後
+        None                //作れない材料
     }
     public Material material;
 
@@ -44,34 +45,34 @@ public class Sweets : MonoBehaviour
         //Debug.Log("in TryMake");
 
         //材料を比較して作れるかどうかを決める
-        //（材料が同じだったらfalseのままreturn）
-        //（材料が違ったらレシピの名前にnameを変更）
+        //（作れる材料じゃなかったらfalseのままreturn）
+        //（作れる材料だったらレシピの名前にnameを変更）
         /*比較条件は今後のレシピの増減によって変わる*/
         switch (material)
         {
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (comparison.material == Material.Butter) return false;
-                else if (comparison.material == Material.Sugar)name = "pretzel";
+                if (comparison.material == Material.Sugar)name = "pretzel";
                 else if (comparison.material == Material.Egg) name = "baumkuchen";
                 else if (comparison.material == Material.Milk) name = "pannacotta";
+                else return false;
                 break;
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
                 if (comparison.material == Material.Butter) name = "pretzel";
-                else if (comparison.material == Material.Sugar) return false;
                 else if (comparison.material == Material.Egg) name = "canulé";
                 else if (comparison.material == Material.Milk) name = "tiramisu";
+                else return false;
                 break;
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
                 if (comparison.material == Material.Butter) name = "baumkuchen";
                 else if (comparison.material == Material.Sugar) name = "canulé";
-                else if (comparison.material == Material.Egg) return false;
                 else if (comparison.material == Material.Milk) name = "macaroon";
+                else return false;
                 break;
             //-----------------------------------------------------------------------
             //牛乳
@@ -79,11 +80,11 @@ public class Sweets : MonoBehaviour
                 if (comparison.material == Material.Butter) name = "pannacotta";
                 else if (comparison.material == Material.Sugar) name = "tiramisu";
                 else if (comparison.material == Material.Egg) name = "macaroon";
-                else if (comparison.material == Material.Milk) return false;
+                else return false;
                 break;
         }
 
-        //ここまでくるということは材料が違うものであるということ
+        //ここまでくるということは作れる材料であるということ
         return true;
     }
 
@@ -93,19 +94,26 @@ public class Sweets : MonoBehaviour
     /// <param name="comparison"></param> 移動先のお菓子のオブジェクト
     public void MakeSweets(GameObject comparison)
     {
-        //製菓後のSpriteを取得
-        Sprite changed = sm.GetMakedSprite(name);
+        //製菓後のGameObjectを取得
+        GameObject changed = sm.GetMakedSweets(name);
 
-        /*Spriteのnullチェック*/
+        /*GameObjectのnullチェック*/
         if (changed != null)
         {
-            //Spriteの変更
-            SpriteRenderer sr = comparison.GetComponent<SpriteRenderer>();
-            sr.sprite = changed;
+            //合体先のマスの上に製菓後のお菓子を配置
+            Vector3 changedpos = this.gameObject.transform.position;
+            GameObject inst = Instantiate(changed, changedpos, Quaternion.identity);
+            inst.transform.SetParent(sm.gameObject.transform);
+
+            //合体後のenumに変更する
+            Sweets instscript = inst.GetComponent<Sweets>();
+            instscript.material = Material.Maked;
 
             //名前の初期化
             name = null;
 
+            //製菓前のふたつのオブジェクトを削除
+            Destroy(comparison);
             Destroy(this.gameObject);
         }
         else Debug.Log("dont get sprite");

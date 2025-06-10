@@ -256,7 +256,7 @@ public class TestPlayer : MonoBehaviour
     /// </summary>
     /// <param name="next"></param>         移動先のマスオブジェクト
     /// <param name="sweetsscript"></param> 移動させるお菓子スクリプト
-    /// <param name="beyond"></param> 移動先のマスにあるお菓子スクリプト
+    /// <param name="beyond"></param>       移動先のマスにあるお菓子スクリプト
     /// canmake = null ; 移動させるお菓子の先のマスにお菓子がない
     /// canmake != null; 移動させるお菓子の先のマスにお菓子がある
     private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
@@ -277,6 +277,7 @@ public class TestPlayer : MonoBehaviour
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
+        //移動が終わるまで処理を待つ
         await this.gameObject.transform.DOMove(pos, speed)
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();

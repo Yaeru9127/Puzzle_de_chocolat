@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//合体後のお菓子を格納するクラス
+//製菓後のお菓子を格納するクラス
 [System.Serializable]
-public class SpriteStringPair
+public class MakedSweetsPair
 {
-    public Sprite makedSprite;
+    public GameObject makedSweets;
     public string makedName;
 }
 
@@ -17,7 +17,7 @@ public class SweetsManager : MonoBehaviour
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
     //インスペクター設定用のList
-    public List<SpriteStringPair> mixtures = new List<SpriteStringPair>();
+    public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
     /*レシピ　メモ
      *プレッツェル : pretzel  バター + 砂糖
@@ -82,20 +82,25 @@ public class SweetsManager : MonoBehaviour
         }*/
     }
 
-    public Sprite GetMakedSprite(string name)
+    /// <summary>
+    /// 製菓後のお菓子を取得する関数
+    /// </summary>
+    /// <param name="name"></param> 検索用の名前変数
+    /// <returns></returns>
+    public GameObject GetMakedSweets(string name)
     {
-        Sprite returnsprite = null;
+        GameObject returnobject = null;
 
         //名前で検索
-        foreach (SpriteStringPair pair in mixtures)
+        foreach (MakedSweetsPair pair in mixtures)
         {
             if (pair.makedName == name)
             {
-                returnsprite = pair.makedSprite;
+                returnobject = pair.makedSweets;
             }
         }
 
-        return returnsprite;
+        return returnobject;
     }
 
     // Update is called once per frame
