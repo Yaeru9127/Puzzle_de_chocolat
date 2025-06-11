@@ -10,7 +10,6 @@ public class Sweets : MonoBehaviour
      *製菓後のSpriteの大きさに注意*/
 
     private SweetsManager sm;
-    private TileManager tm;
 
     //お菓子材料enum
     public enum Material
@@ -24,7 +23,8 @@ public class Sweets : MonoBehaviour
     }
     public Material material;
 
-    private string name;        //製菓後の名前変数
+    private new string name;    //製菓後の名前変数
+    public bool canMove;        //移動できるかの判定用
     public bool canEat;         //食べれるかの判定用
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -32,7 +32,6 @@ public class Sweets : MonoBehaviour
     {
         //初期化
         sm = SweetsManager.sm;
-        tm = TileManager.tm;
         name = null;
     }
 
@@ -133,6 +132,7 @@ public class Sweets : MonoBehaviour
             //お菓子の位置を更新
             sm.SearchSweets();
         }
+        else Debug.Log("this sweets is can not eat");
     }
 
     // Update is called once per frame

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cef409cdafb2907439d919ab823254fd
+guid: e368b4dfd31484d4eb64bdf30f8ba8a9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9176332625645544900
-    second: gameclear_0
+      213: 1017879102727171100
+    second: arrow_down_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gameclear_0
+      name: arrow_down_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 31
-        width: 1255
-        height: 229
+        x: 54
+        y: 23
+        width: 168
+        height: 218
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4c52e6c97e1e85f70800000000000000
-      internalID: 9176332625645544900
+      spriteID: c1ca856a6ab302e00800000000000000
+      internalID: 1017879102727171100
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      gameclear_0: 9176332625645544900
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
