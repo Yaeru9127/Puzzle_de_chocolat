@@ -1,23 +1,29 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Button : MonoBehaviour
 {
-    // Retryボタン → ゲームプレイシーンに遷移
+    public FadeUI fadePanel; // Inspector で割り当てる
+
     public void GoToGameScene()
     {
-        SceneManager.LoadScene("gauge"); // 実際のゲームシーン名に置き換える
+        StartCoroutine(FadeAndLoadScene("gauge"));
     }
 
-    // Stageボタン → ステージ選択画面に遷移
     public void GoToStageSelect()
     {
-        SceneManager.LoadScene("StageSelect"); // ステージ選択シーン名に置き換える
+        StartCoroutine(FadeAndLoadScene("StageSelect"));
     }
 
-    // Titleボタン → タイトル画面に遷移
     public void GoToTitle()
     {
-        SceneManager.LoadScene("Title"); // タイトルシーン名に置き換える
+        StartCoroutine(FadeAndLoadScene("Title"));
+    }
+
+    private IEnumerator FadeAndLoadScene(string sceneName)
+    {
+        yield return fadePanel.FadeOut(); 
+        SceneManager.LoadScene(sceneName);
     }
 }
