@@ -24,7 +24,7 @@ public class ClearCheckController : MonoBehaviour
     {
         //初期化
         manager = InputSystem_Manager.manager;
-        actions = manager.GetActions();
+        
         clearImage.SetActive(false);
         //overImage.SetActive(false);
         nextTextObject.SetActive(false);
@@ -36,6 +36,7 @@ public class ClearCheckController : MonoBehaviour
     /// <param name="playerpos"></param>
     public void ClearCheck(Vector2 playerpos)
     {
+        actions = manager.GetActions();
         /*残り工程数でクリア or ゲームオーバーを設定*/
 
         //↓クリア

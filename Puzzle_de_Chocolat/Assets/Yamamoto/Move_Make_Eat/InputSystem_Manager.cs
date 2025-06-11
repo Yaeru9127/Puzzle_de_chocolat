@@ -43,16 +43,6 @@ public class InputSystem_Manager : MonoBehaviour
         actions.UI.Disable();
     }
 
-    public void UIPointOn()
-    {
-        actions.UI.Point.Enable();
-    }
-
-    public void UIPointOff()
-    {
-        actions.UI.Point.Disable();
-    }
-
     /// <summary>
     /// Player‚ÌƒIƒ“ƒIƒt
     /// </summary>

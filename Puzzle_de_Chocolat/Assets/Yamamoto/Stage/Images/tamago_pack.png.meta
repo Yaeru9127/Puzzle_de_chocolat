@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      tamago_pack_0: 7818197304885398013
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
