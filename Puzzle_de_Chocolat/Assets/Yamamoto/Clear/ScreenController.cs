@@ -1,17 +1,24 @@
 using System.Collections;
 using UnityEngine;
 
-public class ClearCheckController : MonoBehaviour
+public class ScreenController : MonoBehaviour
 {
-    public static ClearCheckController cc { get; private set; }
+    public static ScreenController cc { get; private set; }
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
 
+    /*残り工程数を管理するオブジェクトやscript変数を入れる*/
+
+    /// <summary>
+    /// クリア判定など
+    /// </summary>
     [SerializeField] private GameObject clearJudg;      //ゴール判定オブジェクト
-    [SerializeField] private GameObject clearImage;          //クリアパネル
-    [SerializeField] private GameObject overImage;           //ゲームオーバーパネル
+    [SerializeField] private GameObject clearImage;     //クリアパネル
+    [SerializeField] private GameObject overImage;      //ゲームオーバーパネル
+    [SerializeField] private GameObject pauseImage;     //ポーズパネル
     [SerializeField] private GameObject nextTextObject; //催促テキストオブジェクト
+    private bool onPause;
 
     private void Awake()
     {
@@ -24,19 +31,38 @@ public class ClearCheckController : MonoBehaviour
     {
         //初期化
         manager = InputSystem_Manager.manager;
-        
+        actions = manager.GetActions();
+
+        //各パネルをオフ
         clearImage.SetActive(false);
         //overImage.SetActive(false);
+        //pauseImage.SetActive(false);
         nextTextObject.SetActive(false);
+
+        onPause = false;
+    }
+
+    /// <summary>
+    /// ポーズ画面表示関数
+    /// </summary>
+    private void SetPause()
+    {
+        onPause = true;
+        pauseImage.SetActive(true);
+
+        //一時的にプレイヤー操作をオフにする
+        manager.PlayerOff();
+
+        //UI操作をオンにする
+        manager.UIOn();
     }
 
     /// <summary>
     /// クリアをチェックする関数
     /// </summary>
-    /// <param name="playerpos"></param>
+    /// <param name="playerpos"></param> ゴールマスの座標
     public void ClearCheck(Vector2 playerpos)
     {
-        actions = manager.GetActions();
         /*残り工程数でクリア or ゲームオーバーを設定*/
 
         //↓クリア
@@ -52,23 +78,13 @@ public class ClearCheckController : MonoBehaviour
         }
     }
 
-
-    private IEnumerator WaitDisplayCanNext()
-    {
-        //x秒待つ
-        yield return new WaitForSeconds(3);
-
-        nextTextObject.SetActive(true);
-    }
-
     // Update is called once per frame
     void Update()
     {
-        //クリア画面 or ゲームオーバー画面が表示されている
-        //= ゲームが終了している
-        //if (clearImage.GetComponent<GameObject>().activeSelf || overImage.GetComponent<GameObject>().activeSelf)
-        //{
-        //    Debug.Log("game is end");
-        //}
+        //非ポーズ状態 && ポーズボタンが押されたら && ポーズパネルがオフ状態
+        if (!onPause && actions.Player.Pause.WasPressedThisFrame() && !pauseImage.activeSelf)
+        {
+            SetPause();
+        }
     }
 }

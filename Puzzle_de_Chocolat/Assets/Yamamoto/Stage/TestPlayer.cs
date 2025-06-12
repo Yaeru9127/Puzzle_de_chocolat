@@ -12,7 +12,7 @@ public class TestPlayer : MonoBehaviour
     private InputSystem_Manager manager;
     private TileManager tm;
     private SweetsManager sm;
-    private ClearCheckController cc;
+    private ScreenController cc;
 
     //ƒvƒŒƒCƒ„[‚ªŒü‚¢‚Ä‚¢‚éŒü‚«
     public enum Direction
@@ -43,7 +43,7 @@ public class TestPlayer : MonoBehaviour
         manager = InputSystem_Manager.manager;
         tm = TileManager.tm;
         sm = SweetsManager.sm;
-        cc = ClearCheckController.cc;
+        cc = ScreenController.cc;
 
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
