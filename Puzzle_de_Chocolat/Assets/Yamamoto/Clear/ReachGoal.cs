@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 public class ReachGoal : MonoBehaviour
 {
@@ -13,22 +12,22 @@ public class ReachGoal : MonoBehaviour
         tm = TileManager.tm;
     }
 
-    private List<GameObject[][]> GetRowCol()
-    {
-        List<GameObject[][]> returnlist = new List<GameObject[][]>();
+    //private List<GameObject[][]> GetRowCol()
+    //{
+    //    List<GameObject[][]> returnlist = new List<GameObject[][]>();
 
-        //‚½‚Ä
-        int row;
-        //‚æ‚±
-        int col;
+    //    //‚½‚Ä
+    //    int row;
+    //    //‚æ‚±
+    //    int col;
 
-        foreach (KeyValuePair<GameObject, Vector2> pair in tm.tiles)
-        {
+    //    foreach (KeyValuePair<GameObject, Vector2> pair in tm.tiles)
+    //    {
             
-        }
+    //    }
 
-        return returnlist;
-    }
+    //    return returnlist;
+    //}
 
     // Update is called once per frame
     void Update()
