@@ -1,33 +1,40 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Remainingaircraft : MonoBehaviour
 {
-    // 残機を表すスプライト（またはUI）を登録するリスト
+    // 残機アイコン（飛行機など）
     public List<GameObject> lifeSprites;
+
+    // 数字スプライト（0?9）
+    public Sprite[] numberSprites;
+
+    // 数字表示用（UI用Image）
+    public Image numberDisplay;
 
     // 現在の残機数
     private int currentLife;
 
-    // ゲーム開始時に残機を初期化
     void Start()
     {
-        // 残機数をリストの要素数から設定
+        // 残機数をリストの数から初期化
         currentLife = lifeSprites.Count;
+        UpdateLifeDisplay();
     }
 
-    // 残機を1つ減らす処理
     public void ReduceLife()
     {
         if (currentLife > 0)
         {
-            // 残機数を1つ減らす
             currentLife--;
 
-            // 対応するスプライトを非表示にする
+            // 残機アイコン非表示
             lifeSprites[currentLife].SetActive(false);
 
-            // 残機が0以下になったらゲームオーバー処理を呼ぶ
+            // 数字も更新
+            UpdateLifeDisplay();
+
             if (currentLife <= 0)
             {
                 GameOver();
@@ -35,11 +42,18 @@ public class Remainingaircraft : MonoBehaviour
         }
     }
 
-    // ゲームオーバー時の処理
+    void UpdateLifeDisplay()
+    {
+        // 数字スプライトが用意されていれば更新
+        if (currentLife >= 0 && currentLife < numberSprites.Length)
+        {
+            numberDisplay.sprite = numberSprites[currentLife];
+        }
+    }
+
     void GameOver()
     {
         Debug.Log("Game Over");
-
-        // 必要に応じてここにシーン遷移
+        // ここでシーン遷移など
     }
 }
