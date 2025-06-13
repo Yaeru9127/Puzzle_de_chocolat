@@ -54,6 +54,15 @@ public class TestPlayer : MonoBehaviour
     }
 
     /// <summary>
+    /// 現在のマスのスクリプトを返す関数
+    /// </summary>
+    /// <returns></returns>
+    public Tile ReturnNowTileScript()
+    {
+        return nowmass.GetComponent<Tile>();
+    }
+
+    /// <summary>
     /// 入力値から向きを算出する関数
     /// </summary>
     /// <param name="dir"></param>         入力値
