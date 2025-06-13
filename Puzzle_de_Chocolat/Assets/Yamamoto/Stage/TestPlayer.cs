@@ -360,7 +360,7 @@ public class TestPlayer : MonoBehaviour
         sm.SearchSweets();
 
         //クリアチェック
-        cc.ClearCheck((Vector2)this.transform.position);
+        //cc.ClearCheck((Vector2)this.transform.position);
 
         //処理フラグ更新
         inProcess = false;
