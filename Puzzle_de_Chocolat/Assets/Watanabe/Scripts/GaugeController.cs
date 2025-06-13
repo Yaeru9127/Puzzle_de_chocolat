@@ -7,6 +7,9 @@ public class GaugeController : MonoBehaviour
     // ゲージとして使用する UI の Slider をインスペクターから設定
     public Slider gaugeSlider;
 
+    // GameOver を制御するクラスへの参照
+    public GameOverController gameOverController;
+
     // ゲージの最大値
     private int maxValue = 10;
 
@@ -23,6 +26,11 @@ public class GaugeController : MonoBehaviour
     // ゲージを滑らかに増加させるコルーチン
     private IEnumerator IncreaseGaugeSmoothly(int amount)
     {
+        if (gaugeSlider == null)
+        {
+            yield break;
+        }
+
         // 現在のゲージ値を取得
         float startValue = gaugeSlider.value;
 
@@ -35,17 +43,21 @@ public class GaugeController : MonoBehaviour
         // increaseDuration 秒間かけてゲージを滑らかに変化させる
         while (elapsed < increaseDuration)
         {
-            // 経過時間を加算
             elapsed += Time.deltaTime;
 
             // 線形補間（Lerp）でゲージの値を更新
             gaugeSlider.value = Mathf.Lerp(startValue, endValue, elapsed / increaseDuration);
 
-            // 1フレーム待機してから次のループへ
             yield return null;
         }
 
         // 最終的な値を正確にセット（Lerpの誤差を防ぐため）
         gaugeSlider.value = endValue;
+
+        // GameOver条件チェック（誤差考慮）
+        if (Mathf.Approximately(gaugeSlider.value, maxValue) && gameOverController != null)
+        {
+            gameOverController.ShowGameOver();
+        }
     }
 }

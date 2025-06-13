@@ -4,14 +4,17 @@ using UnityEngine.UI;
 
 public class Remainingaircraft : MonoBehaviour
 {
-    // 残機アイコン（飛行機など）
+    // 残機
     public List<GameObject> lifeSprites;
 
-    // 数字スプライト（0?9）
+    // 数字スプライト（0～9）
     public Sprite[] numberSprites;
 
     // 数字表示用（UI用Image）
     public Image numberDisplay;
+
+    // GameOver を制御するクラスへの参照
+    public GameOverController gameOverController;
 
     // 現在の残機数
     private int currentLife;
@@ -37,7 +40,16 @@ public class Remainingaircraft : MonoBehaviour
 
             if (currentLife <= 0)
             {
-                GameOver();
+                if (gameOverController != null)
+                {
+                    numberDisplay.gameObject.SetActive(false); // 数字のImageを非表示にする
+                    gameOverController.ShowGameOver();
+                }
+
+                else
+                {
+                    Debug.Log("Game Over");
+                }
             }
         }
     }
@@ -49,11 +61,5 @@ public class Remainingaircraft : MonoBehaviour
         {
             numberDisplay.sprite = numberSprites[currentLife];
         }
-    }
-
-    void GameOver()
-    {
-        Debug.Log("Game Over");
-        // ここでシーン遷移など
     }
 }
