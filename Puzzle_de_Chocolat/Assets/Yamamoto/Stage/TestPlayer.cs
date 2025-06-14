@@ -12,7 +12,7 @@ public class TestPlayer : MonoBehaviour
     private InputSystem_Manager manager;
     private TileManager tm;
     private SweetsManager sm;
-    private ScreenController cc;
+    private PauseController pause;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -24,8 +24,9 @@ public class TestPlayer : MonoBehaviour
     }
     public Direction direction;
 
-    [SerializeField] private Sprite[] directionSprites = new Sprite[4];
     /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
+    [SerializeField] private Sprite[] directionSprites = new Sprite[4];
+    
     private GameObject nowmass;          //今いるマス
     private float speed;                //マス間の移動速度
     private GameObject sweets;          //一時的なお菓子変数
@@ -43,7 +44,7 @@ public class TestPlayer : MonoBehaviour
         manager = InputSystem_Manager.manager;
         tm = TileManager.tm;
         sm = SweetsManager.sm;
-        cc = ScreenController.cc;
+        pause = PauseController.pause;
 
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
@@ -451,9 +452,10 @@ public class TestPlayer : MonoBehaviour
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //X or KeyCode.Shift
         float avalue = actions.Player.Eat.ReadValue<float>();           //A or KeyCode.C
-
+        float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
+        
         //移動
-        if (vec2 != Vector2.zero && !inProcess)
+        if (!inProcess && vec2 != Vector2.zero)
         {
             CheckDirection(vec2, xvalue);
         }
@@ -461,6 +463,11 @@ public class TestPlayer : MonoBehaviour
         else if (!inProcess && avalue > 0.5f)
         {
             TryEat(direction);
+        }
+        //ポーズ
+        else if (!inProcess && escape > 0.5f)
+        {
+            pause.SetPause();
         }
         
 

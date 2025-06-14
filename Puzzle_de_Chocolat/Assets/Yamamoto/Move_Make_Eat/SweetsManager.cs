@@ -32,7 +32,7 @@ public class SweetsManager : MonoBehaviour
     {
         //初期化
         if (sm == null) sm = this;
-        else Destroy(sm);
+        else if (sm != null) Destroy(this.gameObject);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -101,6 +101,12 @@ public class SweetsManager : MonoBehaviour
         }
 
         return returnobject;
+    }
+
+    private void OnDestroy()
+    {
+        //シーンを跨ぐときにメモリから消す
+        if (sm == this) sm = null;
     }
 
     // Update is called once per frame

@@ -11,7 +11,7 @@ public class TileManager : MonoBehaviour
     private void Awake()
     {
         if (tm == null) tm = this;
-        else Destroy(this.gameObject);
+        else if (tm != null) Destroy(this.gameObject);
         GetAllMass();
     }
 
@@ -62,6 +62,12 @@ public class TileManager : MonoBehaviour
         }
 
         return nowmass;
+    }
+
+    private void OnDestroy()
+    {
+        //ƒV[ƒ“‚ğŒ×‚®‚Æ‚«‚Éƒƒ‚ƒŠ‚©‚çÁ‚·
+        if (tm == this) tm = null;
     }
 
     // Update is called once per frame
