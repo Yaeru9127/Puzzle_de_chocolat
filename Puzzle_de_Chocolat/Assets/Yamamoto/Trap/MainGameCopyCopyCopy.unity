@@ -2940,6 +2940,7 @@ MonoBehaviour:
     makedName: macaroon
   - makedSweets: {fileID: 5439221851590594595, guid: b10fe1fb2b1b8c24885352187f254832, type: 3}
     makedName: "canul\xE9"
+  gaugeCC: {fileID: 1150791157}
 --- !u!4 &1319832603
 Transform:
   m_ObjectHideFlags: 0
@@ -4649,7 +4650,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerscript: {fileID: 6714176638618182254}
   goal: {fileID: 1042075427}
-  searched: []
 --- !u!1 &1860192778
 GameObject:
   m_ObjectHideFlags: 0
@@ -5304,7 +5304,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 8018854837148782983}
   m_FillRect: {fileID: 8635842703974956747}
   m_HandleRect: {fileID: 2531634365194232746}

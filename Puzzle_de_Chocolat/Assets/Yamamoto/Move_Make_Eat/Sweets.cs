@@ -1,13 +1,9 @@
-﻿using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
+﻿using UnityEngine;
 
 public class Sweets : MonoBehaviour
 {
     /*メモ
-     *お菓子は親オブジェクトをSweetsParentに設定して生成する
-     *製菓後のSpriteの大きさに注意*/
+     *お菓子は親オブジェクトをSweetsParentに設定して生成する*/
 
     private SweetsManager sm;
 
@@ -126,7 +122,7 @@ public class Sweets : MonoBehaviour
         //このお菓子が食べれたら
         if (canEat)
         {
-            Debug.Log("delicious!!!");
+            //Debug.Log("delicious!!!");
             Destroy(this.gameObject);
 
             //お菓子の位置を更新

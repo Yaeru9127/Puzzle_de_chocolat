@@ -5158,7 +5158,6 @@ GameObject:
   - component: {fileID: 1743189591}
   - component: {fileID: 1743189593}
   - component: {fileID: 1743189594}
-  - component: {fileID: 1743189595}
   - component: {fileID: 1743189596}
   m_Layer: 0
   m_Name: InputEmpty
@@ -5208,7 +5207,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerscript: {fileID: 6714176638618182254}
   goal: {fileID: 1042075427}
-  searched: []
 --- !u!114 &1743189594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5221,21 +5219,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc76f84aecbcab42807e3cf51ca3b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cc: {fileID: 0}
+  cc: {fileID: 1743189596}
   pauseobj: {fileID: 844036412}
---- !u!114 &1743189595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1743189590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaba0a718158410439c1fead2b5c320c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cursorTexture: {fileID: 0}
 --- !u!114 &1743189596
 MonoBehaviour:
   m_ObjectHideFlags: 0

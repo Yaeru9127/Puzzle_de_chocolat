@@ -8,12 +8,11 @@ public class PauseController : MonoBehaviour
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
     [SerializeField] private CursorController cc;
-
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
 
     private void Awake()
     {
-        if (pauseobj == null) pause = this;
+        if (pause == null) pause = this;
         else if (pause != null) Destroy(this.gameObject);
     }
 
@@ -59,6 +58,15 @@ public class PauseController : MonoBehaviour
         manager.UIOff();
         manager.PlayerOn();
         
+    }
+
+    /// <summary>
+    /// OnClick.ポーズ画面からタイトルへ戻る
+    /// </summary>
+    public void ReturnTitle()
+    {
+        //タイトルシーンを読み込む
+        //SceneManager.LoadScene("");
     }
 
     private void OnDestroy()

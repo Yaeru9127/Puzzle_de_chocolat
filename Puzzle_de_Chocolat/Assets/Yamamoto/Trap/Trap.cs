@@ -17,7 +17,12 @@ public class Trap : MonoBehaviour
         
     }
 
-    public void BefolgenTrap()
+    /// <summary>
+    /// 以下、トラップを踏んだ時の処理
+    /// </summary>
+    
+    //生クリーム
+    public void CaseFrischeSahne()
     {
 
     }

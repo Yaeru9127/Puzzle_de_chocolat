@@ -19,6 +19,8 @@ public class SweetsManager : MonoBehaviour
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
+    [SerializeField] private GaugeController gaugeCC;
+
     /*レシピ　メモ
      *プレッツェル : pretzel  バター + 砂糖
      *バームクーヘン : baumkuchen  卵 + バター
@@ -101,6 +103,15 @@ public class SweetsManager : MonoBehaviour
         }
 
         return returnobject;
+    }
+
+    /// <summary>
+    /// 食料ゲージを減らす関数を呼ぶ関数
+    /// </summary>
+    /// スクリプトの設定の関係上、ここから呼び出す(仮)
+    public void CallDecreaseFoodGauge()
+    {
+        gaugeCC.OnObjectDestroyed();
     }
 
     private void OnDestroy()

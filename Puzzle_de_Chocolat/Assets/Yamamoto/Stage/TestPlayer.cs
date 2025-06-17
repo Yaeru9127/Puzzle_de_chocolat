@@ -13,6 +13,7 @@ public class TestPlayer : MonoBehaviour
     private TileManager tm;
     private SweetsManager sm;
     private PauseController pause;
+    private CanGoal cg;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -27,7 +28,7 @@ public class TestPlayer : MonoBehaviour
     /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
     [SerializeField] private Sprite[] directionSprites = new Sprite[4];
     
-    private GameObject nowmass;          //今いるマス
+    private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private GameObject sweets;          //一時的なお菓子変数
     private bool inProcess;             //処理中フラグ
@@ -45,6 +46,7 @@ public class TestPlayer : MonoBehaviour
         tm = TileManager.tm;
         sm = SweetsManager.sm;
         pause = PauseController.pause;
+        cg = CanGoal.cg;
 
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
@@ -320,8 +322,6 @@ public class TestPlayer : MonoBehaviour
     /// <param name="next"></param>         移動先のマスオブジェクト
     /// <param name="sweetsscript"></param> 移動させるお菓子スクリプト
     /// <param name="beyond"></param>       移動先のマスにあるお菓子スクリプト
-    /// canmake = null ; 移動させるお菓子の先のマスにお菓子がない
-    /// canmake != null; 移動させるお菓子の先のマスにお菓子がある
     private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
     {
         //移動先のマスにお菓子オブジェクトがある
@@ -329,6 +329,7 @@ public class TestPlayer : MonoBehaviour
         {
             //"移動するお菓子"と"移動先のお菓子"で作れるか
             //作れる = true  作れない = false
+            //作れない場合は移動処理なし
             if (!sweetsscript.TryMake(beyond))
             {
                 inProcess = false;
@@ -348,7 +349,7 @@ public class TestPlayer : MonoBehaviour
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
 
-        //お菓子変数がnullじゃない && 自身の子オブジェクトが0以上
+        //お菓子変数がnullじゃない && 自身の子オブジェクトが0以外
         // = 移動するお菓子がある
         if (sweets != null && this.gameObject.transform.childCount != 0)
         {
@@ -369,8 +370,15 @@ public class TestPlayer : MonoBehaviour
         //お菓子の位置を更新
         sm.SearchSweets();
 
-        //クリアチェック
-        //cc.ClearCheck((Vector2)this.transform.position);
+        /*//残り工程数が0になったときにクリアできるかのチェック
+        if (remaining <= 0)
+        {
+            //ゴールに到達できない場合
+            if (!cg.CanMassThrough(ReturnNowTileScript()))
+            {
+                //ゲームオーバー処理
+            }
+        }*/
 
         //処理フラグ更新
         inProcess = false;
@@ -436,7 +444,7 @@ public class TestPlayer : MonoBehaviour
             eatnext.EatSweets();
 
             //食料ゲージの増加
-            Debug.Log("food gauge is increase");
+            sm.CallDecreaseFoodGauge();
         }
         else Debug.Log("this food can not eat");
 
@@ -450,8 +458,8 @@ public class TestPlayer : MonoBehaviour
     {
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
-        float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //X or KeyCode.Shift
-        float avalue = actions.Player.Eat.ReadValue<float>();           //A or KeyCode.C
+        float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
+        float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.C
         float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
         
         //移動
@@ -467,6 +475,7 @@ public class TestPlayer : MonoBehaviour
         //ポーズ
         else if (!inProcess && escape > 0.5f)
         {
+            if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
         }
         

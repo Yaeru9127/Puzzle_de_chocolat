@@ -1,14 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CanGoal : MonoBehaviour
 {
+    public static CanGoal cg {  get; private set; }
+
     private TileManager tm;
     private SweetsManager sm;
 
-    [SerializeField] private TestPlayer playerscript;
-    [SerializeField] private GameObject goal;
-    [SerializeField] private List<GameObject> searched = new List<GameObject>();
+    [SerializeField] private TestPlayer playerscript;   //プレイヤー変数
+    [SerializeField] private GameObject goal;           //ゴールマスオブジェクト
+
+    //ゴールできるかの判定時に使う検索済み格納関数
+    private List<GameObject> searched = new List<GameObject>();
+
+    private void Awake()
+    {
+        if (cg == null) cg = this;
+        else if (cg != null) Destroy(cg);
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,8 +34,9 @@ public class CanGoal : MonoBehaviour
     /// ゴールできるかを判定する関数
     /// </summary>
     /// <param name="now"></param> 基準となるマスのスクリプト
-    /// お菓子を移動させて残り移動数が0になったときにこの関数を実行する
-    private bool CanMassThrough(Tile now)
+    /// 残り移動数が0になったときにこの関数を実行する
+    /// true = ゴールに到達できる  false = ゴールに到達できない
+    public bool CanMassThrough(Tile now)
     {
         //検索済みリストに重複があったらreturn
         if (searched.Contains(now.gameObject)) return false;
@@ -53,6 +65,12 @@ public class CanGoal : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void OnDestroy()
+    {
+        //シーンを跨ぐときにメモリから消す
+        if (cg == this) cg = null;
     }
 
     // Update is called once per frame
