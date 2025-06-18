@@ -313,6 +313,35 @@ public class TestPlayer : MonoBehaviour
             nextnextmass = next;
         }
 
+        /*↓次のマスのトラップ処理*/
+        //次のマスのトラップを取得
+        Trap trap = null;
+        Collider2D[] col = Physics2D.OverlapPointAll(nextnextmass.transform.position);
+        foreach (Collider2D col2 in col)
+        {
+            if (col2.gameObject.GetComponent<Trap>())
+            {
+                trap = col2.gameObject.GetComponent<Trap>();
+            }
+        }
+
+        /*//残り工程数が0以下 && トラップが生クリーム
+        if (remainingnum <= 0 && trap.type == Trap.Type.FrischeSahne)
+        {
+            //踏むと残り工程数が0未満になるので移動はしない
+            inProcess = false;
+            return;
+        }
+        //残り工程数が0以上 && トラップが生クリーム
+        else if (remainingnum > 0 && trap.type == Trap.Type.FrischeSahne)
+        {
+            //工程数をひとつ減らす
+            Debug.Log("decrease remaining num by FrischeSahne");
+            
+            //生クリームを踏む処理（現在はなにもない）
+            trap.CaseFrischeSahne();
+        }*/
+
         MoveMass(nextnextmass, sweetsscript, nextnextsweets).Forget();
     }
 

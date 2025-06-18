@@ -24,7 +24,7 @@ public class Trap : MonoBehaviour
     //¶ƒNƒŠ[ƒ€
     public void CaseFrischeSahne()
     {
-
+        Debug.Log("in CaseFrischeSahne()");
     }
 
     // Update is called once per frame
