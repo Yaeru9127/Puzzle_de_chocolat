@@ -5,38 +5,53 @@ using System.Collections.Generic;
 
 public class GaugeController : MonoBehaviour
 {
-    // UIのSliderコンポーネント（ゲージ）をアサイン
-    public Slider gaugeSlider;
+    [Header("UI関連")]
+    [Tooltip("UIスライダー")]
+    [SerializeField] private Slider gaugeSlider;
 
-    // ゲームオーバー処理を担当するスクリプトへの参照
-    public GameOverController gameOverController;
+    [SerializeField] private GameOverController gameOverController;
 
-    // ゲージの最大値
-    private int maxValue = 10;
+    [Header("ゲージ設定")]
+    [Tooltip("ゲージが増加するのにかかる時間（秒）")]
+    [SerializeField] private float increaseDuration = 0.5f;
 
-    // ゲージが増加するのにかかる時間（秒）
-    private float increaseDuration = 0.5f;
+    [Tooltip("デフォルトのゲージ増加量（シーンごとに調整）")]
+    [SerializeField] private int defaultIncreaseAmount = 1;
 
-    // ゲージの増加リクエストを保持するキュー
+    // ゲージの最大値（固定値）
+    private const int maxValue = 10;
+
+    // ゲージ増加リクエストを保持するキュー
     private Queue<int> increaseQueue = new Queue<int>();
 
-    // 現在ゲージを増加中かどうか
+    // 現在ゲージが増加中かどうか
     private bool isIncreasing = false;
 
-    // ゲージ増加処理のトリガー（例えば敵が破壊されたときに呼び出す）
+    /// <summary>
+    /// 外部から呼び出す（デフォルトの増加量でゲージを増加）
+    /// </summary>
     public void OnObjectDestroyed()
     {
-        // 増加リクエストをキューに追加
-        increaseQueue.Enqueue(1);
+        OnObjectDestroyed(defaultIncreaseAmount);
+    }
 
-        // まだ増加処理中でなければコルーチンを開始
+    /// <summary>
+    /// 外部から呼び出す（指定した量でゲージを増加）
+    /// </summary>
+    /// <param name="increaseAmount">増加量</param>
+    public void OnObjectDestroyed(int increaseAmount)
+    {
+        increaseQueue.Enqueue(increaseAmount);
+
         if (!isIncreasing)
         {
             StartCoroutine(ProcessQueue());
         }
     }
 
-    // キューに溜まった増加リクエストを順番に処理するコルーチン
+    /// <summary>
+    /// ゲージ増加キューを処理するコルーチン
+    /// </summary>
     private IEnumerator ProcessQueue()
     {
         isIncreasing = true;
@@ -50,10 +65,11 @@ public class GaugeController : MonoBehaviour
         isIncreasing = false;
     }
 
-    // ゲージを滑らかに増加させるコルーチン
+    /// <summary>
+    /// ゲージを滑らかに増加させる処理
+    /// </summary>
     private IEnumerator IncreaseGaugeSmoothly(int amount)
     {
-        // スライダーが未設定の場合は処理を中断
         if (gaugeSlider == null)
             yield break;
 
@@ -62,7 +78,6 @@ public class GaugeController : MonoBehaviour
 
         float elapsed = 0f;
 
-        // 指定された時間でゲージを滑らかに変化
         while (elapsed < increaseDuration)
         {
             elapsed += Time.deltaTime;
@@ -70,10 +85,9 @@ public class GaugeController : MonoBehaviour
             yield return null;
         }
 
-        // 最終的な値を設定
         gaugeSlider.value = endValue;
 
-        // ゲージが最大値に達したらゲームオーバー処理を呼び出す
+        // ゲージが最大になったらゲームオーバー
         if (Mathf.Approximately(gaugeSlider.value, maxValue) && gameOverController != null)
         {
             gameOverController.ShowGameOver();
