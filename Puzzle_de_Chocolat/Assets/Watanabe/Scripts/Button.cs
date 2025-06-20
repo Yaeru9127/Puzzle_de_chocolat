@@ -8,7 +8,7 @@ public class Button : MonoBehaviour
 
     public void GoToGameScene()
     {
-        StartCoroutine(FadeAndLoadScene("gauge"));
+        StartCoroutine(FadeAndLoadScene("MainGameScene"));
     }
 
     public void GoToStageSelect()

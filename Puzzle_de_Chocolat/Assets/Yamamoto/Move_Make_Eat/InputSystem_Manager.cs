@@ -58,6 +58,8 @@ public class InputSystem_Manager : MonoBehaviour
 
     private void OnDestroy()
     {
+        actions.Disable();
+
         //ƒV[ƒ“‚ğŒ×‚®‚Æ‚«‚Éƒƒ‚ƒŠ‚©‚çÁ‚·
         if (manager == this) manager = null;
     }
