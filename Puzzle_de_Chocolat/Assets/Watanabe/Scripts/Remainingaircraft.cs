@@ -59,7 +59,7 @@ public class Remainingaircraft : MonoBehaviour
         // 数字スプライトが用意されていれば更新
         if (currentLife >= 0 && currentLife < numberSprites.Length)
         {
-            numberDisplay.sprite = numberSprites[currentLife];
+            //numberDisplay.sprite = numberSprites[currentLife];
         }
     }
 }

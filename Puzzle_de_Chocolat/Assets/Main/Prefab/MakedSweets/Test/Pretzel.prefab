@@ -101,5 +101,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: 4
-  canMove: 0
+  canMove: 1
   canEat: 0

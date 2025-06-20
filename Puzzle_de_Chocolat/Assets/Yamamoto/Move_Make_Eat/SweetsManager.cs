@@ -73,7 +73,11 @@ public class SweetsManager : MonoBehaviour
         {
             if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
             {
-                sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
+                if (!sweets.ContainsKey(this.gameObject.transform.GetChild(i).GetComponent<Sweets>().transform.position))
+                {
+                    sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
+                }
+                
             }
         }
 

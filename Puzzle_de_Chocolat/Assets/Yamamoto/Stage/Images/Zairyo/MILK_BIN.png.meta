@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bec0d8c0903118d44955975118a3593c
+guid: 0d1b5f7a0e297be45b12d62a86e48f8c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8684269428423967454
-    second: TANA_0
+      213: 6497249700709678284
+    second: MILK_BIN_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TANA_0
+      name: MILK_BIN_0
       rect:
         serializedVersion: 2
-        x: 81
-        y: 110
-        width: 1971
-        height: 1913
+        x: 663
+        y: 363
+        width: 758
+        height: 1388
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ed2cefea809b48870800000000000000
-      internalID: 8684269428423967454
+      spriteID: ccc30dbcd2eda2a50800000000000000
+      internalID: 6497249700709678284
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      TANA_0: 8684269428423967454
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

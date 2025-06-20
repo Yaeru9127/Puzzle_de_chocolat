@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: bec0d8c0903118d44955975118a3593c
+guid: 73e4fb2fe344a3a4abdaf1e57924f5a5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8684269428423967454
-    second: TANA_0
+      213: 1920486423780071682
+    second: sweets_gumi_0
+  - first:
+      213: -346200818222623631
+    second: sweets_gumi_1
+  - first:
+      213: -7280010699233531025
+    second: sweets_gumi_2
+  - first:
+      213: 2299563509662308293
+    second: sweets_gumi_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +148,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TANA_0
+      name: sweets_gumi_0
       rect:
         serializedVersion: 2
-        x: 81
-        y: 110
-        width: 1971
-        height: 1913
+        x: 36
+        y: 284
+        width: 328
+        height: 364
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +163,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ed2cefea809b48870800000000000000
-      internalID: 8684269428423967454
+      spriteID: 2091f5d2a30f6aa10800000000000000
+      internalID: 1920486423780071682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sweets_gumi_1
+      rect:
+        serializedVersion: 2
+        x: 366
+        y: 428
+        width: 268
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17414e8a03c023bf0800000000000000
+      internalID: -346200818222623631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sweets_gumi_2
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 28
+        width: 227
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6b642717d438fa90800000000000000
+      internalID: -7280010699233531025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sweets_gumi_3
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 109
+        width: 246
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c75fd314d0b9ef10800000000000000
+      internalID: 2299563509662308293
       vertices: []
       indices: 
       edges: []
@@ -173,8 +248,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      TANA_0: 8684269428423967454
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

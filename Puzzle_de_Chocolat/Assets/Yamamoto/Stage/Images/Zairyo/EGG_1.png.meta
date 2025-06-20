@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bec0d8c0903118d44955975118a3593c
+guid: b0c627510d1f2e74892b9c0d6543c5e8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8684269428423967454
-    second: TANA_0
+      213: 75723404851265405
+    second: EGG_1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TANA_0
+      name: EGG_1_0
       rect:
         serializedVersion: 2
-        x: 81
-        y: 110
-        width: 1971
-        height: 1913
+        x: 536
+        y: 435
+        width: 1051
+        height: 1369
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ed2cefea809b48870800000000000000
-      internalID: 8684269428423967454
+      spriteID: d7fb75719060d0100800000000000000
+      internalID: 75723404851265405
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      TANA_0: 8684269428423967454
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

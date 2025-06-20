@@ -29,6 +29,19 @@ public class Sweets : MonoBehaviour
         //初期化
         sm = SweetsManager.sm;
         name = null;
+        SetPosition();
+    }
+
+    private void SetPosition()
+    {
+        Collider2D[] col = Physics2D.OverlapPointAll((Vector2)this.gameObject.transform.position);
+        foreach (Collider2D col2 in col)
+        {
+            if (col2.gameObject.GetComponent<Tile>())
+            {
+                this.gameObject.transform.position = new Vector3(col2.gameObject.transform.position.x, col2.gameObject.transform.position.y, this.gameObject.transform.position.z);
+            }
+        }
     }
 
     /// <summary>

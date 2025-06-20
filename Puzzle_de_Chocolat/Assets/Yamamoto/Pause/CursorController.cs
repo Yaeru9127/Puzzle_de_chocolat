@@ -2,15 +2,25 @@ using UnityEngine;
 
 public class CursorController : MonoBehaviour
 {
+    public static CursorController cc { get; private set; }
     [SerializeField] private Texture2D cursorTexture;
+
+    private void Awake()
+    {
+        if (cc == null) cc = this;
+        else if (cc != null) Destroy(this);
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Cursor.visible = true;
+        //テスト
+        ChangeCursorEnable(true);
 
         //画像をカーソルの位置にセットする
         Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     /// <summary>

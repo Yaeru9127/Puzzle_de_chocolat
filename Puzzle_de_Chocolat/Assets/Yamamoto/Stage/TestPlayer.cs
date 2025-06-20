@@ -14,6 +14,8 @@ public class TestPlayer : MonoBehaviour
     private SweetsManager sm;
     private PauseController pause;
     private CanGoal cg;
+    private CursorController cc;
+    [SerializeField] private Remainingaircraft remaining;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -47,7 +49,9 @@ public class TestPlayer : MonoBehaviour
         sm = SweetsManager.sm;
         pause = PauseController.pause;
         cg = CanGoal.cg;
+        cc = CursorController.cc;
 
+        //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
         manager.PlayerOn();
@@ -111,7 +115,7 @@ public class TestPlayer : MonoBehaviour
         SetPlayerDirection(directo);
 
         //入力方向にある次のマスを取得
-        Tile nowtile = nowmass.GetComponent<Tile>();
+        Tile nowtile = ReturnNowTileScript();
         GameObject nexttileobj = nowtile.ReturnNextMass(directo);
 
         /*次のマスが存在する場合*/
@@ -124,28 +128,8 @@ public class TestPlayer : MonoBehaviour
             //移動チェック
             TryMove(nexttileobj, button, directo);
         }
-        //食べる
-        else if (nexttileobj != null)
-        {
-            //食べるお菓子のスクリプトを取得
-            Sweets eatnext = sm.GetSweets(nexttileobj.transform.position);
-
-            //nullじゃなかったら食べる処理へ
-            if (eatnext != null)
-            {
-                //お菓子を食べる
-                eatnext.EatSweets();
-
-                //食料ゲージの増加
-                Debug.Log("food gauge is increase");
-            }
-            else Debug.Log("script of to eat is null");
-
-            inProcess = false;
-            return;
-        }
         //次のマスが存在しない場合
-        else
+        else if (nexttileobj == null)
         {
             Debug.Log($"next mass is null");
             inProcess = false;
@@ -361,6 +345,7 @@ public class TestPlayer : MonoBehaviour
             //作れない場合は移動処理なし
             if (!sweetsscript.TryMake(beyond))
             {
+                sweets.transform.SetParent(sm.gameObject.transform);
                 inProcess = false;
                 return;
             }
@@ -384,16 +369,14 @@ public class TestPlayer : MonoBehaviour
         {
             //お菓子を作れるとき
             if (sweetsscript != null && beyond != null) sweetsscript.MakeSweets(beyond.gameObject);
-            //作れないとき
-            else
-            {
-                //お菓子オブジェクトの親を初期化
-                sweets.transform.SetParent(sm.gameObject.transform);
-                sweets = null;
-            }
+
+            //お菓子オブジェクトの親を初期化
+            sweets.transform.SetParent(sm.gameObject.transform);
+            sweets = null;
 
             /*工程数をひとつ減らす*/
             Debug.Log("decrease remaining num");
+            //remaining.ReduceLife();
         }
 
         //お菓子の位置を更新
@@ -408,6 +391,16 @@ public class TestPlayer : MonoBehaviour
                 //ゲームオーバー処理
             }
         }*/
+
+        //もし生クリームを踏んだ時の処理   
+        Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
+        foreach (Collider2D col2 in col)
+        {
+            if (col2.gameObject.GetComponent<Trap>() && col2.gameObject.GetComponent<Trap>().type == Trap.Type.FrischeSahne)
+            {
+                remaining.ReduceLife();
+            }
+        }
 
         //処理フラグ更新
         inProcess = false;

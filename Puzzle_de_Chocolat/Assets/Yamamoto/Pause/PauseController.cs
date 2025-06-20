@@ -7,7 +7,7 @@ public class PauseController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
-    [SerializeField] private CursorController cc;
+    private CursorController cc;
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
 
     private void Awake()
@@ -20,6 +20,7 @@ public class PauseController : MonoBehaviour
     void Start()
     {
         //初期化
+        cc = CursorController.cc;
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
 
