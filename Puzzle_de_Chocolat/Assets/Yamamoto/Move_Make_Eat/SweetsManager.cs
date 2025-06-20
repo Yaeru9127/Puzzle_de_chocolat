@@ -19,6 +19,8 @@ public class SweetsManager : MonoBehaviour
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
+    [SerializeField] private GaugeController gaugeCC;
+
     /*レシピ　メモ
      *プレッツェル : pretzel  バター + 砂糖
      *バームクーヘン : baumkuchen  卵 + バター
@@ -32,7 +34,7 @@ public class SweetsManager : MonoBehaviour
     {
         //初期化
         if (sm == null) sm = this;
-        else Destroy(sm);
+        else if (sm != null) Destroy(this.gameObject);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -101,6 +103,21 @@ public class SweetsManager : MonoBehaviour
         }
 
         return returnobject;
+    }
+
+    /// <summary>
+    /// 食料ゲージを減らす関数を呼ぶ関数
+    /// </summary>
+    /// スクリプトの設定の関係上、ここから呼び出す(仮)
+    public void CallDecreaseFoodGauge()
+    {
+        gaugeCC.OnObjectDestroyed();
+    }
+
+    private void OnDestroy()
+    {
+        //シーンを跨ぐときにメモリから消す
+        if (sm == this) sm = null;
     }
 
     // Update is called once per frame

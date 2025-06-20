@@ -10,7 +10,7 @@ public class InputSystem_Manager : MonoBehaviour
     private void Awake()
     {
         if (manager == null) manager = this;
-        else Destroy(this.gameObject);
+        else if (manager != null) Destroy(this.gameObject);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -54,6 +54,12 @@ public class InputSystem_Manager : MonoBehaviour
     public void PlayerOff()
     {
         actions.Player.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        //ƒV[ƒ“‚ğŒ×‚®‚Æ‚«‚Éƒƒ‚ƒŠ‚©‚çÁ‚·
+        if (manager == this) manager = null;
     }
 
     // Update is called once per frame

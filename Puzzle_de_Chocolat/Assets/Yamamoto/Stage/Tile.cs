@@ -24,7 +24,9 @@ public class Tile : MonoBehaviour
         GetNeighborTiles();
     }
 
-    //隣接するマスの取得関数
+    /// <summary>
+    /// 隣接するマスの取得関数
+    /// </summary>
     private void GetNeighborTiles()
     {
         foreach (var dir in direction)
