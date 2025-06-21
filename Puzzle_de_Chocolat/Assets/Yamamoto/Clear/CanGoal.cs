@@ -76,10 +76,6 @@ public class CanGoal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //テスト用
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            Debug.Log($"serach is end : {CanMassThrough(playerscript.ReturnNowTileScript())}");
-        }
+
     }
 }

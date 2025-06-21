@@ -248,7 +248,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      sweets_gumi_0: 1920486423780071682
+      sweets_gumi_1: -346200818222623631
+      sweets_gumi_2: -7280010699233531025
+      sweets_gumi_3: 2299563509662308293
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

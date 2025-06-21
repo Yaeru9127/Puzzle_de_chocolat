@@ -17,7 +17,7 @@ public class Remainingaircraft : MonoBehaviour
     public GameOverController gameOverController;
 
     // 現在の残機数
-    private int currentLife;
+    public int currentLife;
 
     void Start()
     {
@@ -28,6 +28,7 @@ public class Remainingaircraft : MonoBehaviour
 
     public void ReduceLife()
     {
+        Debug.Log("life is decrement");
         if (currentLife > 0)
         {
             currentLife--;
@@ -59,7 +60,7 @@ public class Remainingaircraft : MonoBehaviour
         // 数字スプライトが用意されていれば更新
         if (currentLife >= 0 && currentLife < numberSprites.Length)
         {
-            //numberDisplay.sprite = numberSprites[currentLife];
+            numberDisplay.sprite = numberSprites[currentLife];
         }
     }
 }

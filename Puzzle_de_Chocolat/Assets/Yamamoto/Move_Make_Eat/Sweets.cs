@@ -32,6 +32,9 @@ public class Sweets : MonoBehaviour
         SetPosition();
     }
 
+    /// <summary>
+    /// お菓子を現在のマスの中心にセットする関数
+    /// </summary>
     private void SetPosition()
     {
         Collider2D[] col = Physics2D.OverlapPointAll((Vector2)this.gameObject.transform.position);
@@ -50,7 +53,13 @@ public class Sweets : MonoBehaviour
     /// <param name="comparison"></param> 比較するスクリプト
     public bool TryMake(Sweets comparison)
     {
-        //Debug.Log("in TryMake");
+        //デバッグ
+        /*Debug.Log("in TryMake");
+        Debug.Log(material);
+        Debug.Log(comparison.material);*/
+
+        //初期化
+        name = null;
 
         //材料を比較して作れるかどうかを決める
         //（作れる材料じゃなかったらfalseのままreturn）
@@ -90,9 +99,13 @@ public class Sweets : MonoBehaviour
                 else if (comparison.material == Material.Egg) name = "macaroon";
                 else return false;
                 break;
+            //-----------------------------------------------------------------------
+            //それ以外
+            default:
+                return false;
         }
 
-        //ここまでくるということは作れる材料であるということ
+        //作れる材料ならここでreturn
         return true;
     }
 

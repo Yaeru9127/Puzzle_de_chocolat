@@ -15,7 +15,8 @@ public class TestPlayer : MonoBehaviour
     private PauseController pause;
     private CanGoal cg;
     private CursorController cc;
-    [SerializeField] private Remainingaircraft remaining;
+    private Remainingaircraft remaining;
+    private GameOverController goc;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -29,16 +30,12 @@ public class TestPlayer : MonoBehaviour
 
     /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
     [SerializeField] private Sprite[] directionSprites = new Sprite[4];
-    
+
+    [SerializeField] private GameObject controllers;
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private GameObject sweets;          //一時的なお菓子変数
     private bool inProcess;             //処理中フラグ
-
-    private void Awake()
-    {
-        
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,6 +47,8 @@ public class TestPlayer : MonoBehaviour
         pause = PauseController.pause;
         cg = CanGoal.cg;
         cc = CursorController.cc;
+        remaining = controllers.GetComponent<Remainingaircraft>();
+        goc = controllers.GetComponent<GameOverController>();
 
         //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();
@@ -214,7 +213,7 @@ public class TestPlayer : MonoBehaviour
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
         else Debug.Log("sweetsscript is null");*/
 
-        GameObject nextnextmass = null;     //上書き用マスオブジェクト
+        GameObject newnextmass = null;     //上書き用マスオブジェクト
         Sweets nextnextsweets = null;       //上書き用お菓子スクリプト
 
         //前か後ろのマスにお菓子があったら
@@ -237,13 +236,13 @@ public class TestPlayer : MonoBehaviour
                 {
                     /*↓お菓子の先のマスにお菓子があるか探す*/
                     //お菓子の先のマスを取得
-                    nextnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
+                    newnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
 
                     //お菓子の先のマスのお菓子を取得
                     foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
                     {
-                        //移動させるお菓子の座標 と (Vector2)お菓子のその先のマス の座標を比較
-                        if (nextnextmass != null && pair.Key == (Vector2)nextnextmass.transform.position)
+                        //移動させるお菓子の先のマスがある && 移動させるお菓子の先のマスにあるお菓子の座標==移動させるお菓子の先のマスの座標
+                        if (newnextmass != null && pair.Key == (Vector2)newnextmass.transform.position)
                         {
                             nextnextsweets = pair.Value;
 
@@ -257,18 +256,18 @@ public class TestPlayer : MonoBehaviour
                 else if (backmass != null)
                 {
                     //自分の後ろのマスを取得
-                    nextnextmass = backmass;
+                    newnextmass = backmass;
                 }
 
                 //----------------------------------------------------
                 //お菓子の先のマスがない or 後ろにマスがない
-                if (nextnextmass == null)
+                if (newnextmass == null)
                 {
                     inProcess = false;
                     return;
                 }
 
-                nextnextmass = next;
+                newnextmass = next;
 
                 //お菓子を自身の子オブジェクトにする
                 sweets = sweetsscript.gameObject;
@@ -289,18 +288,18 @@ public class TestPlayer : MonoBehaviour
                 }
 
                 //移動先のマスにお菓子がない
-                nextnextmass = next;
+                newnextmass = next;
             }
         }
         else
         {
-            nextnextmass = next;
+            newnextmass = next;
         }
 
         /*↓次のマスのトラップ処理*/
         //次のマスのトラップを取得
         Trap trap = null;
-        Collider2D[] col = Physics2D.OverlapPointAll(nextnextmass.transform.position);
+        Collider2D[] col = Physics2D.OverlapPointAll(newnextmass.transform.position);
         foreach (Collider2D col2 in col)
         {
             if (col2.gameObject.GetComponent<Trap>())
@@ -326,7 +325,7 @@ public class TestPlayer : MonoBehaviour
             trap.CaseFrischeSahne();
         }*/
 
-        MoveMass(nextnextmass, sweetsscript, nextnextsweets).Forget();
+        MoveMass(newnextmass, sweetsscript, nextnextsweets).Forget();
     }
 
     /// <summary>
@@ -337,14 +336,16 @@ public class TestPlayer : MonoBehaviour
     /// <param name="beyond"></param>       移動先のマスにあるお菓子スクリプト
     private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
     {
-        //移動先のマスにお菓子オブジェクトがある
-        if (beyond != null)
+        //移動先のマスにお菓子オブジェクトがある && 移動させるお菓子がある
+        if (beyond != null && sweetsscript != null)
         {
             //"移動するお菓子"と"移動先のお菓子"で作れるか
             //作れる = true  作れない = false
+
             //作れない場合は移動処理なし
             if (!sweetsscript.TryMake(beyond))
             {
+                Debug.Log("can not make");
                 sweets.transform.SetParent(sm.gameObject.transform);
                 inProcess = false;
                 return;
@@ -375,22 +376,12 @@ public class TestPlayer : MonoBehaviour
             sweets = null;
 
             /*工程数をひとつ減らす*/
-            Debug.Log("decrease remaining num");
-            //remaining.ReduceLife();
+            //Debug.Log("decrease remaining num");
+            remaining.ReduceLife();
         }
 
         //お菓子の位置を更新
         sm.SearchSweets();
-
-        /*//残り工程数が0になったときにクリアできるかのチェック
-        if (remaining <= 0)
-        {
-            //ゴールに到達できない場合
-            if (!cg.CanMassThrough(ReturnNowTileScript()))
-            {
-                //ゲームオーバー処理
-            }
-        }*/
 
         //もし生クリームを踏んだ時の処理   
         Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
@@ -400,6 +391,14 @@ public class TestPlayer : MonoBehaviour
             {
                 remaining.ReduceLife();
             }
+        }
+
+        //クリアチェック
+        //残り移動数が0以下だったら = これ以上移動できない状態なら
+        if (remaining.currentLife <= 0)
+        {
+            //もしゴールできないなら、GameOverの設定
+            if (!cg.CanMassThrough(ReturnNowTileScript())) goc.ShowGameOver();
         }
 
         //処理フラグ更新

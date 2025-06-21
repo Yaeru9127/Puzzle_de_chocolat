@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b0c627510d1f2e74892b9c0d6543c5e8
+guid: 8ca93197b15b5ea46b1f4e7087358742
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 75723404851265405
-    second: EGG_1_0
+      213: 7105907761413143285
+    second: sweets_macaroon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: EGG_1_0
+      name: sweets_macaroon_0
       rect:
         serializedVersion: 2
-        x: 536
-        y: 435
-        width: 1051
-        height: 1369
+        x: 10
+        y: 18
+        width: 646
+        height: 540
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7fb75719060d0100800000000000000
-      internalID: 75723404851265405
+      spriteID: 5fab8b5d5714d9260800000000000000
+      internalID: 7105907761413143285
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      EGG_1_0: 75723404851265405
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
