@@ -1063,6 +1063,7 @@ MonoBehaviour:
   retryOrNoRetryClearSprite: {fileID: -8929442069124683599, guid: 59a37bc58a1f69b4c94b6243b24b739e, type: 3}
   retryClearSprite: {fileID: -3457935566585951309, guid: 4a4dfef868ea533498595ec414ff3636, type: 3}
   minStepsToClear: 4
+  minRetriesToClear: 1
 --- !u!4 &1185067048
 Transform:
   m_ObjectHideFlags: 0

@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      tekazu_0: -4630448011432285896
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
