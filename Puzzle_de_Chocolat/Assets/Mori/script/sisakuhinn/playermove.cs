@@ -3,16 +3,18 @@ using UnityEngine.SceneManagement;
 
 public class playermove : MonoBehaviour
 {
-    public float moveDistance = 5f; // 一度の入力で進む距離
+    public float moveDistance = 7f; // 一度の入力で進む距離
     public float moveSpeed = 5f; // 移動速度
     private bool isMoving = false; // 移動中かどうか
     private Vector3 targetPosition; // 移動先の位置
+
+    public GameObject[] stage = new GameObject[4];  // Inspectorで4つのオブジェクトを割り当てる
 
     // 各座標の制限を設定
     private Vector3 restrictedPosition1 = new Vector3(-7.3f, -2.71f, 0); // 右上のみ
     private Vector3 restrictedPosition2 = new Vector3(-2.360252f, 2.299747f, 0); // 左下と右下のみ
     private Vector3 restrictedPosition3 = new Vector3(2.589495f, -2.65f, 0); // 左上と右上のみ
-    private Vector3 restrictedPosition4 = new Vector3(7.539243f, 2.299747f, 0); // 左下のみ
+    //private Vector3 restrictedPosition4 = new Vector3(7.539243f, 2.299747f, 0); // 左下のみ
 
     // 許容範囲（誤差を考慮して）
     public float tolerance = 0.1f;
@@ -23,6 +25,12 @@ public class playermove : MonoBehaviour
     {
         // フェードコントローラーを取得
         fadeController = Object.FindFirstObjectByType<FadeController>();
+
+        for (int i = 0; i < stage.Length; i++)
+        {
+            Vector3 pos = stage[i].transform.position;
+            Debug.Log($"ステージオブジェクト{i + 1}の座標: {pos}");
+        }
     }
 
     void Update()
@@ -100,13 +108,13 @@ public class playermove : MonoBehaviour
             {
                 StartMove(Vector3.up + Vector3.left); // 左上
             }
-            else if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("Vertical") > 0) &&
+            /*else if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("Vertical") > 0) &&
                      (Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("Horizontal") > 0))
             {
                 StartMove(Vector3.up + Vector3.right); // 右上
-            }
+            }*/
         }
-        else if (IsNearRestrictedPosition(transform.position, restrictedPosition4))
+        /*else if (IsNearRestrictedPosition(transform.position, restrictedPosition4))
         {
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1")) // スペースとAボタン(仮)でステージ選択
             {
@@ -119,7 +127,7 @@ public class playermove : MonoBehaviour
             {
                 StartMove(Vector3.down + Vector3.left); // 左下
             }
-        }
+        }*/
     }
 
     void StartMove(Vector3 direction)
