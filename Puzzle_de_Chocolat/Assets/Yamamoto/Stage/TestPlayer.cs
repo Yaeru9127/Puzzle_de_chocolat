@@ -34,7 +34,6 @@ public class TestPlayer : MonoBehaviour
     [SerializeField] private GameObject controllers;
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
-    private GameObject sweets;          //一時的なお菓子変数
     private bool inProcess;             //処理中フラグ
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -213,8 +212,9 @@ public class TestPlayer : MonoBehaviour
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
         else Debug.Log("sweetsscript is null");*/
 
-        GameObject newnextmass = null;     //上書き用マスオブジェクト
-        Sweets nextnextsweets = null;       //上書き用お菓子スクリプト
+        GameObject newnextmass = null;     //マスオブジェクト
+        Sweets nextnextsweets = null;      //お菓子スクリプト
+        Sweets pairnextsweets = null;      //ペアのお菓子スクリプト
 
         //前か後ろのマスにお菓子があったら
         if (sweetsscript != null)
@@ -228,28 +228,62 @@ public class TestPlayer : MonoBehaviour
                     inProcess = false;
                     return;
                 }
-
+                
                 //----------------------------------------------------
                 //向いている方向にお菓子を移動させる
                 //後ろのマス変数がnull => 後ろのマスを探していない
                 if (backmass == null)
                 {
-                    /*↓お菓子の先のマスにお菓子があるか探す*/
+                    /*↓お菓子の先のマスを探す*/
                     //お菓子の先のマスを取得
                     newnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
+                    
+                    //2マスのお菓子の場合はペアのお菓子の先のマスも探す
+                    if (sweetsscript.pair != null)
+                    {
+                        //ペアのお菓子のマスを取得
+                        GameObject pairmass = tm.GetNowMass(sweetsscript.pair);
 
-                    //お菓子の先のマスのお菓子を取得
+                        //ペアのお菓子の先のマスを取得
+                        GameObject pairnextmass = pairmass.GetComponent<Tile>().ReturnNextMass(dire);
+
+                        //ペアのお菓子の先のマスがあったら
+                        if (pairnextmass != null)
+                        {
+                            //ペアのお菓子の先のマスにあるお菓子を探す
+                            foreach (KeyValuePair<Vector2, Sweets> sweetspair in sm.sweets)
+                            {
+                                //座標で検索
+                                //ペアのお菓子の先のマスにあるお菓子の座標 == ペアのお菓子の先のマスの座標
+                                if (sweetspair.Key == (Vector2)pairmass.transform.position)
+                                {
+                                    //ペアのお菓子変数に設定
+                                    pairnextsweets = sweetspair.Value;
+                                }
+                            }
+                        }
+                        //ペアのお菓子の先のマスがなかったら
+                        else
+                        {
+                            inProcess = false;
+                            return;
+                        }
+                    }
+
+                    //移動させるお菓子の先のマスを探す
                     foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
                     {
-                        //移動させるお菓子の先のマスがある && 移動させるお菓子の先のマスにあるお菓子の座標==移動させるお菓子の先のマスの座標
+                        //座標で検索
+                        //移動させるお菓子の先のマスがある &&
+                        //移動させるお菓子の先のマスにあるお菓子の座標 == 移動させるお菓子の先のマスの座標
                         if (newnextmass != null && pair.Key == (Vector2)newnextmass.transform.position)
                         {
                             nextnextsweets = pair.Value;
-
                             break;
                         }
                     }
                 }
+
                 //----------------------------------------------------
                 //向いている方向とは逆方向に移動する
                 //後ろのマス変数がnull以外 => 後ろのマスにお菓子がある
@@ -270,8 +304,13 @@ public class TestPlayer : MonoBehaviour
                 newnextmass = next;
 
                 //お菓子を自身の子オブジェクトにする
-                sweets = sweetsscript.gameObject;
-                sweets.transform.SetParent(this.gameObject.transform);
+                sweetsscript.gameObject.transform.SetParent(this.gameObject.transform);
+                if (sweetsscript.pair != null)
+                {
+                    //移動用に親オブジェクトを設定
+                    sweetsscript.pair.transform.SetParent(this.gameObject.transform);
+                    Debug.Log(sweetsscript.pair.name);
+                }
             }
             //X or Shiftを押していない
             else
@@ -325,7 +364,14 @@ public class TestPlayer : MonoBehaviour
             trap.CaseFrischeSahne();
         }*/
 
-        MoveMass(newnextmass, sweetsscript, nextnextsweets).Forget();
+        //ペアのお菓子のスクリプトを取得
+        Sweets pairsweetsscript = null;
+        if (sweetsscript != null && sweetsscript.pair != null && sweetsscript.pair.GetComponent<Sweets>())
+        {
+            pairsweetsscript = sweetsscript.pair.GetComponent<Sweets>();
+        }
+
+        MoveMass(newnextmass, sweetsscript, nextnextsweets, pairsweetsscript, pairnextsweets).Forget();
     }
 
     /// <summary>
@@ -334,19 +380,63 @@ public class TestPlayer : MonoBehaviour
     /// <param name="next"></param>         移動先のマスオブジェクト
     /// <param name="sweetsscript"></param> 移動させるお菓子スクリプト
     /// <param name="beyond"></param>       移動先のマスにあるお菓子スクリプト
-    private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
+    /// 
+    /// <param name="pairsweets"></param>   移動させるお菓子のペアスクリプト
+    /// <param name="pairbeyond"></param>   移動させるお菓子の移動先のマスにあるお菓子スクリプト
+    private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond, Sweets pairsweets, Sweets pairbeyond)
     {
-        //移動先のマスにお菓子オブジェクトがある && 移動させるお菓子がある
-        if (beyond != null && sweetsscript != null)
+        //自身の子オブジェクトを取得
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in this.gameObject.transform)
         {
-            //"移動するお菓子"と"移動先のお菓子"で作れるか
-            //作れる = true  作れない = false
+            Debug.Log(child.name);
+            children.Add(child.gameObject);
+        }
 
-            //作れない場合は移動処理なし
+        //移動させるお菓子がある && ペアのお菓子が存在する
+        if (sweetsscript != null && pairsweets != null)
+        {
+            //移動先のマスにお菓子が存在する && ペアのお菓子の移動先にお菓子がある
+            //= 2マスのお菓子の場合は移動することはできない
+            if (beyond !=null && pairbeyond != null)
+            {
+                //親オブジェクトをリセット
+                ResetParent(children);
+
+                inProcess = false;
+                return;
+            }
+            //ペアのお菓子の移動先にお菓子がない
+            //= お菓子が移動できる
+            else if (pairbeyond == null)
+            {
+                //移動先のマスにお菓子がある && 移動させるお菓子と移動先のお菓子で作れない
+                //= 移動処理なし
+                if (beyond != null && !sweetsscript.TryMake(beyond))
+                {
+                    Debug.Log("can not make");
+
+                    //親子関係をリセット
+                    ResetParent(children);
+
+                    inProcess = false;
+                    return;
+                }
+
+                //移動のためにペアのお菓子の親オブジェクトを設定
+                pairsweets.gameObject.transform.SetParent(this.gameObject.transform);
+            }
+        }
+        //移動させるお菓子がある && 移動先のマスにお菓子が存在する && ペアのお菓子が存在しない
+        else if (sweetsscript != null && beyond != null && pairsweets == null)
+        {
             if (!sweetsscript.TryMake(beyond))
             {
                 Debug.Log("can not make");
-                sweets.transform.SetParent(sm.gameObject.transform);
+
+                //親子関係をリセット
+                ResetParent(children);
+
                 inProcess = false;
                 return;
             }
@@ -364,18 +454,25 @@ public class TestPlayer : MonoBehaviour
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
 
-        //お菓子変数がnullじゃない && 自身の子オブジェクトが0以外
-        // = 移動するお菓子がある
-        if (sweets != null && this.gameObject.transform.childCount != 0)
+        //自身の子オブジェクトが0以外 = 移動するお菓子がある
+        if (this.gameObject.transform.childCount != 0)
         {
             //お菓子を作れるとき
-            if (sweetsscript != null && beyond != null) sweetsscript.MakeSweets(beyond.gameObject);
+            //-> 移動先にお菓子が存在していてペアのお菓子が存在していないとき
+            if (sweetsscript != null && beyond != null && pairsweets == null)
+            {
+                sweetsscript.MakeSweets(beyond.gameObject);
+            }
+            //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
+            else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
+            {
+                pairsweets.MakeSweets(pairbeyond.gameObject);
+            }
 
-            //お菓子オブジェクトの親を初期化
-            sweets.transform.SetParent(sm.gameObject.transform);
-            sweets = null;
+            //親子関係をリセット
+            ResetParent(children);
 
-            /*工程数をひとつ減らす*/
+            /*残り工程数をひとつ減らす*/
             //Debug.Log("decrease remaining num");
             remaining.ReduceLife();
         }
@@ -403,6 +500,15 @@ public class TestPlayer : MonoBehaviour
 
         //処理フラグ更新
         inProcess = false;
+    }
+
+    private void ResetParent(List<GameObject> child)
+    {
+        foreach (GameObject ch in child)
+        {
+            ch.transform.SetParent(sm.gameObject.transform);
+            Debug.Log(ch.name);
+        }
     }
 
     /// <summary>
@@ -482,7 +588,7 @@ public class TestPlayer : MonoBehaviour
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
         float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.C
         float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
-        
+
         //移動
         if (!inProcess && vec2 != Vector2.zero)
         {

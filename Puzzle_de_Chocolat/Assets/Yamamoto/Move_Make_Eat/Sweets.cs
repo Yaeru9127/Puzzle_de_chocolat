@@ -19,6 +19,7 @@ public class Sweets : MonoBehaviour
     }
     public Material material;
 
+    public GameObject pair;     //2マスお菓子のペアオブジェクト変数
     private new string name;    //製菓後の名前変数
     public bool canMove;        //移動できるかの判定用
     public bool canEat;         //食べれるかの判定用
@@ -118,7 +119,7 @@ public class Sweets : MonoBehaviour
         //製菓後のGameObjectを取得
         GameObject changed = sm.GetMakedSweets(name);
 
-        /*GameObjectのnullチェック*/
+        /*製菓後のGameObjectのnullチェック*/
         if (changed != null)
         {
             //合体先のマスの上に製菓後のお菓子を配置
@@ -133,8 +134,9 @@ public class Sweets : MonoBehaviour
             //名前の初期化
             name = null;
 
-            //製菓前のふたつのオブジェクトを削除
+            //製菓前のオブジェクトを削除
             Destroy(comparison);
+            if (pair != null) Destroy(pair);
             Destroy(this.gameObject);
         }
         else Debug.Log("dont get sprite");
@@ -149,6 +151,9 @@ public class Sweets : MonoBehaviour
         if (canEat)
         {
             //Debug.Log("delicious!!!");
+
+            //お菓子を削除
+            if (pair != null) Destroy(pair);
             Destroy(this.gameObject);
 
             //お菓子の位置を更新
