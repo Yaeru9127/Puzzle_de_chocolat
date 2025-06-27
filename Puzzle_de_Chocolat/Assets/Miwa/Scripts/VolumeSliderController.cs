@@ -1,49 +1,50 @@
+using System.Security.Cryptography;
+using Unity.Jobs;
 using UnityEngine;
-using UnityEngine.UI; // UI要素（Slider）を使うために必要
+
+
+using UnityEngine.UI;
 
 public class VolumeSliderController : MonoBehaviour
 {
-    public Slider bgmVolumeSlider; // BGM用UIスライダーをInspectorで割り当てる
-    public Slider seVolumeSlider; // SFX用UIスライダーをInspectorで割り当てる
 
+    public Slider bgmVolumeSlider;
+    public Slider seVolumeSlider;  
     void Start()
     {
-        // スライダーの初期値を設定し、UIからの変更イベントを購読
-        // PlayerPrefsから以前の値をロードするか、デフォルト値（0.75f）を使用
         if (bgmVolumeSlider != null)
         {
-            float savedBGMVolume = PlayerPrefs.GetFloat("SavedBGMVolume", 0.75f);
+            float savedBGMVolume = PlayerPrefs.GetFloat("SaveBGMVolume", 1f);//スライダーの初期値
             bgmVolumeSlider.value = savedBGMVolume;
             bgmVolumeSlider.onValueChanged.AddListener(SetBGMVolumeFromSlider);
-            SetBGMVolumeFromSlider(savedBGMVolume); // 初期ロード時にAudioManagerに設定
+            SetBGMVolumeFromSlider(savedBGMVolume);
         }
-
-        if (seVolumeSlider != null)
+        if(seVolumeSlider !=null)
         {
-            float savedSEVolume = PlayerPrefs.GetFloat("SavedSEVolume", 0.75f);
+            float savedSEVolume = PlayerPrefs.GetFloat("SavedSEVolume", 1f);//スライダーの初期値
             seVolumeSlider.value = savedSEVolume;
             seVolumeSlider.onValueChanged.AddListener(SetSEVolumeFromSlider);
-            SetSEVolumeFromSlider(savedSEVolume); // 初期ロード時にAudioManagerに設定
+            SetSEVolumeFromSlider(savedSEVolume);
         }
     }
 
-    // BGMスライダーの値が変更されたときにAudioManagerのBGM音量設定を呼び出す
     void SetBGMVolumeFromSlider(float volume)
     {
-        if (AudioManager.Instance != null)
+        if(AudioManager.Instance !=null)
         {
             AudioManager.Instance.SetBGMVolume(volume);
-            PlayerPrefs.SetFloat("SavedBGMVolume", volume); // 設定を保存
+            PlayerPrefs.SetFloat("SavedBGMVolume", volume);
+            PlayerPrefs.Save();
         }
     }
 
-    // SFXスライダーの値が変更されたときにAudioManagerのSFX音量設定を呼び出す
     void SetSEVolumeFromSlider(float volume)
     {
-        if (AudioManager.Instance != null)
+        if(AudioManager.Instance !=null)
         {
             AudioManager.Instance.SetSEVolume(volume);
-            PlayerPrefs.SetFloat("SavedSEVolume", volume); // 設定を保存
+            PlayerPrefs.SetFloat("SavedSEVolume", volume);
+            PlayerPrefs.Save();
         }
     }
 }
