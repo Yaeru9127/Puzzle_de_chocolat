@@ -1,48 +1,59 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Remainingaircraft : MonoBehaviour
 {
-    // c‹@
+    // æ®‹æ©Ÿã¨ã—ã¦è¡¨ç¤ºã™ã‚‹ã‚¢ã‚¤ã‚³ãƒ³ï¼ˆUIã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰
     public List<GameObject> lifeSprites;
 
-    // ”šƒXƒvƒ‰ƒCƒgi0`99j
+    // 0ã€œ9 ã®æ•°å­—ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆï¼ˆæ•°å­—è¡¨ç¤ºç”¨ï¼‰
     public Sprite[] numberSprites;
 
-    // ”š•\¦—piUI—pImagej
-    public Image numberDisplay;
+    // æ•°å­—è¡¨ç¤ºã«ä½¿ã† UI Imageï¼ˆ2æ¡è¡¨ç¤ºç”¨ï¼‰
+    public Image[] numberDisplays;
 
-    // GameOver ‚ğ§Œä‚·‚éƒNƒ‰ƒX‚Ö‚ÌQÆ
+    // GameOver è¡¨ç¤ºå‡¦ç†ã‚’æŒã¤ã‚¯ãƒ©ã‚¹
     public GameOverController gameOverController;
 
-    // Œ»İ‚Ìc‹@”
+    // ç¾åœ¨ã®æ®‹æ©Ÿæ•°ï¼ˆlifeSprites.Countã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆï¼‰
     private int currentLife;
 
     void Start()
     {
-        // c‹@”‚ğƒŠƒXƒg‚Ì”‚©‚ç‰Šú‰»
+        // åˆæœŸæ®‹æ©Ÿæ•°ã‚’è¨­å®š
         currentLife = lifeSprites.Count;
+
+        // æ•°å­—ã¨ã‚¢ã‚¤ã‚³ãƒ³è¡¨ç¤ºã‚’åˆæœŸåŒ–
         UpdateLifeDisplay();
     }
 
+    // æ®‹æ©Ÿã‚’1ã¤æ¸›ã‚‰ã™å‡¦ç†
     public void ReduceLife()
     {
         if (currentLife > 0)
         {
+            // æ®‹æ©Ÿã‚’1æ¸›ã‚‰ã™
             currentLife--;
 
-            // c‹@ƒAƒCƒRƒ“”ñ•\¦
+            // è©²å½“ã™ã‚‹ã‚¢ã‚¤ã‚³ãƒ³ã‚’éè¡¨ç¤ºã«ã™ã‚‹
             lifeSprites[currentLife].SetActive(false);
 
-            // ”š‚àXV
+            // æ•°å­—è¡¨ç¤ºæ›´æ–°
             UpdateLifeDisplay();
 
+            // ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼å‡¦ç†ï¼ˆ0ä»¥ä¸‹ã«ãªã£ãŸã¨ãï¼‰
             if (currentLife <= 0)
             {
+                // æ•°å­—è¡¨ç¤ºã‚’ã™ã¹ã¦éè¡¨ç¤ºã«ã™ã‚‹
+                foreach (var display in numberDisplays)
+                {
+                    display.gameObject.SetActive(false);
+                }
+
+                // GameOverå‡¦ç†ã‚’å‘¼ã³å‡ºã™
                 if (gameOverController != null)
                 {
-                    numberDisplay.gameObject.SetActive(false); // ”š‚ÌImage‚ğ”ñ•\¦‚É‚·‚é
                     gameOverController.ShowGameOver();
                 }
                 else
@@ -53,24 +64,26 @@ public class Remainingaircraft : MonoBehaviour
         }
     }
 
+    // æ®‹æ©Ÿæ•°ã‚’UIã«åæ˜ ã™ã‚‹å‡¦ç†ï¼ˆ2æ¡æ•°å­—ï¼‰
     void UpdateLifeDisplay()
     {
-        // c‹@”‚ª“ñŒ…‘Î‰
-        int tens = currentLife / 10;  // \‚ÌˆÊ
-        int ones = currentLife % 10;  // ˆê‚ÌˆÊ
+        int tens = currentLife / 10;  // 10ã®ä½
+        int ones = currentLife % 10;  // 1ã®ä½
 
-        // 1Œ…‚Ì‚ÍA‚»‚Ì‚Ü‚Ü•\¦
-        if (currentLife < 10)
+        // 10ã®ä½ã®è¡¨ç¤º
+        if (tens >= 0 && tens < numberSprites.Length && numberDisplays.Length > 0)
         {
-            numberDisplay.sprite = numberSprites[currentLife];  // 0-9‚ÌƒXƒvƒ‰ƒCƒg
-        }
-        else
-        {
-            // “ñŒ…‚Ì‚Æ‚«A”’l‚É‰‚¶‚ÄƒXƒvƒ‰ƒCƒg‚ğ•ÏX
-            numberDisplay.sprite = numberSprites[currentLife];  // 10-99‚ÌƒXƒvƒ‰ƒCƒg
+            numberDisplays[0].sprite = numberSprites[tens];
+
+            // 10æœªæº€ã®ã¨ãã¯éè¡¨ç¤ºã«ã—ã¦0ã‚’è¦‹ã›ãªã„ã‚ˆã†ã«ã™ã‚‹
+            numberDisplays[0].gameObject.SetActive(tens > 0 || currentLife >= 10);
         }
 
-        // ”š‚ª0‚Ì‚Æ‚«AImage‚ª”ñ•\¦‚É‚È‚ç‚È‚¢‚æ‚¤‚É
-        numberDisplay.gameObject.SetActive(true); // í‚É•\¦
+        // 1ã®ä½ã®è¡¨ç¤ºï¼ˆå¸¸ã«è¡¨ç¤ºï¼‰
+        if (ones >= 0 && ones < numberSprites.Length && numberDisplays.Length > 1)
+        {
+            numberDisplays[1].sprite = numberSprites[ones];
+            numberDisplays[1].gameObject.SetActive(true);
+        }
     }
 }

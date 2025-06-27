@@ -549,7 +549,7 @@ GameObject:
   - component: {fileID: 477953901}
   m_Layer: 0
   m_Name: watermark_0
-  m_TagString: Button
+  m_TagString: Candy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1027,6 +1027,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gaugeSlider: {fileID: 590039488}
   gameOverController: {fileID: 171863864}
+  remainingAircraft: {fileID: 2061706226}
   increaseDuration: 0.5
   defaultIncreaseAmount: 4
 --- !u!1 &1185067046
@@ -2014,24 +2015,16 @@ MonoBehaviour:
   - {fileID: 9153319047519127056, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
   - {fileID: -290087458851718232, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
   - {fileID: -2095093859085678079, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
-  - {fileID: -4906167379763698644, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -8208058981458656029, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -1547524900322789551, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -744063835384098991, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -7510320563749203690, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -2845440556510888177, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 3168286671896697595, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 9063293069752963073, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -476436919263850630, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 7264112055361014304, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 1384485496926916755, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 7158639785439578848, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 1972285926285650494, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -6675614011154623288, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 6396061110187611003, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: -7964204617345445846, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  - {fileID: 4184474122472423466, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  numberDisplay: {fileID: 1981350901}
+  - {fileID: -1048593909, guid: 8adf3d7ae7082bc44a487cdf02a920ae, type: 3}
+  - {fileID: -682840348, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 1509829984, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -737907346, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 1177155438, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 640809680, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -1328709794, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 241595672, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 1210119792, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  numberDisplays: []
   gameOverController: {fileID: 171863864}
 --- !u!1001 &5939305438741733138
 PrefabInstance:
