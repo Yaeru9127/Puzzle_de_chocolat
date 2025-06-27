@@ -502,6 +502,10 @@ public class TestPlayer : MonoBehaviour
         inProcess = false;
     }
 
+    /// <summary>
+    /// 親子関係をリセットする関数
+    /// </summary>
+    /// <param name="child"></param> 
     private void ResetParent(List<GameObject> child)
     {
         foreach (GameObject ch in child)
@@ -605,7 +609,5 @@ public class TestPlayer : MonoBehaviour
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
         }
-        
-
     }
 }

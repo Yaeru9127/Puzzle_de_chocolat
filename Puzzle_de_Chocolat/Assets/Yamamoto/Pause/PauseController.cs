@@ -70,6 +70,17 @@ public class PauseController : MonoBehaviour
         //SceneManager.LoadScene("");
     }
 
+
+    /// <summary>
+    /// OnClick.シーンのリロード
+    /// </summary>
+    public void Retry()
+    {
+        //現在のシーンのインデックスナンバーを取得してリロード
+        int nowsceneindex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(nowsceneindex);
+    }
+
     private void OnDestroy()
     {
         //シーンを跨ぐときにメモリから消す
