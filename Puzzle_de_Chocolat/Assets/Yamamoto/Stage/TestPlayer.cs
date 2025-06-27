@@ -53,7 +53,7 @@ public class TestPlayer : MonoBehaviour
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
         manager.PlayerOn();
-        manager.UIOff();
+        manager.GamePadOff();
         speed = 0.4f;
         inProcess = false;
     }

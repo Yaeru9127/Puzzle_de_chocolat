@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
@@ -35,7 +36,10 @@ public class PauseController : MonoBehaviour
     {
         //プレイヤー操作をオフ、UI操作をオン
         manager.PlayerOff();
-        manager.UIOn();
+
+        bool deviceCheck = Gamepad.all.Count > 0;
+        if (deviceCheck) manager.GamePadOn();
+        else manager.MouseOn();
 
         //ポーズパネルを表示する
         pauseobj.SetActive(true);
@@ -56,7 +60,9 @@ public class PauseController : MonoBehaviour
         pauseobj.SetActive(false);
 
         //UI操作をオフ、プレイヤー操作をオン
-        manager.UIOff();
+        bool deviceCheck = Gamepad.all.Count > 0;
+        if (deviceCheck) manager.GamePadOff();
+        else manager.MouseOff();
         manager.PlayerOn();
         
     }

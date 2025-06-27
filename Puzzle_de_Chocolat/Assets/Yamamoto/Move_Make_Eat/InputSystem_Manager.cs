@@ -16,7 +16,11 @@ public class InputSystem_Manager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //èâä˙âª
         DontDestroyOnLoad(this.gameObject);
+        GetActions();
+        PlayerOff();
+        GamePadOn();
     }
 
     /// <summary>
@@ -31,17 +35,31 @@ public class InputSystem_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// UI
+    /// GamePad
     /// </summary>
-    public void UIOn()
+    public void GamePadOn()
     {
-        actions.UI.Enable();
+        actions.GamePad.Enable();
     }
 
-    public void UIOff()
+    public void GamePadOff()
     {
-        actions.UI.Disable();
+        actions.GamePad.Disable();
     }
+
+    /// <summary>
+    /// Mouse
+    /// </summary>
+    public void MouseOn()
+    {
+        actions.Mouse.Enable();
+    }
+
+    public void MouseOff()
+    {
+        actions.Mouse.Disable();
+    }
+
 
     /// <summary>
     /// PlayerÇÃÉIÉìÉIÉt
@@ -59,6 +77,6 @@ public class InputSystem_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

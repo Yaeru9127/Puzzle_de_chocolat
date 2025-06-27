@@ -23,16 +23,18 @@ public class FadeUI : MonoBehaviour
         float t = 0f;
         Color c = fadeImage.color;
 
-        while (t < fadeDuration)
+        while (true)
         {
             t += Time.deltaTime;
             c.a = t / fadeDuration;
             fadeImage.color = c;
             yield return null;
+
+            if (fadeImage.color.a <= 0) break;
         }
 
-        c.a = 1f;
-        fadeImage.color = c;
+        //c.a = 1f;
+        //fadeImage.color = c;
     }
 
     public IEnumerator FadeIn()
