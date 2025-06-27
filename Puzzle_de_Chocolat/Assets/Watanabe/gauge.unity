@@ -1058,12 +1058,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a331a4dc75004d44a0de246522c9e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clearImage: {fileID: 563637852}
-  noRetryFastClearSprite: {fileID: 7335053153666065984, guid: 57f87311e3c9fe946a1bbfbcb31e0720, type: 3}
-  retryOrNoRetryClearSprite: {fileID: -8929442069124683599, guid: 59a37bc58a1f69b4c94b6243b24b739e, type: 3}
-  retryClearSprite: {fileID: -3457935566585951309, guid: 4a4dfef868ea533498595ec414ff3636, type: 3}
-  minStepsToClear: 4
-  minRetriesToClear: 1
 --- !u!4 &1185067048
 Transform:
   m_ObjectHideFlags: 0
@@ -2002,6 +1996,13 @@ MonoBehaviour:
   - {fileID: 648572799}
   - {fileID: 1312988207}
   - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
+  - {fileID: 1780122609}
   numberSprites:
   - {fileID: 1529409630825075727, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
   - {fileID: -4677205242863488633, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
@@ -2013,6 +2014,23 @@ MonoBehaviour:
   - {fileID: 9153319047519127056, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
   - {fileID: -290087458851718232, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
   - {fileID: -2095093859085678079, guid: f01603902c766d743898c2e283bbb7f5, type: 3}
+  - {fileID: -4906167379763698644, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -8208058981458656029, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -1547524900322789551, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -744063835384098991, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -7510320563749203690, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -2845440556510888177, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 3168286671896697595, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 9063293069752963073, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -476436919263850630, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 7264112055361014304, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 1384485496926916755, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 7158639785439578848, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 1972285926285650494, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -6675614011154623288, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 6396061110187611003, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: -7964204617345445846, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
+  - {fileID: 4184474122472423466, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
   numberDisplay: {fileID: 1981350901}
   gameOverController: {fileID: 171863864}
 --- !u!1001 &5939305438741733138

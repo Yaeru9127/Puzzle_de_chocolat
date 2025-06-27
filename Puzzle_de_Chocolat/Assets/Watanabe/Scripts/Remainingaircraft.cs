@@ -7,7 +7,7 @@ public class Remainingaircraft : MonoBehaviour
     // 残機
     public List<GameObject> lifeSprites;
 
-    // 数字スプライト（0～9）
+    // 数字スプライト（0～99）
     public Sprite[] numberSprites;
 
     // 数字表示用（UI用Image）
@@ -45,7 +45,6 @@ public class Remainingaircraft : MonoBehaviour
                     numberDisplay.gameObject.SetActive(false); // 数字のImageを非表示にする
                     gameOverController.ShowGameOver();
                 }
-
                 else
                 {
                     Debug.Log("Game Over");
@@ -56,10 +55,22 @@ public class Remainingaircraft : MonoBehaviour
 
     void UpdateLifeDisplay()
     {
-        // 数字スプライトが用意されていれば更新
-        if (currentLife >= 0 && currentLife < numberSprites.Length)
+        // 残機数が二桁対応
+        int tens = currentLife / 10;  // 十の位
+        int ones = currentLife % 10;  // 一の位
+
+        // 1桁の時は、そのまま表示
+        if (currentLife < 10)
         {
-            numberDisplay.sprite = numberSprites[currentLife];
+            numberDisplay.sprite = numberSprites[currentLife];  // 0-9のスプライト
         }
+        else
+        {
+            // 二桁のとき、数値に応じてスプライトを変更
+            numberDisplay.sprite = numberSprites[currentLife];  // 10-99のスプライト
+        }
+
+        // 数字が0のとき、Imageが非表示にならないように
+        numberDisplay.gameObject.SetActive(true); // 常に表示
     }
 }
