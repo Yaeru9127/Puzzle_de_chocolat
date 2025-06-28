@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ffd8083107a12864fa711aa38f3d4511
+guid: ede736aa3bc30d8439639676238ea54d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1645109858000972950
-    second: stage_Back_0
+      213: 8206931891736078550
+    second: omatsuri_ringoame_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: stage_Back_0
+      name: omatsuri_ringoame_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 7894
-        height: 4502
+        x: 56
+        y: 9
+        width: 409
+        height: 613
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a63db51ec456b29e0800000000000000
-      internalID: -1645109858000972950
+      spriteID: 6d8e0c6c211e4e170800000000000000
+      internalID: 8206931891736078550
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      stage_Back_0: -1645109858000972950
+      omatsuri_ringoame_0: 8206931891736078550
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

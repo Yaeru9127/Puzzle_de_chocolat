@@ -335,8 +335,7 @@ public class TestPlayer : MonoBehaviour
             newnextmass = next;
         }
 
-        /*↓次のマスのトラップ処理*/
-        //次のマスのトラップを取得
+        /*//次のマスのトラップを取得
         Trap trap = null;
         Collider2D[] col = Physics2D.OverlapPointAll(newnextmass.transform.position);
         foreach (Collider2D col2 in col)
@@ -346,22 +345,9 @@ public class TestPlayer : MonoBehaviour
                 trap = col2.gameObject.GetComponent<Trap>();
             }
         }
-
-        /*//残り工程数が0以下 && トラップが生クリーム
-        if (remainingnum <= 0 && trap.type == Trap.Type.FrischeSahne)
+        if (trap != null)
         {
-            //踏むと残り工程数が0未満になるので移動はしない
-            inProcess = false;
-            return;
-        }
-        //残り工程数が0以上 && トラップが生クリーム
-        else if (remainingnum > 0 && trap.type == Trap.Type.FrischeSahne)
-        {
-            //工程数をひとつ減らす
-            Debug.Log("decrease remaining num by FrischeSahne");
-            
-            //生クリームを踏む処理（現在はなにもない）
-            trap.CaseFrischeSahne();
+            //移動前の段階で次のマスのトラップが作用する場合はそのトラップを処理
         }*/
 
         //ペアのお菓子のスクリプトを取得
@@ -450,6 +436,9 @@ public class TestPlayer : MonoBehaviour
         await this.gameObject.transform.DOMove(pos, speed)
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
+
+        //元のマスのひびチェック
+        ReturnNowTileScript().ChangeSprite();
 
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);

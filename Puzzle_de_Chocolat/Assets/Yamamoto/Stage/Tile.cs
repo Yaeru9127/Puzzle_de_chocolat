@@ -13,6 +13,9 @@ public class Tile : MonoBehaviour
         Vector2.up, Vector2.down, Vector2.left, Vector2.right
     };
 
+    [SerializeField] private Sprite hibi;   //ひびマスSprite
+    public bool canBreak;                   //壊れるマス設定変数
+
     private void Awake()
     {
         
@@ -94,6 +97,20 @@ public class Tile : MonoBehaviour
         if (mass == null) Debug.Log("mass is null");
         else Debug.Log(mass.name);*/
         return mass;
+    }
+
+    /// <summary>
+    /// マスのひび入れ、マスの削除関数
+    /// </summary>
+    public void ChangeSprite()
+    {
+        //壊れないマスならreturn
+        if (!canBreak) return;
+
+        //Spriteがひびマスでないなら、ひびマスに設定
+        if (this.gameObject.GetComponent<SpriteRenderer>().sprite != hibi) this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
+        //Spriteがひびマスなら
+        else if (this.gameObject.GetComponent<SpriteRenderer>().sprite == hibi) Destroy(this.gameObject);
     }
 
     // Update is called once per frame

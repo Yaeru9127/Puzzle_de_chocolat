@@ -1,6 +1,6 @@
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CursorController : MonoBehaviour
@@ -12,7 +12,7 @@ public class CursorController : MonoBehaviour
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
-    public GameObject instance;
+    private GameObject instance;
     public InputAction input;
     private float speed;
 
@@ -37,6 +37,9 @@ public class CursorController : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    /// <summary>
+    /// コントローラーの接続を検知する関数
+    /// </summary>
     private void DeviceCheck()
     {
         // コントローラーの接続を検知
@@ -89,6 +92,27 @@ public class CursorController : MonoBehaviour
         Cursor.visible = torf;
     }
 
+    private void GamePadClick()
+    {
+        //選択しているUIを格納
+        GameObject select = EventSystem.current.currentSelectedGameObject;
+
+        //選択UIが存在しない || 選択UIがボタンではない => return
+        if (select == null || select.GetComponent<Button>() == null) return;
+
+        //選択UIが存在する && 選択UIがボタンである
+        if (select != null && select.GetComponent<Button>() != null)
+        {
+            UnityEngine.UI.Button button = select.GetComponent<UnityEngine.UI.Button>();
+
+            if (button != null)
+            {
+                Debug.Log(button.gameObject.name);
+                button.onClick.Invoke();
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -102,6 +126,8 @@ public class CursorController : MonoBehaviour
         {
             Vector2 now = instance.transform.position;
             instance.transform.position = now + read * speed * Time.deltaTime;
+
+            GamePadClick();
         }
     }
 }

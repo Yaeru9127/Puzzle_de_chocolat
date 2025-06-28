@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      hyouka_board1_0: 249103917650133473
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
