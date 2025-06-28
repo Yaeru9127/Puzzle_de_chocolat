@@ -6,64 +6,39 @@ using System.Collections.Generic;
 public class GaugeController : MonoBehaviour
 {
     [Header("UI関連")]
-    [Tooltip("ゲージバーのスライダーコンポーネント")]
+    [Tooltip("UIスライダー")]
     [SerializeField] private Slider gaugeSlider;
 
-    [Tooltip("GameOverを管理するクラス")]
     [SerializeField] private GameOverController gameOverController;
 
-    [Tooltip("残機を管理するクラス")]
-    [SerializeField] private Remainingaircraft remainingAircraft;
+    [SerializeField] private Remainingaircraft remainingAircraft; // ★ 残機管理クラスへの参照を追加
 
     [Header("ゲージ設定")]
-    [Tooltip("ゲージが増加するまでの時間（秒）")]
+    [Tooltip("ゲージが増加するのにかかる時間（秒）")]
     [SerializeField] private float increaseDuration = 0.5f;
 
-    [Tooltip("通常のゲージ増加量（指定がない場合）")]
+    [Tooltip("デフォルトのゲージ増加量（シーンごとに調整）")]
     [SerializeField] private int defaultIncreaseAmount = 1;
 
-    // ゲージの最大値（固定）
     private const int maxValue = 10;
-
-    // ゲージ増加リクエストを保持するキュー
     private Queue<int> increaseQueue = new Queue<int>();
-
-    // 現在ゲージが増加中かどうかのフラグ
     private bool isIncreasing = false;
 
-    /// <summary>
-    /// デフォルトの増加量でゲージを増加させる（外部呼び出し用）
-    /// </summary>
     public void OnObjectDestroyed()
     {
         OnObjectDestroyed(defaultIncreaseAmount);
     }
 
-    /// <summary>
-    /// 指定した量でゲージを増加させ、残機も減らす
-    /// </summary>
-    /// <param name="increaseAmount">ゲージの増加量</param>
     public void OnObjectDestroyed(int increaseAmount)
     {
-        // ゲージ増加リクエストをキューに追加
         increaseQueue.Enqueue(increaseAmount);
 
-        // 残機も減らす
-        if (remainingAircraft != null)
-        {
-            remainingAircraft.ReduceLife();
-        }
-
-        // 増加処理が動いていなければコルーチン開始
         if (!isIncreasing)
         {
             StartCoroutine(ProcessQueue());
         }
     }
 
-    /// <summary>
-    /// ゲージ増加キューを処理するコルーチン
-    /// </summary>
     private IEnumerator ProcessQueue()
     {
         isIncreasing = true;
@@ -77,9 +52,6 @@ public class GaugeController : MonoBehaviour
         isIncreasing = false;
     }
 
-    /// <summary>
-    /// ゲージを滑らかに増加させるコルーチン
-    /// </summary>
     private IEnumerator IncreaseGaugeSmoothly(int amount)
     {
         if (gaugeSlider == null)
@@ -99,7 +71,13 @@ public class GaugeController : MonoBehaviour
 
         gaugeSlider.value = endValue;
 
-        // ゲージが最大になったらGameOver発動
+        // ★ ゲージが増加したタイミングで残機を減らす
+        if (remainingAircraft != null)
+        {
+            remainingAircraft.ReduceLife();
+        }
+
+        // ゲージが最大になったらゲームオーバー
         if (Mathf.Approximately(gaugeSlider.value, maxValue) && gameOverController != null)
         {
             gameOverController.ShowGameOver();

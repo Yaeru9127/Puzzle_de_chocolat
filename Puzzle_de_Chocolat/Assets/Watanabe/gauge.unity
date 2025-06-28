@@ -2024,7 +2024,7 @@ MonoBehaviour:
   - {fileID: -1328709794, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
   - {fileID: 241595672, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
   - {fileID: 1210119792, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
-  numberDisplays: []
+  numberDisplay: {fileID: 1981350901}
   gameOverController: {fileID: 171863864}
 --- !u!1001 &5939305438741733138
 PrefabInstance:
