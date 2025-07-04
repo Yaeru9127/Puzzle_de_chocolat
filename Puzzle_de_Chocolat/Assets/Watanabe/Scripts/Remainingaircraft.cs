@@ -32,6 +32,30 @@ public class Remainingaircraft : MonoBehaviour
         gameOverController = GameOverController.over;
         currentLife = lifeSprites.Count;
         UpdateLifeDisplay();
+        SetLifes();
+    }
+
+    public void SetLifes()
+    {
+        foreach (GameObject obj in lifeSprites)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(true);
+            }
+        }
+
+        lifeSprites.Clear();
+
+        if (GameOverController.over != null && GameOverController.over.gameObject != null)
+        {
+            for (int i = 0; i < this.gameObject.transform.childCount; i++)
+            {
+                Transform child = this.gameObject.transform.GetChild(i);
+                lifeSprites.Add(child.gameObject);
+            }
+            currentLife = lifeSprites.Count;
+        }
     }
 
     public void ReduceLife()
