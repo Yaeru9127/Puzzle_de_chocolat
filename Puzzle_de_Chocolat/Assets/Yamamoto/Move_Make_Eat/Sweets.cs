@@ -48,7 +48,7 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (comparison.material == Material.Sugar)name = "pretzel";
+                if (comparison.material == Material.Sugar) name = "pretzel";
                 else if (comparison.material == Material.Egg) name = "baumkuchen";
                 else if (comparison.material == Material.Milk) name = "pannacotta";
                 else return false;
@@ -134,6 +134,6 @@ public class Sweets : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

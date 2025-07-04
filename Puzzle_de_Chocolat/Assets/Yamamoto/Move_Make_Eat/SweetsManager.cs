@@ -19,7 +19,7 @@ public class SweetsManager : MonoBehaviour
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
-    [SerializeField] private GaugeController gaugeCC;
+    //[SerializeField] private GaugeController gaugeCC;  // ゲージコントローラー（コメントアウト）
 
     /*レシピ　メモ
      *プレッツェル : pretzel  バター + 砂糖
@@ -37,7 +37,6 @@ public class SweetsManager : MonoBehaviour
         else if (sm != null) Destroy(this.gameObject);
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SearchSweets();
@@ -63,7 +62,6 @@ public class SweetsManager : MonoBehaviour
     /// <summary>
     /// マス上のすべてのお菓子を取得する関数
     /// </summary>
-    /// <returns></returns>
     public void SearchSweets()
     {
         sweets.Clear();
@@ -71,17 +69,13 @@ public class SweetsManager : MonoBehaviour
         //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
+            var child = this.gameObject.transform.GetChild(i);
+            Sweets sweetsComp = child.GetComponent<Sweets>();
+            if (sweetsComp != null)
             {
-                sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
+                sweets.Add(child.position, sweetsComp);
             }
         }
-
-        /*//デバッグ
-        foreach (var sw in sweets)
-        {
-            Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
-        }*/
     }
 
     /// <summary>
@@ -108,11 +102,10 @@ public class SweetsManager : MonoBehaviour
     /// <summary>
     /// 食料ゲージを減らす関数を呼ぶ関数
     /// </summary>
-    /// スクリプトの設定の関係上、ここから呼び出す(仮)
-    public void CallDecreaseFoodGauge()
-    {
-        gaugeCC.OnObjectDestroyed();
-    }
+    //public void CallDecreaseFoodGauge()
+    //{
+    //    gaugeCC.OnObjectDestroyed();  // ゲージ処理（コメントアウト）
+    //}
 
     private void OnDestroy()
     {
@@ -120,9 +113,8 @@ public class SweetsManager : MonoBehaviour
         if (sm == this) sm = null;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        //今は特に何もしない
     }
 }

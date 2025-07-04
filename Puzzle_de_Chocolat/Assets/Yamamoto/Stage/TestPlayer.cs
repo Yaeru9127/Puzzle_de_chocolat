@@ -473,7 +473,7 @@ public class TestPlayer : MonoBehaviour
             eatnext.EatSweets();
 
             //H—¿ƒQ[ƒW‚Ì‘‰Á
-            sm.CallDecreaseFoodGauge();
+            //sm.CallDecreaseFoodGauge();
         }
         else Debug.Log("this food can not eat");
 
