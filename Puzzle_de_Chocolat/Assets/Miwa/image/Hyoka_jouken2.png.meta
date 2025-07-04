@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b57accda91e84d1418277b368c43dbc4
+guid: 12729ac28f957914e8b7e4c65cfab75f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4190548176374339244
-    second: slider_2_0
+      213: -2228592727594539726
+    second: Hyoka_jouken2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: slider_2_0
+      name: Hyoka_jouken2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2031
-        height: 201
+        width: 2279
+        height: 1745
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 459eb05d2ae28d5c0800000000000000
-      internalID: -4190548176374339244
+      spriteID: 23565bac8b27211e0800000000000000
+      internalID: -2228592727594539726
       vertices: []
       indices: 
       edges: []
@@ -173,8 +173,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      slider_2_0: -4190548176374339244
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
