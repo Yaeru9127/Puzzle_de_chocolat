@@ -375,7 +375,7 @@ public class TestPlayer : MonoBehaviour
         List<GameObject> children = new List<GameObject>();
         foreach (Transform child in this.gameObject.transform)
         {
-            Debug.Log(child.name);
+            //Debug.Log(child.name);
             children.Add(child.gameObject);
         }
 
@@ -503,7 +503,7 @@ public class TestPlayer : MonoBehaviour
         foreach (GameObject ch in child)
         {
             ch.transform.SetParent(sm.gameObject.transform);
-            Debug.Log(ch.name);
+            //Debug.Log(ch.name);
         }
     }
 
