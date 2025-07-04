@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using UnityEditor.Experimental.GraphView;
-using NUnit.Framework.Internal;
 
 
 public class FadeManager : MonoBehaviour
@@ -85,7 +83,6 @@ public class FadeManager : MonoBehaviour
         });
     }
 
-
     public void FadegameLodScene(string game)
     {
         FadeOut(() =>
@@ -93,5 +90,13 @@ public class FadeManager : MonoBehaviour
             if (game == "Stage01") stage.stagenum = 0;
             SceneManager.LoadScene(game);
         });
+    }
+
+    public void EndGame()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }
