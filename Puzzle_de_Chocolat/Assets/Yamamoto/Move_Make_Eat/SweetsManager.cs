@@ -19,14 +19,14 @@ public class SweetsManager : MonoBehaviour
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
     //インスペクター設定用のList
-    public List<List<MakedSweetsPair>> mixtures = new List<List<MakedSweetsPair>>();
+    public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
     [SerializeField] private GaugeController gaugeCC;
 
     /*レシピ　メモ
      *Stage1
      *プレッツェル : pretzel    バター + 砂糖
-     *マドレーヌ : madeleine    バター + 卵
+     *バームクーヘン : baumkuchen バター + 卵
      *
      *Stage2
      *パンナコッタ : pannacotta バター + 牛乳
@@ -36,6 +36,7 @@ public class SweetsManager : MonoBehaviour
      *else
      *カヌレ : canulé           砂糖 + 卵
      *マカロン : macaroon  バター + 牛乳
+     *マドレーヌ : madeleine    バター + 卵
      *
      *Inspecterのstringには上記の名前で設定すること*/
 
@@ -107,10 +108,9 @@ public class SweetsManager : MonoBehaviour
     public GameObject GetMakedSweets(string name)
     {
         GameObject returnobject = null;
-        List<MakedSweetsPair> maked = mixtures[stage.stagenum];
 
         //名前で検索
-        foreach (MakedSweetsPair pair in maked)
+        foreach (MakedSweetsPair pair in mixtures)
         {
             if (pair.makedName == name)
             {

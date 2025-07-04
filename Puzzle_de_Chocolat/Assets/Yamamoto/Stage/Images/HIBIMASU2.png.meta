@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      HIBIMASU2_0: 6682011128216389247
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

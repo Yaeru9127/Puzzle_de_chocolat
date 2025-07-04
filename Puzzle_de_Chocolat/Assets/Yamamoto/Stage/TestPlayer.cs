@@ -110,7 +110,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //プレイヤーの向きを設定
-        SetPlayerDirection(directo);
+        //SetPlayerDirection(directo);
 
         //入力方向にある次のマスを取得
         Tile nowtile = ReturnNowTileScript();

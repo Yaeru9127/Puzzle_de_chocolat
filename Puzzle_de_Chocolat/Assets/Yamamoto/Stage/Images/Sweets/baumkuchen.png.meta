@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      baumkuchen_0: -4925130958772955173
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

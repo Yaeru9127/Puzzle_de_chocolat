@@ -1369,12 +1369,12 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 486919314}
+  - {fileID: 991913333}
   - {fileID: 195182060}
   - {fileID: 979863545}
   - {fileID: 844036413}
   - {fileID: 1541428323}
-  - {fileID: 486919314}
-  - {fileID: 991913333}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1634,7 +1634,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: On Pause
+  m_text: Pause
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1661,14 +1661,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 55
+  m_fontSizeBase: 55
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2099,7 +2099,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 8684269428423967454, guid: bec0d8c0903118d44955975118a3593c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2132,7 +2132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2531634364957655527, guid: 1b4bbbb9e7a03784b8201911901e9378, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4936814833519966687, guid: 1b4bbbb9e7a03784b8201911901e9378, type: 3}
       propertyPath: m_Name
@@ -2387,6 +2387,7 @@ GameObject:
   - component: {fileID: 1150791156}
   - component: {fileID: 1150791157}
   - component: {fileID: 1150791158}
+  - component: {fileID: 1150791159}
   m_Layer: 0
   m_Name: ControllersEmpty
   m_TagString: Untagged
@@ -2483,6 +2484,18 @@ MonoBehaviour:
   gameOverImage: {fileID: 1541428324}
   fadeDuration: 1.5
   waitBeforeRetry: 3
+--- !u!114 &1150791159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150791154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b639ee02853d8ed4f924e6ba69de6740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1150855212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3021,6 +3034,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage: {fileID: 0}
+  mixtures:
+  - makedSweets: {fileID: 6587333138416083492, guid: e5709828ead7d4b4aad6950f6f1dbdd7, type: 3}
+    makedName: pretzel
+  - makedSweets: {fileID: 8328734318948931800, guid: fbf118b0d1907b948b766090b4573d26, type: 3}
+    makedName: madeleine
+  - makedSweets: {fileID: 5378070503894086322, guid: b3602e43ff26cfd4d91fb18acb0a4d47, type: 3}
+    makedName: pannacotta
+  - makedSweets: {fileID: 8121381601419604992, guid: 8f5c6046786c1bb4bbe18c5600b5dab5, type: 3}
+    makedName: tiramisu
+  - makedSweets: {fileID: 1229217850999343624, guid: fef76010a776c7645b29481569c1d32a, type: 3}
+    makedName: maritozzo
+  - makedSweets: {fileID: 5924880099824159555, guid: 553f36214b3a8454a8008d30177f2b4c, type: 3}
+    makedName: baumkuchen
   gaugeCC: {fileID: 1150791157}
 --- !u!4 &1319832603
 Transform:
@@ -5715,6 +5741,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4381739239368063215, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 02a6dc94c973a904a9615120573b3522, type: 3}
+    - target: {fileID: 7254401693067938389, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254401693067938389, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7254401693067938389, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 7254401693067938389, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.85025
