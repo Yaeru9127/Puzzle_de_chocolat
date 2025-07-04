@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Main/TitleScene.unity
     guid: 4490bbd8a8927ee488c9eaff4736146d
   - enabled: 1
-    path: Assets/Yamamoto/Move_Make_Eat/Stage01.unity
-    guid: 87461fa914b6fd34d8f0f6fd71e24762
-  - enabled: 1
     path: Assets/Main/OpshonScene.unity
     guid: 586ea4140eac04a4ab761bffb055985f
+  - enabled: 1
+    path: Assets/Main/Stage01.unity
+    guid: 9b65b8ff3cd4eb745842e9d2f83ca436
   - enabled: 1
     path: Assets/Main/RetryScene.unity
     guid: 80add36e203c5c343a055b72f6c90856
