@@ -1,84 +1,60 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class scenereload : MonoBehaviour
 {
-    private const string ReloadCountKey = "SceneReloadCount";
-
-    // Canvas“à‚ÌŠm”Fƒ_ƒCƒAƒƒOPanel‚ğŠi”[‚·‚é•Ï”
     public GameObject confirmationDialog;
 
     void Start()
     {
-        // Œ»İ‚ÌƒŠƒ[ƒhƒJƒEƒ“ƒg‚ğƒƒO‚Éo—ÍiƒfƒoƒbƒO—pj
-        int reloadCount = PlayerPrefs.GetInt(ReloadCountKey, 0);
-        Debug.Log("Œ»İ‚ÌƒŠƒ[ƒhƒJƒEƒ“ƒg: " + reloadCount);
-
-        // ‰Šúó‘Ô‚Å‚ÍŠm”Fƒ_ƒCƒAƒƒO‚ğ”ñ•\¦‚É
         confirmationDialog.SetActive(false);
+        Debug.Log("ç¾åœ¨ã®ãƒªãƒ­ãƒ¼ãƒ‰ã‚«ã‚¦ãƒ³ãƒˆ: " + ReloadCountManager.Instance.ReloadCount);
     }
 
     void Update()
     {
-        // RƒL[‚Ü‚½‚ÍYƒ{ƒ^ƒ“‚ÅƒŠƒ[ƒh‚ğŠm”F
-        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton3)) // Yƒ{ƒ^ƒ“ (ƒWƒ‡ƒCƒXƒeƒBƒbƒN)
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton3))
         {
             ShowConfirmationDialog();
         }
 
-        // Šm”Fƒ_ƒCƒAƒƒO‚Å‚ÌƒL[“ü—Í‚ğˆ—
         HandleConfirmationInput();
     }
 
-    // Šm”Fƒ_ƒCƒAƒƒO‚ğ•\¦‚·‚é
     void ShowConfirmationDialog()
     {
-        confirmationDialog.SetActive(true); // ƒ_ƒCƒAƒƒO‚ğ•\¦
-        Debug.Log("ƒŠƒ[ƒh‚µ‚Ü‚·‚©H[Y] ‚Í‚¢A[N] ‚¢‚¢‚¦");
+        confirmationDialog.SetActive(true);
+        Debug.Log("ãƒªãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã‹ï¼Ÿ[Y] ã¯ã„ã€[N] ã„ã„ãˆ");
     }
 
-    // Šm”Fƒ_ƒCƒAƒƒO‚Å‚Ìƒ†[ƒU[“ü—Í‚ğˆ—
     void HandleConfirmationInput()
     {
-        // u‚Í‚¢v‚ğ‘I‘ğ: YƒL[ ‚Ü‚½‚Í Aƒ{ƒ^ƒ“
-        if (Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.JoystickButton0)) // Aƒ{ƒ^ƒ“ (ƒWƒ‡ƒCƒXƒeƒBƒbƒN)
+        if (Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.JoystickButton0))
         {
             OnConfirmReload();
         }
 
-        // u‚¢‚¢‚¦v‚ğ‘I‘ğ: NƒL[ ‚Ü‚½‚Í Bƒ{ƒ^ƒ“
-        if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton1)) // Bƒ{ƒ^ƒ“ (ƒWƒ‡ƒCƒXƒeƒBƒbƒN)
+        if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton1))
         {
             OnCancelReload();
         }
     }
 
-    // Šm”Fƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—iƒŠƒ[ƒhÀsj
     void OnConfirmReload()
     {
-        confirmationDialog.SetActive(false); // ƒ_ƒCƒAƒƒO‚ğ”ñ•\¦
-
-        int reloadCount = PlayerPrefs.GetInt(ReloadCountKey, 0);
-        reloadCount++;
-        PlayerPrefs.SetInt(ReloadCountKey, reloadCount);
-        PlayerPrefs.Save(); // –¾¦“I‚É•Û‘¶
-
-        // ƒV[ƒ“‚ğƒŠƒ[ƒh
+        confirmationDialog.SetActive(false);
+        ReloadCountManager.Instance.IncrementReloadCount();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // ƒLƒƒƒ“ƒZƒ‹ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«‚Ìˆ—iƒŠƒ[ƒh‚ğƒLƒƒƒ“ƒZƒ‹j
     void OnCancelReload()
     {
-        confirmationDialog.SetActive(false); // ƒ_ƒCƒAƒƒO‚ğ”ñ•\¦
-        Debug.Log("ƒŠƒ[ƒh‚ªƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½");
+        confirmationDialog.SetActive(false);
+        Debug.Log("ãƒªãƒ­ãƒ¼ãƒ‰ãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ");
     }
 
-    // I—¹‚ÉƒŠƒZƒbƒg‚ğs‚¢‚½‚¢ê‡
     void OnApplicationQuit()
     {
-        // ƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹‚ÉƒJƒEƒ“ƒg‚ğƒŠƒZƒbƒg
-        PlayerPrefs.SetInt(ReloadCountKey, 0);
-        PlayerPrefs.Save();
+        ReloadCountManager.Instance.ResetReloadCount();
     }
-}//‚Ù‚©‚ÌƒR[ƒh‚Ìƒ{ƒ^ƒ“‚ÉŠÖ—^‚µ‚È‚¢‚æ‚¤‚É‚·‚é
+}
