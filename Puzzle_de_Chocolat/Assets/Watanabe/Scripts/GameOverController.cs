@@ -31,6 +31,7 @@ public class GameOverController : MonoBehaviour
     public void ShowGameOver()
     {
         if (isGameOver) return;
+
         isGameOver = true;
 
         if (gameOverImage != null)

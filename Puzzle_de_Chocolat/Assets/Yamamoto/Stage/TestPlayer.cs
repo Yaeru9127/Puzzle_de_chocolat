@@ -46,8 +46,8 @@ public class TestPlayer : MonoBehaviour
         pause = PauseController.pause;
         cg = CanGoal.cg;
         cc = CursorController.cc;
-        remaining = controllers.GetComponent<Remainingaircraft>();
-        goc = controllers.GetComponent<GameOverController>();
+        remaining = Remainingaircraft.remain;
+        goc = GameOverController.over;
 
         //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();

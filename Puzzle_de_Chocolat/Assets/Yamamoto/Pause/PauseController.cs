@@ -10,6 +10,7 @@ public class PauseController : MonoBehaviour
     private InputSystem_Manager manager;
     private CursorController cc;
     private ReloadCountManager rm;
+    private Remainingaircraft remain;
 
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
 
@@ -27,6 +28,7 @@ public class PauseController : MonoBehaviour
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
         rm = ReloadCountManager.Instance;
+        remain = Remainingaircraft.remain;
 
         //もし表示状態なら非表示にする
         if (pauseobj.activeSelf) pauseobj.SetActive(false);
@@ -76,7 +78,7 @@ public class PauseController : MonoBehaviour
     public void ReturnTitle()
     {
         //タイトルシーンを読み込む
-        //SceneManager.LoadScene("");
+        SceneManager.LoadScene("TitleScene");
     }
 
 
@@ -88,11 +90,14 @@ public class PauseController : MonoBehaviour
         //現在のシーンのインデックスナンバーを取得してリロード
         int nowsceneindex = SceneManager.GetActiveScene().buildIndex;
         rm.IncrementReloadCount();
+
         SceneManager.LoadScene(nowsceneindex);
     }
 
     private void OnDestroy()
     {
+        remain.SetLifes();
+
         //シーンを跨ぐときにメモリから消す
         if (pause == this) pause = null;
     }
