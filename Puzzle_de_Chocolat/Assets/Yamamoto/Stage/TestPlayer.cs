@@ -443,6 +443,9 @@ public class TestPlayer : MonoBehaviour
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
 
+        //マス情報を更新
+        tm.GetAllMass();
+
         //自身の子オブジェクトが0以外 = 移動するお菓子がある
         if (this.gameObject.transform.childCount != 0)
         {

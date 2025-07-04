@@ -24,13 +24,13 @@ public class Tile : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GetNeighborTiles();
+        
     }
 
     /// <summary>
     /// 隣接するマスの取得関数
     /// </summary>
-    private void GetNeighborTiles()
+    public void GetNeighborTiles()
     {
         foreach (var dir in direction)
         {
@@ -107,10 +107,12 @@ public class Tile : MonoBehaviour
         //壊れないマスならreturn
         if (!canBreak) return;
 
+        SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
+
         //Spriteがひびマスでないなら、ひびマスに設定
-        if (this.gameObject.GetComponent<SpriteRenderer>().sprite != hibi) this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
+        if (renderer.sprite != hibi && renderer != null) this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
         //Spriteがひびマスなら
-        else if (this.gameObject.GetComponent<SpriteRenderer>().sprite == hibi) Destroy(this.gameObject);
+        else if (renderer.sprite == hibi) Destroy(this.gameObject);
     }
 
     // Update is called once per frame

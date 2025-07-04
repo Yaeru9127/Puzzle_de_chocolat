@@ -21,7 +21,9 @@ public class TileManager : MonoBehaviour
         
     }
 
-    //すべてのマスを取得する関数
+    /// <summary>
+    /// すべてのマスを取得する関数
+    /// </summary>
     public void GetAllMass()
     {
         //初期化
@@ -32,8 +34,12 @@ public class TileManager : MonoBehaviour
         {
             if (this.gameObject.transform.GetChild(i).GetComponent<Tile>())
             {
+                //マスリストに追加
                 Tile tile = this.gameObject.transform.GetChild(i).GetComponent<Tile>(); ;
                 tiles.Add(this.gameObject.transform.GetChild(i).gameObject, tile.gameObject.transform.position);
+
+                //隣接マスを取得
+                tile.GetNeighborTiles();
             }
         }
 
