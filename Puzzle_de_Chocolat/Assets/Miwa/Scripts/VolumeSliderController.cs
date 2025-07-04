@@ -46,5 +46,7 @@ public class VolumeSliderController : MonoBehaviour
             PlayerPrefs.SetFloat("SavedSEVolume", volume);
             PlayerPrefs.Save();
         }
+
+        AudioManager.Instance.PlaySE("ENTER");
     }
 }

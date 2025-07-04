@@ -127,7 +127,7 @@ public class SweetsManager : MonoBehaviour
     /// スクリプトの設定の関係上、ここから呼び出す(仮)
     public void CallDecreaseFoodGauge()
     {
-        gaugeCC.OnObjectDestroyed();
+        gaugeCC.OnObjectDestroyed(1);
     }
 
     private void OnDestroy()

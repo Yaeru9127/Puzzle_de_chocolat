@@ -110,7 +110,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //プレイヤーの向きを設定
-        //SetPlayerDirection(directo);
+        SetPlayerDirection(directo);
 
         //入力方向にある次のマスを取得
         Tile nowtile = ReturnNowTileScript();
@@ -147,22 +147,22 @@ public class TestPlayer : MonoBehaviour
         if (dir == Vector2.up)
         {
             direction = Direction.Up;
-            renderer.sprite = directionSprites[0];
+            //renderer.sprite = directionSprites[0];
         }
         else if (dir == Vector2.down)
         {
             direction = Direction.Down;
-            renderer.sprite = directionSprites[1];
+            //renderer.sprite = directionSprites[1];
         }
         else if (dir == Vector2.left)
         {
             direction = Direction.Left;
-            renderer.sprite = directionSprites[2];
+            //renderer.sprite = directionSprites[2];
         }
         else if (dir == Vector2.right)
         {
             direction = Direction.Right;
-            renderer.sprite = directionSprites[3];
+            //renderer.sprite = directionSprites[3];
         }
     }
 
@@ -582,8 +582,9 @@ public class TestPlayer : MonoBehaviour
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
-        float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.C
+        float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.Space
         float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
+        float r = actions.Player.Retry.ReadValue<float>();              //KeyCode.R
 
         //移動
         if (!inProcess && vec2 != Vector2.zero)
@@ -600,6 +601,11 @@ public class TestPlayer : MonoBehaviour
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
+        }
+        //リトライ
+        else if (!inProcess && r > 0.5f)
+        {
+            manager.Retry();
         }
     }
 }

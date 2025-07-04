@@ -31,10 +31,10 @@ public class GaugeController : MonoBehaviour
     }
 
     // オブジェクトが破壊された際にゲージを増加させる
-    public void OnObjectDestroyed()
+    /*public void OnObjectDestroyed()
     {
         OnObjectDestroyed(defaultIncreaseAmount); // デフォルトの増加量でゲージを増加
-    }
+    }*/
 
     // 引数で指定された増加量でゲージを増加させる
     public void OnObjectDestroyed(int increaseAmount)

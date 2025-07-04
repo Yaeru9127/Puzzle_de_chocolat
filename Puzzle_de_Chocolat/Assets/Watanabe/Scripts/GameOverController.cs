@@ -69,7 +69,7 @@ public class GameOverController : MonoBehaviour
 
         // フェード完了後、3秒待ってシーン遷移
         yield return new WaitForSeconds(waitBeforeRetry);
-        SceneManager.LoadScene("TitleScene"); // Retry シーン名に応じて変更
+        SceneManager.LoadScene("RetryScene"); // Retry シーン名に応じて変更
     }
 
     private void OnDestroy()

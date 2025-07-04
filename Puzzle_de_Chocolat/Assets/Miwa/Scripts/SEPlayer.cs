@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement; // ★追加：シーン管理のための名前空間
 
 public class SEPlayer : MonoBehaviour

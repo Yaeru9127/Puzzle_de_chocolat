@@ -106,7 +106,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySE(AudioClip clip)
+    public void PlaySEAudioClip(AudioClip clip)
     {
         if (clip == null)
         {
@@ -128,7 +128,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySE(int index)
+    /*public void PlaySE(int index)
     {
         if (seClips == null || index >= seClips.Length || index < 0)
         {
@@ -137,7 +137,7 @@ public class AudioManager : MonoBehaviour
         }
         AudioClip clipToPlay = seClips[index];
         PlaySE(clipToPlay);
-    }
+    }*/
 
     public void PlaySE(string clipName)
     {
@@ -162,7 +162,7 @@ public class AudioManager : MonoBehaviour
 
         if (foundClip != null)
         {
-            PlaySE(foundClip);
+            PlaySEAudioClip(foundClip);
         }
         else
         {

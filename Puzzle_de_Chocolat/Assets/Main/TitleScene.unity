@@ -292,7 +292,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Menu
+          m_StringArgument: OpshonScene
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &454049520
@@ -545,6 +545,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stagenum: 0
+--- !u!1001 &1040951404
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.3753424
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.22146511
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.04668808
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1179037929273408908, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[0].sceneName
+      value: TitleScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[1].sceneName
+      value: Stage01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[2].sceneName
+      value: OpshonScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 7819784571569621297, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: m_Name
+      value: AudioManager 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
 --- !u!1 &1397499631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1228,3 +1297,4 @@ SceneRoots:
   - {fileID: 973885126}
   - {fileID: 1801220286}
   - {fileID: 208408368}
+  - {fileID: 1040951404}

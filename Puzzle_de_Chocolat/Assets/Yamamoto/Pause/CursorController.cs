@@ -98,10 +98,10 @@ public class CursorController : MonoBehaviour
         GameObject select = EventSystem.current.currentSelectedGameObject;
 
         //選択UIが存在しない || 選択UIがボタンではない => return
-        if (select == null || select.GetComponent<Button>() == null) return;
+        if (select == null || select.GetComponent<ButtonController>() == null) return;
 
         //選択UIが存在する && 選択UIがボタンである
-        if (select != null && select.GetComponent<Button>() != null)
+        if (select != null && select.GetComponent<ButtonController>() != null)
         {
             UnityEngine.UI.Button button = select.GetComponent<UnityEngine.UI.Button>();
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputSystem_Manager : MonoBehaviour
 {
@@ -72,6 +73,11 @@ public class InputSystem_Manager : MonoBehaviour
     public void PlayerOff()
     {
         actions.Player.Disable();
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene("Stage01");
     }
 
     // Update is called once per frame

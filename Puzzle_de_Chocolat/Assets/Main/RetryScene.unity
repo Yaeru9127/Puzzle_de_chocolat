@@ -197,12 +197,12 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 149701902}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1810387923}
+      - m_Target: {fileID: 1810387922}
         m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: GoToStageSelect
         m_Mode: 1
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1810387923}
+      - m_Target: {fileID: 1810387922}
         m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: GoToGameScene
         m_Mode: 1
@@ -542,7 +542,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Stage
+  m_Text: 
 --- !u!222 &556993758
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -729,7 +729,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1810387923}
+      - m_Target: {fileID: 1810387922}
         m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: GoToTitle
         m_Mode: 1
@@ -1041,7 +1041,7 @@ GameObject:
   - component: {fileID: 1810387920}
   - component: {fileID: 1810387919}
   - component: {fileID: 1810387918}
-  - component: {fileID: 1810387923}
+  - component: {fileID: 1810387922}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1135,7 +1135,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1810387923
+--- !u!114 &1810387922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

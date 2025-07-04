@@ -1880,7 +1880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3936755252003008808, guid: e74e49f09179c064ba365be6a617e867, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5749207576965160780, guid: e74e49f09179c064ba365be6a617e867, type: 3}
       propertyPath: m_Pivot.x
@@ -1972,6 +1972,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5749207576965160780, guid: e74e49f09179c064ba365be6a617e867, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7675992606464470264, guid: e74e49f09179c064ba365be6a617e867, type: 3}
+      propertyPath: m_Color.a
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -3175,7 +3179,7 @@ MonoBehaviour:
     makedName: maritozzo
   - makedSweets: {fileID: 5924880099824159555, guid: 553f36214b3a8454a8008d30177f2b4c, type: 3}
     makedName: baumkuchen
-  gaugeCC: {fileID: 0}
+  gaugeCC: {fileID: 1048206900}
 --- !u!4 &1319832603
 Transform:
   m_ObjectHideFlags: 0
@@ -4118,7 +4122,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8720929086273843191, guid: f15ddeacb8c4f504ca4a4a69742f1403, type: 3}
+  m_Sprite: {fileID: 317010468468323505, guid: 3a9ad61b6764ea2408c93b6b01d2370d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

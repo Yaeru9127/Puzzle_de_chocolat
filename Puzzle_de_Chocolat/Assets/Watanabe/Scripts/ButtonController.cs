@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class Button : MonoBehaviour
+public class ButtonController : MonoBehaviour
 {
     public FadeUI fadePanel; // Inspector ‚ÅŠ„‚è“–‚Ä‚é
 
     public void GoToGameScene()
     {
-        StartCoroutine(FadeAndLoadScene("MainGameScene"));
+        StartCoroutine(FadeAndLoadScene("Stage01"));
     }
 
     public void GoToStageSelect()
@@ -18,7 +18,7 @@ public class Button : MonoBehaviour
 
     public void GoToTitle()
     {
-        StartCoroutine(FadeAndLoadScene("Title"));
+        StartCoroutine(FadeAndLoadScene("TitleScene"));
     }
 
     private IEnumerator FadeAndLoadScene(string sceneName)

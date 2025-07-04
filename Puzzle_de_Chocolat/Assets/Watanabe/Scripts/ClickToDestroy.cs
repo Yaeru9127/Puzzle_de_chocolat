@@ -66,7 +66,7 @@ public class ClickToDestroy : MonoBehaviour
 
             if (gaugeController != null)
             {
-                gaugeController.OnObjectDestroyed();
+                gaugeController.OnObjectDestroyed(1);
             }
 
             Destroy(clickedObject);
