@@ -13,7 +13,9 @@ public class SweetsManager : MonoBehaviour
 {
     public static SweetsManager sm { get; private set; }
 
-    //お菓子オブジェクト格納のDictionary<座標, スクリプト>
+    public StageManager stage;
+
+    //お菓子オブジェクト格納のList<Dictionary<座標, スクリプト>>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
     //インスペクター設定用のList
@@ -22,12 +24,20 @@ public class SweetsManager : MonoBehaviour
     [SerializeField] private GaugeController gaugeCC;
 
     /*レシピ　メモ
-     *プレッツェル : pretzel  バター + 砂糖
-     *バームクーヘン : baumkuchen  卵 + バター
-     *ティラミス : tiramisu  牛乳 + 砂糖
-     *パンナコッタ : pannacotta  牛乳 + バター
-     *マカロン : macaroon  卵 + 牛乳
-     *カヌレ : canulé  卵 + 砂糖
+     *Stage1
+     *プレッツェル : pretzel    バター + 砂糖
+     *バームクーヘン : baumkuchen バター + 卵
+     *
+     *Stage2
+     *パンナコッタ : pannacotta バター + 牛乳
+     *ティラミス : tiramisu     砂糖 + 牛乳
+     *マリトッツォ : maritozzo  バター + 砂糖
+     *
+     *else
+     *カヌレ : canulé           砂糖 + 卵
+     *マカロン : macaroon  バター + 牛乳
+     *マドレーヌ : madeleine    バター + 卵
+     *
      *Inspecterのstringには上記の名前で設定すること*/
 
     private void Awake()
@@ -35,6 +45,8 @@ public class SweetsManager : MonoBehaviour
         //初期化
         if (sm == null) sm = this;
         else if (sm != null) Destroy(this.gameObject);
+
+        stage = StageManager.stage;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -49,7 +61,7 @@ public class SweetsManager : MonoBehaviour
     /// <param name="pos"></param> 探すマスの座標
     public Sweets GetSweets(Vector2 pos)
     {
-        Sweets returnsweetts = null;
+        Sweets returnsweetts = null;;
 
         //座標で検索
         foreach (Vector2 sweetspos in sweets.Keys)
@@ -66,6 +78,7 @@ public class SweetsManager : MonoBehaviour
     /// <returns></returns>
     public void SearchSweets()
     {
+        //初期化
         sweets.Clear();
 
         //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
@@ -77,7 +90,6 @@ public class SweetsManager : MonoBehaviour
                 {
                     sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
                 }
-                
             }
         }
 

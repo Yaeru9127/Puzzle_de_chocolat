@@ -71,34 +71,60 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (comparison.material == Material.Sugar)name = "pretzel";
-                else if (comparison.material == Material.Egg) name = "baumkuchen";
-                else if (comparison.material == Material.Milk) name = "pannacotta";
-                else return false;
+                if (sm.stage.stagenum == 0)
+                {
+                    if (comparison.material == Material.Sugar) name = "pretzel";
+                    else if (comparison.material == Material.Egg) name = "baumkuchen";
+                    else return false;
+                }
+                else if (sm.stage.stagenum == 1)
+                {
+                    if (comparison.material == Material.Milk) name = "pannacotta";
+                    else if (comparison.material == Material.Sugar) name = "maritozzo";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
-                if (comparison.material == Material.Butter) name = "pretzel";
-                else if (comparison.material == Material.Egg) name = "canulé";
-                else if (comparison.material == Material.Milk) name = "tiramisu";
-                else return false;
+                if (sm.stage.stagenum == 0)
+                {
+                    if (comparison.material == Material.Butter) name = "pretzel";
+                    else return false;
+                }
+                else if (sm.stage.stagenum == 1)
+                {
+                    if (comparison.material == Material.Milk) name = "tiramisu";
+                    else if (comparison.material == Material.Butter) name = "maritozzo";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
-                if (comparison.material == Material.Butter) name = "baumkuchen";
-                else if (comparison.material == Material.Sugar) name = "canulé";
-                else if (comparison.material == Material.Milk) name = "macaroon";
-                else return false;
+                if (sm.stage.stagenum == 0)
+                {
+                    if (comparison.material == Material.Butter) name = "baumkuchen";
+                    else return false;
+                }
+                else if (sm.stage.stagenum == 1)
+                {
+                    return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //牛乳
             case Material.Milk:
-                if (comparison.material == Material.Butter) name = "pannacotta";
-                else if (comparison.material == Material.Sugar) name = "tiramisu";
-                else if (comparison.material == Material.Egg) name = "macaroon";
-                else return false;
+                if (sm.stage.stagenum == 0)
+                {
+                    return false;
+                }
+                else if (sm.stage.stagenum == 1)
+                {
+                    if (comparison.material == Material.Butter) name = "pannacotta";
+                    else if (comparison.material == Material.Sugar) name = "tiramisu";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //それ以外

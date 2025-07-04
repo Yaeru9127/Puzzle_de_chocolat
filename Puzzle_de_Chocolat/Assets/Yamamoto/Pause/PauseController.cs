@@ -9,6 +9,8 @@ public class PauseController : MonoBehaviour
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
     private CursorController cc;
+    private ReloadCountManager rm;
+
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
 
     private void Awake()
@@ -24,6 +26,7 @@ public class PauseController : MonoBehaviour
         cc = CursorController.cc;
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        rm = ReloadCountManager.Instance;
 
         //もし表示状態なら非表示にする
         if (pauseobj.activeSelf) pauseobj.SetActive(false);
@@ -84,6 +87,7 @@ public class PauseController : MonoBehaviour
     {
         //現在のシーンのインデックスナンバーを取得してリロード
         int nowsceneindex = SceneManager.GetActiveScene().buildIndex;
+        rm.IncrementReloadCount();
         SceneManager.LoadScene(nowsceneindex);
     }
 

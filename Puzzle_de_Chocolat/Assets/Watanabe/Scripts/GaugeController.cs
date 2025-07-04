@@ -9,9 +9,9 @@ public class GaugeController : MonoBehaviour
     [Tooltip("UIスライダー")]
     [SerializeField] private Slider gaugeSlider; // ゲージのUIスライダー
 
-    [SerializeField] private GameOverController gameOverController; // ゲームオーバーを管理するコントローラー
+    private GameOverController gameOverController; // ゲームオーバーを管理するコントローラー
 
-    [SerializeField] private Remainingaircraft remainingAircraft; // 残機管理クラスへの参照
+    private Remainingaircraft remainingAircraft; // 残機管理クラスへの参照
 
     [Header("ゲージ設定")]
     [Tooltip("ゲージが増加するのにかかる時間（秒）")]
@@ -23,6 +23,12 @@ public class GaugeController : MonoBehaviour
     private const int maxValue = 10; // ゲージの最大値
     private Queue<int> increaseQueue = new Queue<int>(); // 増加量を順番に処理するためのキュー
     private bool isIncreasing = false; // 現在、ゲージが増加中かどうかを判定するフラグ
+
+    private void Awake()
+    {
+        gameOverController = GameOverController.over;
+        remainingAircraft = Remainingaircraft.remain;
+    }
 
     // オブジェクトが破壊された際にゲージを増加させる
     public void OnObjectDestroyed()
