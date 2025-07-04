@@ -17,7 +17,7 @@ public class Remainingaircraft : MonoBehaviour
     public GameOverController gameOverController;
 
     // 現在の残機数
-    private int currentLife;
+    public int currentLife;
 
     void Start()
     {
