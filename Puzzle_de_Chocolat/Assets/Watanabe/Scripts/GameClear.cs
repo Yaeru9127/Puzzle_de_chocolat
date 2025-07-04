@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameClear
+public class GameClear : MonoBehaviour
 {
     public Image clearImage;  // ゲームクリア結果を表示する画像（UI）
 
     // それぞれのクリア状態に応じたスプライト
-    private  Sprite noRetryFastClearSprite;       // ①リトライなし＆最短クリア
-    private  Sprite retryOrNoRetryClearSprite;    // ②リトライあり＆最短 or リトライなし
-    private  Sprite retryClearSprite;             // ③リトライあり
+    public  Sprite noRetryFastClearSprite;       // ①リトライなし＆最短クリア
+    public  Sprite retryOrNoRetryClearSprite;    // ②リトライあり＆最短 or リトライなし
+    public  Sprite retryClearSprite;             // ③リトライあり
 
     public int minStepsToClear = 10;  // 最短クリアに必要な手順数
     public int minRetriesToClear = 2; // 最低リトライ回数（この数値以上ならリトライありになる）
