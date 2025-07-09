@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class TestPlayer : MonoBehaviour
     private float speed;                //マス間の移動速度
     private GameObject sweets;          //一時的なお菓子変数
     private bool inProcess;             //処理中フラグ
+    private string stageselect;
 
     private void Awake()
     {
@@ -507,7 +509,11 @@ public class TestPlayer : MonoBehaviour
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown("joystick button 5"))
+        {
+            SceneManager.LoadScene("stageselect");
+        }
 
     }
 }

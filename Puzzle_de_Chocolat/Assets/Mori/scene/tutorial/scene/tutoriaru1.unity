@@ -817,6 +817,7 @@ GameObject:
   - component: {fileID: 182234120}
   - component: {fileID: 182234119}
   - component: {fileID: 182234118}
+  - component: {fileID: 182234121}
   m_Layer: 0
   m_Name: Tile (15)
   m_TagString: Untagged
@@ -952,6 +953,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &182234121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182234116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 202ae58db0c77c6449d133c9fbe2b5a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1217550735}
+  nextSceneName: tutoriaru2
 --- !u!4 &238719074 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5391322373832773851, guid: 62ad1321121386a43a6e3aaca98d4227, type: 3}
@@ -2669,6 +2684,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9132011655824976765, guid: 1b4bbbb9e7a03784b8201911901e9378, type: 3}
   m_PrefabInstance: {fileID: 1213100482}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1217550735 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7812261362122400869, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
+  m_PrefabInstance: {fileID: 6714176638618182253}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1254649819
 GameObject:
   m_ObjectHideFlags: 0
@@ -4376,7 +4396,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7943594801781301970, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
   m_PrefabInstance: {fileID: 6714176638618182253}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1217550735}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7c92f684a89f5c4db3940facb56efc0, type: 3}

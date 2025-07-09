@@ -14,6 +14,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Main/TitleScene.unity
     guid: 4490bbd8a8927ee488c9eaff4736146d
+  - enabled: 1
+    path: Assets/Mori/scene/tutorial/scene/tutoriaru1.unity
+    guid: 16bd13a2a0b9caa4d9639dc43e31082d
+  - enabled: 1
+    path: Assets/Mori/scene/tutorial/scene/tutoriaru2.unity
+    guid: aaffdf28b67db2849bd7f5dc17c46ff2
+  - enabled: 1
+    path: Assets/Mori/scene/tutorial/scene/tutoriaru3.unity
+    guid: 271eece00455c1443aca851c739b3e00
+  - enabled: 1
+    path: Assets/Mori/scene/tutorial/scene/tutoriaru4.unity
+    guid: ff5c5455c597e5a45a70448f98cb7930
+  - enabled: 1
+    path: Assets/Mori/scene/stageselect.unity
+    guid: 6be2e57dfee28894cb1ab4111e38c486
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7dfe699c6f5096449a10e40cf4230a00, type: 3}
   m_UseUCBPForAssetBundles: 0
