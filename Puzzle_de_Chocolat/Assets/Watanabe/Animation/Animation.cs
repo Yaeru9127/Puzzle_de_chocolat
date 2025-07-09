@@ -3,12 +3,12 @@ using UnityEngine;
 public class Animation : MonoBehaviour
 {
     private Animator animator;
-    private SpriteRenderer spriteRenderer; // 追加
+    private SpriteRenderer spriteRenderer; 
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); // 追加
+        spriteRenderer = GetComponent<SpriteRenderer>(); 
     }
 
     void Update()
@@ -25,10 +25,10 @@ public class Animation : MonoBehaviour
         animator.SetFloat("MoveX", moveX);
         animator.SetFloat("MoveY", moveY);
 
-        // ←★ ここが反転処理（右向きのときに flipX = true）
+        //ここが反転処理（右向きのときに flipX = true）
         if (moveX != 0)
         {
-            spriteRenderer.flipX = (moveX > 0);  // → のとき true（反転）
+            spriteRenderer.flipX = (moveX > 0);  
         }
     }
 }
