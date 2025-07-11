@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Button
   - Candy
+  - player
   layers:
   - Default
   - TransparentFX

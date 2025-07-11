@@ -67,6 +67,6 @@ public class InputSystem_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

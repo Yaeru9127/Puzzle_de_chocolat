@@ -3,9 +3,12 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using System;
 
 public class TestPlayer : MonoBehaviour
 {
+    public static event Action<GameObject> OnPlayerSpawned;
+
     /// <summary>
     /// Other Scripts
     /// </summary>
@@ -43,6 +46,8 @@ public class TestPlayer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        OnPlayerSpawned?.Invoke(this.gameObject);
+
         //初期化
         manager = InputSystem_Manager.manager;
         tm = TileManager.tm;
@@ -377,6 +382,24 @@ public class TestPlayer : MonoBehaviour
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
 
+        //////////////
+        if (nowmass == null)
+        {
+            Debug.LogError("nowmass is null");
+        }
+            else
+        {
+            Debug.Log("nowmass: " + nowmass.name);
+        }
+
+        if (TileManager.tm == null)
+        {
+            Debug.LogError("TileManager.tm is null! TileManagerが初期化されていないか、シングルトンインスタンスが正しく設定されていません。");
+        }
+        else
+        {
+            Debug.Log("TileManager.tm は正常に取得されました。");
+        }
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
 

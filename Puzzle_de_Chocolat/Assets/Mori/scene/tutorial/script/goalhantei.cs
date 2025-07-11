@@ -3,32 +3,39 @@ using UnityEngine.SceneManagement;
 
 public class goalhantei : MonoBehaviour
 {
-    public GameObject target;              // プレイヤーオブジェクトをインスペクターで指定
-    public string nextSceneName = ""; // 切り替えたいシーン名を指定
+    public GameObject target;           // プレイヤーオブジェクト（タグで探す）
+    public string nextSceneName = "";  // 次のシーン名
 
-    private bool goalReached = false;      // ゴール到達フラグ（1回だけ処理させるため）
+    private bool goalReached = false;  // ゴール判定済みかどうか
 
     void Update()
     {
-        if (goalReached) return; // すでにゴールしていたらスキップ
+        if (goalReached) return; // 既にゴール済みなら処理しない
 
-        if (target != null)
+        // targetがnullまたは破棄されている場合はタグで探す
+        if (target == null)
         {
-            Vector2 playerPos = target.transform.position;
-            Vector2 goalPos = transform.position;
-
-            // 小数点の誤差対策：整数マスに丸めて比較
-            Vector2Int playerGridPos = Vector2Int.RoundToInt(playerPos);
-            Vector2Int goalGridPos = Vector2Int.RoundToInt(goalPos);
-
-            if (playerGridPos == goalGridPos)
+            target = GameObject.FindGameObjectWithTag("Player"); // "player"タグで取得
+            if (target == null)
             {
-                Debug.Log("ゴール！");
-                goalReached = true; // 二重処理を防止
-
-                // シーン切り替え
-                SceneManager.LoadScene(nextSceneName);
+                // プレイヤーがまだ存在しなければ処理しない
+                return;
             }
+        }
+
+        Vector2 playerPos = target.transform.position;
+        Vector2 goalPos = transform.position;
+
+        // 小数点誤差対策に丸めて比較
+        //Vector2Int playerGridPos = Vector2Int.RoundToInt(playerPos);
+        //Vector2Int goalGridPos = Vector2Int.RoundToInt(goalPos);
+
+        if (playerPos == goalPos)
+        {
+            Debug.Log("ゴール！");
+            goalReached = true; // 一度だけ処理
+
+            SceneManager.LoadScene(nextSceneName);
         }
     }
 }

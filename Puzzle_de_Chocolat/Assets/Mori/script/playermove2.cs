@@ -23,7 +23,7 @@ public class playermove2 : MonoBehaviour
         // フェードコントローラーを取得
         fadeController = Object.FindFirstObjectByType<FadeController>();
 
-        // ノード接続定義：双方向
+        // 座標ごとにいける方向を指定
         nodeConnections[0] = new List<int> { 1 };         // 座標1 → 座標2
         nodeConnections[1] = new List<int> { 0, 2 };      // 座標2 → 座標1,3
         nodeConnections[2] = new List<int> { 1, 3 };      // 座標3 → 座標2,4
