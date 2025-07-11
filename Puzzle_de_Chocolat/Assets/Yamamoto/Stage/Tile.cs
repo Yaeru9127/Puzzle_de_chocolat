@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Tile : MonoBehaviour
 {
@@ -13,6 +11,9 @@ public class Tile : MonoBehaviour
         Vector2.up, Vector2.down, Vector2.left, Vector2.right
     };
 
+    [SerializeField] private Sprite hibi;   //ひびマスSprite
+    public bool canBreak;                   //壊れるマス設定変数
+
     private void Awake()
     {
         
@@ -21,13 +22,13 @@ public class Tile : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GetNeighborTiles();
+        
     }
 
     /// <summary>
     /// 隣接するマスの取得関数
     /// </summary>
-    private void GetNeighborTiles()
+    public void GetNeighborTiles()
     {
         foreach (var dir in direction)
         {
@@ -94,6 +95,22 @@ public class Tile : MonoBehaviour
         if (mass == null) Debug.Log("mass is null");
         else Debug.Log(mass.name);*/
         return mass;
+    }
+
+    /// <summary>
+    /// マスのひび入れ、マスの削除関数
+    /// </summary>
+    public void ChangeSprite()
+    {
+        //壊れないマスならreturn
+        if (!canBreak) return;
+
+        SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
+
+        //Spriteがひびマスでないなら、ひびマスに設定
+        if (renderer.sprite != hibi && renderer != null) this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
+        //Spriteがひびマスなら
+        else if (renderer.sprite == hibi) Destroy(this.gameObject);
     }
 
     // Update is called once per frame

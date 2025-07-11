@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using UnityEditor.Experimental.GraphView;
 
 
 public class FadeManager : MonoBehaviour
@@ -13,7 +12,7 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 1.0f;//fade‚ÌŽ‘±ŽžŠÔ
     [SerializeField] private Ease fadeEase = Ease.Linear;
 
-
+    private StageManager stage;
 
     private void Awake()
     {
@@ -32,6 +31,8 @@ public class FadeManager : MonoBehaviour
             fadePanel.color = panelColor;
             fadePanel.gameObject.SetActive(true);
         }
+
+        stage = StageManager.stage;
 
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -82,12 +83,20 @@ public class FadeManager : MonoBehaviour
         });
     }
 
-
     public void FadegameLodScene(string game)
     {
         FadeOut(() =>
         {
+            if (game == "Stage01") stage.stagenum = 0;
             SceneManager.LoadScene(game);
         });
+    }
+
+    public void EndGame()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

@@ -1,29 +1,61 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Remainingaircraft : MonoBehaviour
 {
-    // c‹@
+    public static Remainingaircraft remain { get; private set; }
+
+    // æ®‹æ©Ÿ
     public List<GameObject> lifeSprites;
 
-    // ”šƒXƒvƒ‰ƒCƒgi0`9j
+    // æ•°å­—ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆï¼ˆ0ï½99ï¼‰
     public Sprite[] numberSprites;
 
-    // ”š•\¦—piUI—pImagej
+    // æ•°å­—è¡¨ç¤ºç”¨ï¼ˆUIç”¨Imageï¼‰
     public Image numberDisplay;
 
-    // GameOver ‚ğ§Œä‚·‚éƒNƒ‰ƒX‚Ö‚ÌQÆ
-    public GameOverController gameOverController;
+    // GameOver ã‚’åˆ¶å¾¡ã™ã‚‹ã‚¯ãƒ©ã‚¹ã¸ã®å‚ç…§
+    private GameOverController gameOverController;
 
-    // Œ»İ‚Ìc‹@”
-    private int currentLife;
+    // ç¾åœ¨ã®æ®‹æ©Ÿæ•°
+    public int currentLife;
+
+    private void Awake()
+    {
+        if (remain == null) remain = this;
+        else if (remain != null) Destroy(this.gameObject);
+    }
 
     void Start()
     {
-        // c‹@”‚ğƒŠƒXƒg‚Ì”‚©‚ç‰Šú‰»
+        gameOverController = GameOverController.over;
         currentLife = lifeSprites.Count;
         UpdateLifeDisplay();
+        SetLifes();
+    }
+
+    public void SetLifes()
+    {
+        foreach (GameObject obj in lifeSprites)
+        {
+            if (obj != null)
+            {
+                obj.SetActive(true);
+            }
+        }
+
+        lifeSprites.Clear();
+
+        if (GameOverController.over != null && GameOverController.over.gameObject != null)
+        {
+            for (int i = 0; i < this.gameObject.transform.childCount; i++)
+            {
+                Transform child = this.gameObject.transform.GetChild(i);
+                lifeSprites.Add(child.gameObject);
+            }
+            currentLife = lifeSprites.Count;
+        }
     }
 
     public void ReduceLife()
@@ -32,20 +64,16 @@ public class Remainingaircraft : MonoBehaviour
         {
             currentLife--;
 
-            // c‹@ƒAƒCƒRƒ“”ñ•\¦
             lifeSprites[currentLife].SetActive(false);
-
-            // ”š‚àXV
             UpdateLifeDisplay();
 
             if (currentLife <= 0)
             {
                 if (gameOverController != null)
                 {
-                    numberDisplay.gameObject.SetActive(false); // ”š‚ÌImage‚ğ”ñ•\¦‚É‚·‚é
+                    numberDisplay.gameObject.SetActive(false);
                     gameOverController.ShowGameOver();
                 }
-
                 else
                 {
                     Debug.Log("Game Over");
@@ -56,10 +84,24 @@ public class Remainingaircraft : MonoBehaviour
 
     void UpdateLifeDisplay()
     {
-        // ”šƒXƒvƒ‰ƒCƒg‚ª—pˆÓ‚³‚ê‚Ä‚¢‚ê‚ÎXV
-        if (currentLife >= 0 && currentLife < numberSprites.Length)
+        int tens = currentLife / 10;
+        int ones = currentLife % 10;
+
+        if (currentLife < 10)
         {
             numberDisplay.sprite = numberSprites[currentLife];
         }
+        else
+        {
+            numberDisplay.sprite = numberSprites[currentLife];
+        }
+
+        numberDisplay.gameObject.SetActive(true);
+    }
+
+    private void OnDestroy()
+    {
+        //ã‚·ãƒ¼ãƒ³ã‚’è·¨ãã¨ãã«ãƒ¡ãƒ¢ãƒªã‹ã‚‰æ¶ˆã™
+        if (remain == this) remain = null;
     }
 }

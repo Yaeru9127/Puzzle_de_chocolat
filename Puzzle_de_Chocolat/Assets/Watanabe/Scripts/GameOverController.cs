@@ -5,11 +5,22 @@ using System.Collections;
 
 public class GameOverController : MonoBehaviour
 {
+    public static GameOverController over { get; private set; }
+
+    private InputSystem_Actions actions;
+    private InputSystem_Manager manager;
+
     public Image gameOverImage; // Game Over の UI Image
     public float fadeDuration = 1.5f; // フェードにかかる時間
     public float waitBeforeRetry = 3.0f; // リトライまでの待機時間
 
     private bool isGameOver = false;
+
+    private void Awake()
+    {
+        if (over == null) over = this;
+        else if (over != null) Destroy(this.gameObject);
+    }
 
     void Start()
     {
@@ -18,11 +29,17 @@ public class GameOverController : MonoBehaviour
             gameOverImage.color = new Color(1, 1, 1, 0);
             gameOverImage.gameObject.SetActive(false);
         }
+
+        manager = InputSystem_Manager.manager;
+        actions = manager.GetActions();
     }
 
     public void ShowGameOver()
     {
         if (isGameOver) return;
+
+        manager.PlayerOff();
+
         isGameOver = true;
 
         if (gameOverImage != null)
@@ -52,6 +69,12 @@ public class GameOverController : MonoBehaviour
 
         // フェード完了後、3秒待ってシーン遷移
         yield return new WaitForSeconds(waitBeforeRetry);
-        SceneManager.LoadScene("Retry"); // Retry シーン名に応じて変更
+        SceneManager.LoadScene("RetryScene"); // Retry シーン名に応じて変更
+    }
+
+    private void OnDestroy()
+    {
+        //シーンを跨ぐときにメモリから消す
+        if (over == this) over = null;
     }
 }

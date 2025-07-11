@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PauseController : MonoBehaviour
@@ -7,7 +8,10 @@ public class PauseController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
-    [SerializeField] private CursorController cc;
+    private CursorController cc;
+    private ReloadCountManager rm;
+    private Remainingaircraft remain;
+
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
 
     private void Awake()
@@ -20,8 +24,11 @@ public class PauseController : MonoBehaviour
     void Start()
     {
         //初期化
+        cc = CursorController.cc;
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        rm = ReloadCountManager.Instance;
+        remain = Remainingaircraft.remain;
 
         //もし表示状態なら非表示にする
         if (pauseobj.activeSelf) pauseobj.SetActive(false);
@@ -34,7 +41,10 @@ public class PauseController : MonoBehaviour
     {
         //プレイヤー操作をオフ、UI操作をオン
         manager.PlayerOff();
-        manager.UIOn();
+
+        bool deviceCheck = Gamepad.all.Count > 0;
+        if (deviceCheck) manager.GamePadOn();
+        else manager.MouseOn();
 
         //ポーズパネルを表示する
         pauseobj.SetActive(true);
@@ -55,7 +65,9 @@ public class PauseController : MonoBehaviour
         pauseobj.SetActive(false);
 
         //UI操作をオフ、プレイヤー操作をオン
-        manager.UIOff();
+        bool deviceCheck = Gamepad.all.Count > 0;
+        if (deviceCheck) manager.GamePadOff();
+        else manager.MouseOff();
         manager.PlayerOn();
         
     }
@@ -66,11 +78,26 @@ public class PauseController : MonoBehaviour
     public void ReturnTitle()
     {
         //タイトルシーンを読み込む
-        //SceneManager.LoadScene("");
+        SceneManager.LoadScene("TitleScene");
+    }
+
+
+    /// <summary>
+    /// OnClick.シーンのリロード
+    /// </summary>
+    public void Retry()
+    {
+        //現在のシーンのインデックスナンバーを取得してリロード
+        int nowsceneindex = SceneManager.GetActiveScene().buildIndex;
+        rm.IncrementReloadCount();
+
+        SceneManager.LoadScene(nowsceneindex);
     }
 
     private void OnDestroy()
     {
+        remain.SetLifes();
+
         //シーンを跨ぐときにメモリから消す
         if (pause == this) pause = null;
     }

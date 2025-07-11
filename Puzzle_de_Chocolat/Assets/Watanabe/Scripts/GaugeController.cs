@@ -5,78 +5,95 @@ using System.Collections.Generic;
 
 public class GaugeController : MonoBehaviour
 {
-    // UIのSliderコンポーネント（ゲージ）をアサイン
-    public Slider gaugeSlider;
+    [Header("UI関連")]
+    [Tooltip("UIスライダー")]
+    [SerializeField] private Slider gaugeSlider; // ゲージのUIスライダー
 
-    // ゲームオーバー処理を担当するスクリプトへの参照
-    public GameOverController gameOverController;
+    private GameOverController gameOverController; // ゲームオーバーを管理するコントローラー
 
-    // ゲージの最大値
-    private int maxValue = 10;
+    private Remainingaircraft remainingAircraft; // 残機管理クラスへの参照
 
-    // ゲージが増加するのにかかる時間（秒）
-    private float increaseDuration = 0.5f;
+    [Header("ゲージ設定")]
+    [Tooltip("ゲージが増加するのにかかる時間（秒）")]
+    [SerializeField] private float increaseDuration = 0.5f; // ゲージが増加する時間
 
-    // ゲージの増加リクエストを保持するキュー
-    private Queue<int> increaseQueue = new Queue<int>();
+    [Tooltip("デフォルトのゲージ増加量（シーンごとに調整）")]
+    [SerializeField] private int defaultIncreaseAmount = 1; // デフォルトの増加量
 
-    // 現在ゲージを増加中かどうか
-    private bool isIncreasing = false;
+    private const int maxValue = 10; // ゲージの最大値
+    private Queue<int> increaseQueue = new Queue<int>(); // 増加量を順番に処理するためのキュー
+    private bool isIncreasing = false; // 現在、ゲージが増加中かどうかを判定するフラグ
 
-    // ゲージ増加処理のトリガー（例えば敵が破壊されたときに呼び出す）
-    public void OnObjectDestroyed()
+    private void Awake()
     {
-        // 増加リクエストをキューに追加
-        increaseQueue.Enqueue(1);
+        gameOverController = GameOverController.over;
+        remainingAircraft = Remainingaircraft.remain;
+    }
 
-        // まだ増加処理中でなければコルーチンを開始
+    // オブジェクトが破壊された際にゲージを増加させる
+    /*public void OnObjectDestroyed()
+    {
+        OnObjectDestroyed(defaultIncreaseAmount); // デフォルトの増加量でゲージを増加
+    }*/
+
+    // 引数で指定された増加量でゲージを増加させる
+    public void OnObjectDestroyed(int increaseAmount)
+    {
+        increaseQueue.Enqueue(increaseAmount); // 増加量をキューに追加
+
+        // まだ増加処理が行われていなければ、キューの処理を開始
         if (!isIncreasing)
         {
             StartCoroutine(ProcessQueue());
         }
     }
 
-    // キューに溜まった増加リクエストを順番に処理するコルーチン
+    // キューにある増加量を順に処理
     private IEnumerator ProcessQueue()
     {
-        isIncreasing = true;
+        isIncreasing = true; // ゲージ増加中フラグを立てる
 
+        // キューに増加量が残っている間、処理を続ける
         while (increaseQueue.Count > 0)
         {
-            int amount = increaseQueue.Dequeue();
-            yield return StartCoroutine(IncreaseGaugeSmoothly(amount));
+            int amount = increaseQueue.Dequeue(); // キューから増加量を取り出す
+            yield return StartCoroutine(IncreaseGaugeSmoothly(amount)); // ゲージをスムーズに増加させる
         }
 
-        isIncreasing = false;
+        isIncreasing = false; // ゲージ増加処理完了
     }
 
-    // ゲージを滑らかに増加させるコルーチン
+    // ゲージをスムーズに増加させるコルーチン
     private IEnumerator IncreaseGaugeSmoothly(int amount)
     {
-        // スライダーが未設定の場合は処理を中断
         if (gaugeSlider == null)
-            yield break;
+            yield break; // ゲージスライダーが設定されていなければ処理を中断
 
-        float startValue = gaugeSlider.value;
-        float endValue = Mathf.Clamp(startValue + amount, 0, maxValue);
+        float startValue = gaugeSlider.value; // ゲージの現在の値
+        float endValue = Mathf.Clamp(startValue + amount, 0, maxValue); // 増加後の値（最大値を超えないように制限）
 
-        float elapsed = 0f;
+        float elapsed = 0f; // 経過時間
 
-        // 指定された時間でゲージを滑らかに変化
+        // ゲージが増加する時間（スムーズに変化）
         while (elapsed < increaseDuration)
         {
-            elapsed += Time.deltaTime;
-            gaugeSlider.value = Mathf.Lerp(startValue, endValue, elapsed / increaseDuration);
-            yield return null;
+            elapsed += Time.deltaTime; // 経過時間を更新
+            gaugeSlider.value = Mathf.Lerp(startValue, endValue, elapsed / increaseDuration); // ゲージ値を線形補間
+            yield return null; // 次のフレームまで待機
         }
 
-        // 最終的な値を設定
-        gaugeSlider.value = endValue;
+        gaugeSlider.value = endValue; // ゲージの最終値を設定
 
-        // ゲージが最大値に達したらゲームオーバー処理を呼び出す
+        // ゲージが増加したタイミングで残機を減らす
+        if (remainingAircraft != null)
+        {
+            remainingAircraft.ReduceLife(); // 残機を1つ減らす
+        }
+
+        // ゲージが最大値に達した場合、ゲームオーバー処理を行う
         if (Mathf.Approximately(gaugeSlider.value, maxValue) && gameOverController != null)
         {
-            gameOverController.ShowGameOver();
+            gameOverController.ShowGameOver(); // ゲームオーバーを表示
         }
     }
 }

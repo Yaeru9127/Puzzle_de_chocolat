@@ -61,12 +61,12 @@ public class ClickToDestroy : MonoBehaviour
                 return;
 
             // オブジェクトを選択
-            ClearSelection();
+            
             SelectedObject = clickedObject;
 
             if (gaugeController != null)
             {
-                gaugeController.OnObjectDestroyed();
+                gaugeController.OnObjectDestroyed(1);
             }
 
             Destroy(clickedObject);
@@ -105,9 +105,5 @@ public class ClickToDestroy : MonoBehaviour
     //    }
     //}
 
-    public static void ClearSelection()
-    {
-        // 色変更は削除。選択解除のみ。
-        SelectedObject = null;
-    }
+    
 }

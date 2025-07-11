@@ -11,7 +11,7 @@ public class ButtonAnimationController : MonoBehaviour, IPointerEnterHandler, IP
         myAnimator = GetComponent<Animator>();
         if (myAnimator == null)
         {
-            Debug.LogError("ButtonAnimationController: Animatorコンポーネントが見つかりません。このスクリプトはAnimatorコンポーネントがアタッチされたGameObjectにアタッチしてください。", this);
+            //Debug.LogError("ButtonAnimationController: Animatorコンポーネントが見つかりません。このスクリプトはAnimatorコンポーネントがアタッチされたGameObjectにアタッチしてください。", this);
         }
     }
 
@@ -24,7 +24,7 @@ public class ButtonAnimationController : MonoBehaviour, IPointerEnterHandler, IP
             // "Highlighted"ステートのアニメーションがループ設定されていれば、
             // カーソルが合っている間、このアニメーションが再生され続けます。
             myAnimator.SetTrigger("Highlighted");
-            Debug.Log("マウスがボタンに入りました: " + gameObject.name + " -> Highlightedアニメーション再生 (ループ)");
+            //Debug.Log("マウスがボタンに入りました: " + gameObject.name + " -> Highlightedアニメーション再生 (ループ)");
         }
     }
 
@@ -36,7 +36,7 @@ public class ButtonAnimationController : MonoBehaviour, IPointerEnterHandler, IP
             // Animatorの"Normal" Triggerを設定して、通常のアニメーションを再生。
             // これにより、"Highlighted"ステートから"Normal"ステートへ遷移します。
             myAnimator.SetTrigger("Normal");
-            Debug.Log("マウスがボタンから出ました: " + gameObject.name + " -> Normalアニメーション再生");
+            //Debug.Log("マウスがボタンから出ました: " + gameObject.name + " -> Normalアニメーション再生");
         }
     }
 }

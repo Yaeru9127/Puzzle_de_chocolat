@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputSystem_Manager : MonoBehaviour
 {
@@ -16,7 +17,11 @@ public class InputSystem_Manager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        //初期化
+        DontDestroyOnLoad(this.gameObject);
+        GetActions();
+        PlayerOff();
+        GamePadOn();
     }
 
     /// <summary>
@@ -31,17 +36,31 @@ public class InputSystem_Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// UI
+    /// GamePad
     /// </summary>
-    public void UIOn()
+    public void GamePadOn()
     {
-        actions.UI.Enable();
+        actions.GamePad.Enable();
     }
 
-    public void UIOff()
+    public void GamePadOff()
     {
-        actions.UI.Disable();
+        actions.GamePad.Disable();
     }
+
+    /// <summary>
+    /// Mouse
+    /// </summary>
+    public void MouseOn()
+    {
+        actions.Mouse.Enable();
+    }
+
+    public void MouseOff()
+    {
+        actions.Mouse.Disable();
+    }
+
 
     /// <summary>
     /// Playerのオンオフ
@@ -56,12 +75,9 @@ public class InputSystem_Manager : MonoBehaviour
         actions.Player.Disable();
     }
 
-    private void OnDestroy()
+    public void Retry()
     {
-        actions.Disable();
-
-        //シーンを跨ぐときにメモリから消す
-        if (manager == this) manager = null;
+        SceneManager.LoadScene("Stage01");
     }
 
     // Update is called once per frame
