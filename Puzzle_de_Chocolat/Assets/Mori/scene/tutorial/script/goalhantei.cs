@@ -15,7 +15,7 @@ public class goalhantei : MonoBehaviour
         // targetがnullまたは破棄されている場合はタグで探す
         if (target == null)
         {
-            target = GameObject.FindGameObjectWithTag("Player"); // "player"タグで取得
+            target = GameObject.FindGameObjectWithTag("zyoukenn"); // "zyoukenn"タグで取得
             if (target == null)
             {
                 // プレイヤーがまだ存在しなければ処理しない

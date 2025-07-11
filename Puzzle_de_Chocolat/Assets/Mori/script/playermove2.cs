@@ -51,7 +51,9 @@ public class playermove2 : MonoBehaviour
                 input = pad.leftStick.ReadValue();
             }
 #endif
-            input.x += Input.GetAxisRaw("Horizontal");
+            
+            input.x -= Input.GetAxisRaw("Horizontal");
+            //input.x = -input.x;  // これで入力の方向が逆になります
 
             if (Mathf.Abs(input.x) > 0.5f)
             {
@@ -61,8 +63,9 @@ public class playermove2 : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))//スペースキーとAボタン(仮)でステージ選択
             {
                 SceneChange();
-            }           
-        }else
+            }
+        }
+        else
         {
             MoveToTarget();
         }

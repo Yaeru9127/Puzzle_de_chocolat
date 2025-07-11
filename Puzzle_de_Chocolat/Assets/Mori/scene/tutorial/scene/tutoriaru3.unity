@@ -165,6 +165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &96473906
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -433,6 +435,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &115880363
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -581,6 +585,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &182234119
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -694,8 +700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 202ae58db0c77c6449d133c9fbe2b5a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
   nextSceneName: tutoriaru4
-  playerRefHolder: {fileID: 1921119849}
 --- !u!1001 &232164179
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -979,6 +985,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &759220295
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1094,7 +1102,7 @@ GameObject:
   - component: {fileID: 799199463}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Player
+  m_TagString: zyoukenn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1231,6 +1239,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &806161695
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1378,6 +1388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &845755746
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1525,6 +1537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &911220676
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1780,6 +1794,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &979229141
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1927,6 +1943,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1039612232
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2348,6 +2366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1078747882
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2541,7 +2561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1150791155
 Transform:
   m_ObjectHideFlags: 0
@@ -2572,7 +2592,7 @@ MonoBehaviour:
   lifeSprites: []
   numberSprites: []
   numberDisplay: {fileID: 0}
-  gameOverController: {fileID: 0}
+  currentLife: 0
 --- !u!114 &1150791157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2586,7 +2606,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gaugeSlider: {fileID: 0}
-  gameOverController: {fileID: 0}
+  increaseDuration: 0.5
+  defaultIncreaseAmount: 1
 --- !u!1 &1156300703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2831,6 +2852,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1378098806
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3111,6 +3134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1539792470
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3258,6 +3283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1582670486
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3405,6 +3432,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1587242951
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3644,6 +3673,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1711282903
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3986,6 +4017,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &1860192781
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4144,17 +4177,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9decf4afd3aed344f8369036fef08afb, type: 3}
---- !u!114 &1921119849 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3779630794514156065, guid: 9decf4afd3aed344f8369036fef08afb, type: 3}
-  m_PrefabInstance: {fileID: 1921119848}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 010aa60529ea8a142b7ef90abe73f0e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1975752555
 GameObject:
   m_ObjectHideFlags: 0
@@ -4276,6 +4298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bf2413e65cc4a4eb7eb1919005e411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hibi: {fileID: 0}
+  canBreak: 0
 --- !u!61 &2108533918
 BoxCollider2D:
   m_ObjectHideFlags: 0
