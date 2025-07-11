@@ -5,49 +5,44 @@ public class Animation : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
+    private float lastMoveX = 0f;
+    private float lastMoveY = 0f;
+
     void Start()
     {
-        // Animatorコンポーネントを取得
         animator = GetComponent<Animator>();
-        // SpriteRendererコンポーネントを取得
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        // 入力を取得
-        float moveX = Input.GetAxisRaw("Horizontal"); // 左右
-        float moveY = Input.GetAxisRaw("Vertical");   // 上下
+        // 矢印キー（キーボード）とコントローラー入力を合成
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
 
-        // アニメーションの遷移と絵の反転
-        if (moveX > 0)
+        // 移動がゼロのときは停止処理（最後の方向でフレーム停止）
+        if (moveX == 0 && moveY == 0)
         {
-            // 右移動アニメーション
-            animator.SetTrigger("MoveRight");
-            // 右に移動するときは絵を反転させる
-            spriteRenderer.flipX = true;
-        }
-        else if (moveX < 0)
-        {
-            // 左移動アニメーション
-            animator.SetTrigger("MoveLeft");
-            // 左に移動するときは絵を反転させない
-            spriteRenderer.flipX = false;
-        }
-        else if (moveY > 0)
-        {
-            // 上移動アニメーション
-            animator.SetTrigger("MoveUp");
-        }
-        else if (moveY < 0)
-        {
-            // 下移動アニメーション
-            animator.SetTrigger("MoveDown");
+            animator.SetFloat("MoveX", lastMoveX);
+            animator.SetFloat("MoveY", lastMoveY);
+
+            animator.speed = 0f;  // アニメーション停止
         }
         else
         {
-            // Idleアニメーション
-            animator.SetTrigger("Idle");
+            animator.SetFloat("MoveX", moveX);
+            animator.SetFloat("MoveY", moveY);
+
+            lastMoveX = moveX;
+            lastMoveY = moveY;
+
+            animator.speed = 1f;  // アニメーション再開
+        }
+
+        // X方向入力がある場合だけ反転処理
+        if (moveX != 0)
+        {
+            spriteRenderer.flipX = (moveX > 0);
         }
     }
 }
