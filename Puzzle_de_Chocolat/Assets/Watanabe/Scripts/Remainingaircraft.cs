@@ -65,4 +65,16 @@ public class Remainingaircraft : MonoBehaviour
 
         numberDisplay.gameObject.SetActive(true);
     }
+
+
+
+    //追加
+    public Sprite GetNumberSprite(int value)
+    {
+        if (numberSprites != null && value >= 0 && value < numberSprites.Length)
+        {
+            return numberSprites[value];
+        }
+        return null;
+    }
 }
