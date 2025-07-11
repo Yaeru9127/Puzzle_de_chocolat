@@ -96,7 +96,7 @@ public class PauseController : MonoBehaviour
 
     private void OnDestroy()
     {
-        remain.SetLifes();
+        remain.UpdateLifeDisplay();
 
         //ƒV[ƒ“‚ğŒ×‚®‚Æ‚«‚Éƒƒ‚ƒŠ‚©‚çÁ‚·
         if (pause == this) pause = null;

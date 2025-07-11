@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      eatgage1_0: -5905428787971393501
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

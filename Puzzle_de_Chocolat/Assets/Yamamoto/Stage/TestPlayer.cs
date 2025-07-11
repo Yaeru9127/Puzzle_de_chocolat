@@ -15,7 +15,7 @@ public class TestPlayer : MonoBehaviour
     private PauseController pause;
     private CanGoal cg;
     private CursorController cc;
-    private Remainingaircraft remaining;
+    private Remainingaircraft remain;
     private GameOverController goc;
     private ReloadCountManager rcm;
     private StageManager stage;
@@ -31,12 +31,13 @@ public class TestPlayer : MonoBehaviour
     }
     public Direction direction;
 
-    /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
-    [SerializeField] private Sprite[] directionSprites = new Sprite[4];
-
+    private Animator animator;
+    [SerializeField] private Sprite[] sprites = new Sprite[4];
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private bool inProcess;             //処理中フラグ
+    private float lastX;
+    private float lastY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -48,10 +49,11 @@ public class TestPlayer : MonoBehaviour
         pause = PauseController.pause;
         cg = CanGoal.cg;
         cc = CursorController.cc;
-        remaining = Remainingaircraft.remain;
+        remain = Remainingaircraft.remain;
         goc = GameOverController.over;
         rcm = ReloadCountManager.Instance;
         stage = StageManager.stage;
+        animator = this.gameObject.GetComponent<Animator>();
 
         //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();
@@ -108,7 +110,7 @@ public class TestPlayer : MonoBehaviour
             //yの値が小さい => 下
             else directo = Vector2.down;
         }
-
+        
         //入力値が0だったらreturn
         if (directo == Vector2.zero)
         {
@@ -151,25 +153,19 @@ public class TestPlayer : MonoBehaviour
     {
         //入力値から判断
         SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
-        if (dir == Vector2.up)
+        if (dir == Vector2.up) direction = Direction.Up;
+        else if (dir == Vector2.down) direction = Direction.Down;
+        else if (dir == Vector2.left) direction = Direction.Left;
+        else if (dir == Vector2.right) direction = Direction.Right;
+
+        animator.SetFloat("MoveX", dir.x);
+        animator.SetFloat("MoveY", dir.y);
+        animator.speed = 1f;        // アニメーション再開
+
+        // X方向入力がある場合だけ反転処理
+        if (dir.x != 0)
         {
-            direction = Direction.Up;
-            //renderer.sprite = directionSprites[0];
-        }
-        else if (dir == Vector2.down)
-        {
-            direction = Direction.Down;
-            //renderer.sprite = directionSprites[1];
-        }
-        else if (dir == Vector2.left)
-        {
-            direction = Direction.Left;
-            //renderer.sprite = directionSprites[2];
-        }
-        else if (dir == Vector2.right)
-        {
-            direction = Direction.Right;
-            //renderer.sprite = directionSprites[3];
+            renderer.flipX = (dir.x > 0);
         }
     }
 
@@ -473,7 +469,7 @@ public class TestPlayer : MonoBehaviour
 
             /*残り工程数をひとつ減らす*/
             //Debug.Log("decrease remaining num");
-            remaining.ReduceLife();
+            remain.ReduceLife();
         }
 
         //お菓子の位置を更新
@@ -485,13 +481,13 @@ public class TestPlayer : MonoBehaviour
         {
             if (col2.gameObject.GetComponent<Trap>() && col2.gameObject.GetComponent<Trap>().type == Trap.Type.FrischeSahne)
             {
-                remaining.ReduceLife();
+                remain.ReduceLife();
             }
         }
 
         //クリアチェック
         //残り移動数が0以下だったら = これ以上移動できない状態なら
-        if (remaining.currentLife <= 0)
+        if (remain.currentLife <= 0)
         {
             manager.PlayerOff();
 
@@ -585,7 +581,7 @@ public class TestPlayer : MonoBehaviour
             eatnext.EatSweets();
 
             //工程数をひとつ減らす
-            remaining.ReduceLife();
+            remain.ReduceLife();
 
             //食料ゲージの増加
             sm.CallDecreaseFoodGauge();
@@ -613,6 +609,19 @@ public class TestPlayer : MonoBehaviour
         if (!inProcess && vec2 != Vector2.zero)
         {
             CheckDirection(vec2, xvalue);
+        }
+        else if (!inProcess && vec2 == Vector2.zero)
+        {
+            // 移動がゼロのときは停止処理（最後の方向でフレーム停止）
+            animator.SetFloat("MoveX", lastX);
+            animator.SetFloat("MoveY", lastY);
+            animator.speed = 0f;        // アニメーション停止
+
+            SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
+            if (direction == Direction.Up) renderer.sprite = sprites[0];
+            else if (direction == Direction.Down) renderer.sprite = sprites[1];
+            else if (direction == Direction.Left) renderer.sprite = sprites[2];
+            else if (direction == Direction.Right) renderer.sprite = sprites[3]; renderer.flipX = (-1 > 0);
         }
         //食べる
         else if (!inProcess && avalue > 0.5f)

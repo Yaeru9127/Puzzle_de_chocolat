@@ -16,7 +16,7 @@ public class Remainingaircraft : MonoBehaviour
     public Image numberDisplay;
 
     // GameOver を制御するクラスへの参照
-    private GameOverController gameOverController;
+    public GameOverController gameOverController;
 
     // 現在の残機数
     public int currentLife;
@@ -29,33 +29,8 @@ public class Remainingaircraft : MonoBehaviour
 
     void Start()
     {
-        gameOverController = GameOverController.over;
         currentLife = lifeSprites.Count;
         UpdateLifeDisplay();
-        SetLifes();
-    }
-
-    public void SetLifes()
-    {
-        foreach (GameObject obj in lifeSprites)
-        {
-            if (obj != null)
-            {
-                obj.SetActive(true);
-            }
-        }
-
-        lifeSprites.Clear();
-
-        if (GameOverController.over != null && GameOverController.over.gameObject != null)
-        {
-            for (int i = 0; i < this.gameObject.transform.childCount; i++)
-            {
-                Transform child = this.gameObject.transform.GetChild(i);
-                lifeSprites.Add(child.gameObject);
-            }
-            currentLife = lifeSprites.Count;
-        }
     }
 
     public void ReduceLife()
@@ -82,7 +57,7 @@ public class Remainingaircraft : MonoBehaviour
         }
     }
 
-    void UpdateLifeDisplay()
+    public void UpdateLifeDisplay()
     {
         int tens = currentLife / 10;
         int ones = currentLife % 10;
@@ -99,9 +74,14 @@ public class Remainingaircraft : MonoBehaviour
         numberDisplay.gameObject.SetActive(true);
     }
 
-    private void OnDestroy()
+
+    //追加
+    public Sprite GetNumberSprite(int value)
     {
-        //シーンを跨ぐときにメモリから消す
-        if (remain == this) remain = null;
+        if (numberSprites != null && value >= 0 && value < numberSprites.Length)
+        {
+            return numberSprites[value];
+        }
+        return null;
     }
 }
