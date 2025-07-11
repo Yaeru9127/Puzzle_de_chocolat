@@ -629,6 +629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorTexture: {fileID: 2800000, guid: 939af32afd6814c408c1d80a2bde187d, type: 3}
   cursorobj: {fileID: 1218592490521845423, guid: 37db529f82cfb3a47bda859f0edc5456, type: 3}
+  instance: {fileID: 0}
   input:
     m_Name: Input
     m_Type: 0
@@ -677,6 +678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f31aa6fe13f0cc4eb3ccd64b9462d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phase: 0
   stagenum: 0
 --- !u!1001 &1040951404
 PrefabInstance:
@@ -727,6 +729,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[3].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[3].bgmIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[0].sceneName
       value: TitleScene
       objectReference: {fileID: 0}
@@ -737,6 +751,10 @@ PrefabInstance:
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[2].sceneName
       value: OpshonScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[3].sceneName
+      value: StageSelect
       objectReference: {fileID: 0}
     - target: {fileID: 7819784571569621297, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: m_Name

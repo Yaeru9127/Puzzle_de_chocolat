@@ -12,7 +12,7 @@ public class CursorController : MonoBehaviour
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
-    private GameObject instance;
+    public GameObject instance;
     public InputAction input;
     private float speed;
 
@@ -25,6 +25,7 @@ public class CursorController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         manager = InputSystem_Manager.manager;
         action = manager.GetActions();
         speed =5f;
@@ -33,8 +34,6 @@ public class CursorController : MonoBehaviour
         ChangeCursorEnable(true);
 
         DeviceCheck();
-
-        DontDestroyOnLoad(this.gameObject);
     }
 
     /// <summary>
@@ -58,13 +57,15 @@ public class CursorController : MonoBehaviour
             //カーソルオブジェクトが生成されているかによって処理を変える
             if (instance == null)
             {
-                instance = Instantiate(cursorobj, Vector2.zero, Quaternion.identity);
+                instance = Instantiate(cursorobj, new Vector3(0, 0, -7), Quaternion.identity);
             }
             else
             {
-                instance.transform.position = Vector2.zero;
+                instance.transform.position = new Vector3(0, 0, -7);
                 instance.SetActive(true);
             }
+
+            DontDestroyOnLoad(instance);
         }
         //コントローラーが接続されていなかったら
         else
@@ -119,12 +120,12 @@ public class CursorController : MonoBehaviour
         if (input == null) return;
 
         //入力を読み込む
-        Vector2 read = input.ReadValue<Vector2>();
+        Vector3 read = new Vector3(input.ReadValue<Vector2>().x, input.ReadValue<Vector2>().y, 0);
 
         //カーソルオブジェクトが存在したらカーソルを動かす
         if (instance != null)
         {
-            Vector2 now = instance.transform.position;
+            Vector3 now = new Vector3(instance.transform.position.x, instance.transform.position.y, -7);
             instance.transform.position = now + read * speed * Time.deltaTime;
 
             GamePadClick();

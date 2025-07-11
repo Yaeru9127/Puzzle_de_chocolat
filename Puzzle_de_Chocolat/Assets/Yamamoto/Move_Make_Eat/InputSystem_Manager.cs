@@ -21,7 +21,6 @@ public class InputSystem_Manager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         GetActions();
         PlayerOff();
-        GamePadOn();
     }
 
     /// <summary>

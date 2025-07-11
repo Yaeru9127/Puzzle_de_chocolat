@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameClear : MonoBehaviour
@@ -48,5 +49,10 @@ public class GameClear : MonoBehaviour
         {
             clearImage.sprite = retryOrNoRetryClearSprite;  // リトライありまたは最短クリアではないスプライトを設定
         }
+    }
+
+    public void LoadResultScene()
+    {
+        SceneManager.LoadScene("RetryScene");
     }
 }

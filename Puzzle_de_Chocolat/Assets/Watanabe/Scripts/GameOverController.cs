@@ -9,6 +9,8 @@ public class GameOverController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
+    private CursorController cc;
+    private StageManager stage;
 
     public Image gameOverImage; // Game Over の UI Image
     public float fadeDuration = 1.5f; // フェードにかかる時間
@@ -32,6 +34,8 @@ public class GameOverController : MonoBehaviour
 
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        cc = CursorController.cc;
+        stage = StageManager.stage;
     }
 
     public void ShowGameOver()
@@ -45,6 +49,8 @@ public class GameOverController : MonoBehaviour
         if (gameOverImage != null)
         {
             gameOverImage.gameObject.SetActive(true);
+            stage.phase = StageManager.Phase.Result;
+            cc.instance.SetActive(true);
             StartCoroutine(FadeInAndRetry());
         }
     }

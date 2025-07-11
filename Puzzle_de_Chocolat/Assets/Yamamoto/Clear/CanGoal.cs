@@ -10,7 +10,7 @@ public class CanGoal : MonoBehaviour
     private SweetsManager sm;
 
     [SerializeField] private TestPlayer playerscript;   //プレイヤー変数
-    [SerializeField] private GameObject goal;           //ゴールマスオブジェクト
+    public GameObject goal;           //ゴールマスオブジェクト
 
     //ゴールできるかの判定時に使う検索済み格納関数
     private List<GameObject> searched = new List<GameObject>();

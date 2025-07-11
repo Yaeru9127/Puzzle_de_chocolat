@@ -17,6 +17,9 @@ public class TestPlayer : MonoBehaviour
     private CursorController cc;
     private Remainingaircraft remaining;
     private GameOverController goc;
+    private ReloadCountManager rcm;
+    private StageManager stage;
+    [SerializeField] private GameClear gameClear;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -31,7 +34,6 @@ public class TestPlayer : MonoBehaviour
     /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
     [SerializeField] private Sprite[] directionSprites = new Sprite[4];
 
-    [SerializeField] private GameObject controllers;
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private bool inProcess;             //処理中フラグ
@@ -48,14 +50,19 @@ public class TestPlayer : MonoBehaviour
         cc = CursorController.cc;
         remaining = Remainingaircraft.remain;
         goc = GameOverController.over;
+        rcm = ReloadCountManager.Instance;
+        stage = StageManager.stage;
 
         //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
         manager.PlayerOn();
         manager.GamePadOff();
+        stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
+
+        if (cc.instance != null) cc.instance.SetActive(false);
     }
 
     /// <summary>
@@ -71,7 +78,7 @@ public class TestPlayer : MonoBehaviour
     /// 入力値から向きを算出する関数
     /// </summary>
     /// <param name="dir"></param>         入力値
-    /// <param name="button"></param>      (X or Shift) or (A or C)ボタンを押しているか
+    /// <param name="button"></param>      X or Shift ボタンを押しているか
     private void CheckDirection(Vector2 dir, float button)
     {
         if (!inProcess) inProcess = true;
@@ -129,7 +136,7 @@ public class TestPlayer : MonoBehaviour
         //次のマスが存在しない場合
         else if (nexttileobj == null)
         {
-            Debug.Log($"next mass is null");
+            //Debug.Log($"next mass is null");
             inProcess = false;
             return;
         }
@@ -418,7 +425,7 @@ public class TestPlayer : MonoBehaviour
         {
             if (!sweetsscript.TryMake(beyond))
             {
-                Debug.Log("can not make");
+                //Debug.Log("can not make");
 
                 //親子関係をリセット
                 ResetParent(children);
@@ -486,8 +493,18 @@ public class TestPlayer : MonoBehaviour
         //残り移動数が0以下だったら = これ以上移動できない状態なら
         if (remaining.currentLife <= 0)
         {
+            manager.PlayerOff();
+
             //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript())) goc.ShowGameOver();
+        }
+
+        //ゴールマスについたら
+        if (nowmass == cg.goal)
+        {
+            Debug.Log("reach goal");
+            manager.PlayerOff();
+            gameClear.ShowClearResult(rcm.ReloadCount);
         }
 
         //処理フラグ更新
@@ -561,16 +578,22 @@ public class TestPlayer : MonoBehaviour
             return;
         }
 
+        //次のマスのお菓子が食べれるなら
         if (eatnext.canEat)
         {
             //お菓子を食べる
             eatnext.EatSweets();
+
+            //工程数をひとつ減らす
+            remaining.ReduceLife();
 
             //食料ゲージの増加
             sm.CallDecreaseFoodGauge();
         }
         else Debug.Log("this food can not eat");
 
+        //お菓子の位置の更新
+        sm.SearchSweets();
 
         //処理フラグの更新
         inProcess = false;
@@ -605,6 +628,7 @@ public class TestPlayer : MonoBehaviour
         //リトライ
         else if (!inProcess && r > 0.5f)
         {
+            rcm.IncrementReloadCount();     //リロードカウントを増やす
             manager.Retry();
         }
     }
