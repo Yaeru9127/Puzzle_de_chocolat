@@ -72,13 +72,13 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Sugar) name = "pretzel";
                     else if (comparison.material == Material.Egg) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "maritozzo";
@@ -88,12 +88,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "pretzel";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "tiramisu";
                     else if (comparison.material == Material.Butter) name = "maritozzo";
@@ -103,12 +103,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     return false;
                 }
@@ -116,11 +116,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //牛乳
             case Material.Milk:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Butter) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "tiramisu";

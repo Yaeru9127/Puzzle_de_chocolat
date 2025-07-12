@@ -18,11 +18,13 @@ public class Result : MonoBehaviour
         manager = InputSystem_Manager.manager;
         action = manager.GetActions();
         stage.phase = StageManager.Phase.Result;
-        if (cc.instance != null) cc.instance.SetActive(true);
-        manager.PlayerOff();
 
+        manager.PlayerOff();
         if (cc.instance != null)
         {
+            GameObject canvas = GameObject.Find("Canvas");
+            cc.instance.transform.SetParent(canvas.transform);
+            cc.instance.SetActive(true);
             manager.MouseOff();
             manager.GamePadOn();
         }

@@ -13,6 +13,7 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private Ease fadeEase = Ease.Linear;
 
     private StageManager stage;
+    private CursorController cc;
 
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class FadeManager : MonoBehaviour
         }
 
         stage = StageManager.stage;
+        cc = CursorController.cc;
 
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -87,7 +89,9 @@ public class FadeManager : MonoBehaviour
     {
         FadeOut(() =>
         {
-            if (game == "Stage01") stage.stagenum = 0;
+            if(cc.instance != null) cc.instance.transform.SetParent(cc.gameObject.transform);
+            if (game == "stageselect") stage.stagenum = 0;
+            else if (game == "Stage01") stage.stagenum = 1;
             SceneManager.LoadScene(game);
         });
     }

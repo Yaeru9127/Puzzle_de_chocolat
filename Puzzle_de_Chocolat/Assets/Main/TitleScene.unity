@@ -628,7 +628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorTexture: {fileID: 2800000, guid: 939af32afd6814c408c1d80a2bde187d, type: 3}
-  cursorobj: {fileID: 1218592490521845423, guid: 37db529f82cfb3a47bda859f0edc5456, type: 3}
+  cursorobj: {fileID: 1300118925825896067, guid: 48b069f40e6290a4a8279869c07f0d5b, type: 3}
   instance: {fileID: 0}
   input:
     m_Name: Input

@@ -15,6 +15,7 @@ public class CursorController : MonoBehaviour
     public GameObject instance;
     public InputAction input;
     private float speed;
+    private GameObject buttonObject;
 
     private void Awake()
     {
@@ -57,13 +58,17 @@ public class CursorController : MonoBehaviour
             //カーソルオブジェクトが生成されているかによって処理を変える
             if (instance == null)
             {
-                instance = Instantiate(cursorobj, new Vector3(0, 0, -7), Quaternion.identity);
+                instance = Instantiate(cursorobj, new Vector3(0, 0, -3), Quaternion.identity);
             }
             else
             {
-                instance.transform.position = new Vector3(0, 0, -7);
+                instance.transform.position = new Vector3(0, 0, -3);
                 instance.SetActive(true);
             }
+
+            //ImageなのでCanvasの子オブジェクトに設定
+            GameObject canvas = GameObject.Find("Canvas");
+            instance.transform.SetParent(canvas.transform);
 
             DontDestroyOnLoad(instance);
         }
@@ -93,25 +98,45 @@ public class CursorController : MonoBehaviour
         Cursor.visible = torf;
     }
 
-    private void GamePadClick()
+    /// <summary>
+    /// GamePadでの操作時にボタンをクリックする関数
+    /// </summary>
+    private void GamePadButtonSelect()
     {
         //選択しているUIを格納
         GameObject select = EventSystem.current.currentSelectedGameObject;
 
-        //選択UIが存在しない || 選択UIがボタンではない => return
-        if (select == null || select.GetComponent<ButtonController>() == null) return;
-
-        //選択UIが存在する && 選択UIがボタンである
-        if (select != null && select.GetComponent<ButtonController>() != null)
+        //選択UIが存在しない => return
+        if (select == null)
         {
-            UnityEngine.UI.Button button = select.GetComponent<UnityEngine.UI.Button>();
-
-            if (button != null)
-            {
-                Debug.Log(button.gameObject.name);
-                button.onClick.Invoke();
-            }
+            buttonObject = null;
+            return;
         }
+
+        UnityEngine.UI.Button bt = select.GetComponent<UnityEngine.UI.Button>();
+
+        //選択UIがボタンではない => return
+        if (bt == null) return;
+
+        //確認デバッグ
+        Debug.Log(bt.name);
+
+        //ボタンオブジェクトを格納
+        buttonObject = bt.gameObject;
+    }
+
+    private void GamePadClick()
+    {
+        //選択するボタンがない => return
+        if (buttonObject == null) return;
+
+        UnityEngine.UI.Button button = buttonObject.GetComponent<UnityEngine.UI.Button>();
+        
+        //ボタンComponentがない => return
+        if (button == null) return;
+
+        //ボタンのOnClickを実行
+        button.onClick.Invoke();
     }
 
     // Update is called once per frame
@@ -128,7 +153,10 @@ public class CursorController : MonoBehaviour
             Vector3 now = new Vector3(instance.transform.position.x, instance.transform.position.y, -7);
             instance.transform.position = now + read * speed * Time.deltaTime;
 
-            GamePadClick();
+            GamePadButtonSelect();
+
+            float avalue = action.GamePad.Click.ReadValue<float>();
+            if (avalue > 0.5f) GamePadClick();
         }
     }
 }

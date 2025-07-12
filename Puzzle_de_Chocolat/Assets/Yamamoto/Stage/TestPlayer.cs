@@ -64,7 +64,13 @@ public class TestPlayer : MonoBehaviour
         speed = 0.4f;
         inProcess = false;
 
-        if (cc.instance != null) cc.instance.SetActive(false);
+        //カーソルオブジェクトの設定
+        if (cc.instance != null)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            cc.instance.transform.SetParent(canvas.transform);
+            cc.instance.SetActive(false);
+        }
     }
 
     /// <summary>
