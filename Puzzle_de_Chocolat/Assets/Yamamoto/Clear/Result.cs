@@ -18,7 +18,7 @@ public class Result : MonoBehaviour
         manager = InputSystem_Manager.manager;
         action = manager.GetActions();
         stage.phase = StageManager.Phase.Result;
-        cc.instance.SetActive(true);
+        if (cc.instance != null) cc.instance.SetActive(true);
         manager.PlayerOff();
 
         if (cc.instance != null)

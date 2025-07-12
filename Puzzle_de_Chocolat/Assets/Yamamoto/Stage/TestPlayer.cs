@@ -110,7 +110,10 @@ public class TestPlayer : MonoBehaviour
             //yの値が小さい => 下
             else directo = Vector2.down;
         }
-        
+
+        lastX = directo.x;
+        lastY = directo.y;
+
         //入力値が0だったらreturn
         if (directo == Vector2.zero)
         {
@@ -503,6 +506,10 @@ public class TestPlayer : MonoBehaviour
             gameClear.ShowClearResult(rcm.ReloadCount);
         }
 
+        animator.speed = 0f;
+        animator.SetFloat("MoveX", 0);
+        animator.SetFloat("MoveY", 0);
+
         //処理フラグ更新
         inProcess = false;
     }
@@ -524,27 +531,19 @@ public class TestPlayer : MonoBehaviour
     /// お菓子が食べれるかチェックする関数
     /// </summary>
     /// <param name="dire"></param> Direction = 向いている方向
-    private void TryEat(Direction dire)
+    private async void TryEat(Direction dire)
     {
         if (!inProcess) inProcess = true;
 
         //向いている方向から位置関係Vector2を取得
-        Vector2 original = Vector2.zero;
-        switch (dire)
+        Vector2 original = direction switch
         {
-            case Direction.Up:
-                original = Vector2.up;
-                break;
-            case Direction.Down:
-                original = Vector2.down;
-                break;
-            case Direction.Left:
-                original = Vector2.left;
-                break;
-            case Direction.Right:
-                original = Vector2.right;
-                break;
-        }
+            Direction.Up => Vector2.up,
+            Direction.Down => Vector2.down,
+            Direction.Left => Vector2.left,
+            Direction.Right => Vector2.right,
+            _ => Vector2.zero
+        };
 
         //方向nullチェック
         if (original == Vector2.zero)
@@ -554,8 +553,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //向いている方向の次のマスを取得
-        Tile nowtile = nowmass.GetComponent<Tile>();
-        GameObject nexttile = nowtile.ReturnNextMass(original);
+        GameObject nexttile = nowmass.GetComponent<Tile>().ReturnNextMass(original);
 
         //マスのnullチェック
         if (nexttile == null)
@@ -568,25 +566,19 @@ public class TestPlayer : MonoBehaviour
         Sweets eatnext = sm.GetSweets(nexttile.transform.position);
 
         //お菓子スクリプトがnull or 食べれないお菓子 なら
-        if (eatnext == null)
+        if (eatnext == null || !eatnext.canEat)
         {
             inProcess = false;
             return;
         }
 
-        //次のマスのお菓子が食べれるなら
-        if (eatnext.canEat)
-        {
-            //お菓子を食べる
-            eatnext.EatSweets();
+        await eatnext.EatSweets();
 
-            //工程数をひとつ減らす
-            remain.ReduceLife();
+        //工程数をひとつ減らす
+        //remain.ReduceLife();
 
-            //食料ゲージの増加
-            sm.CallDecreaseFoodGauge();
-        }
-        else Debug.Log("this food can not eat");
+        //食料ゲージの増加
+        sm.CallDecreaseFoodGauge();
 
         //お菓子の位置の更新
         sm.SearchSweets();
@@ -613,29 +605,33 @@ public class TestPlayer : MonoBehaviour
         else if (!inProcess && vec2 == Vector2.zero)
         {
             // 移動がゼロのときは停止処理（最後の方向でフレーム停止）
+            animator.speed = 0f;        // アニメーション停止
             animator.SetFloat("MoveX", lastX);
             animator.SetFloat("MoveY", lastY);
-            animator.speed = 0f;        // アニメーション停止
+
 
             SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
-            if (direction == Direction.Up) renderer.sprite = sprites[0];
-            else if (direction == Direction.Down) renderer.sprite = sprites[1];
-            else if (direction == Direction.Left) renderer.sprite = sprites[2];
-            else if (direction == Direction.Right) renderer.sprite = sprites[3]; renderer.flipX = (-1 > 0);
+            if (lastX != 0)
+            {
+                renderer.flipX = (lastX > 0);
+            }
         }
+
         //食べる
-        else if (!inProcess && avalue > 0.5f)
+        if (!inProcess && actions.Player.Eat.WasPressedThisFrame())
         {
             TryEat(direction);
         }
+
         //ポーズ
-        else if (!inProcess && escape > 0.5f)
+        if (!inProcess && escape > 0.5f)
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
         }
+
         //リトライ
-        else if (!inProcess && r > 0.5f)
+        if (!inProcess && r > 0.5f)
         {
             rcm.IncrementReloadCount();     //リロードカウントを増やす
             manager.Retry();

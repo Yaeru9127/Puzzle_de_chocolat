@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class GameOverController : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class GameOverController : MonoBehaviour
         {
             gameOverImage.gameObject.SetActive(true);
             stage.phase = StageManager.Phase.Result;
-            cc.instance.SetActive(true);
+            if (cc.instance != null) cc.instance.SetActive(true);
             StartCoroutine(FadeInAndRetry());
         }
     }

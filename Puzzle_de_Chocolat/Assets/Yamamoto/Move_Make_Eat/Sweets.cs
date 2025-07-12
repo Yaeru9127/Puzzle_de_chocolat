@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class Sweets : MonoBehaviour
 {
@@ -171,7 +172,7 @@ public class Sweets : MonoBehaviour
     /// <summary>
     /// お菓子を食べる関数
     /// </summary>
-    public void EatSweets()
+    public async UniTask EatSweets()
     {
         //このお菓子が食べれたら
         if (canEat)
@@ -182,6 +183,7 @@ public class Sweets : MonoBehaviour
             if (pair != null) Destroy(pair);
             Destroy(this.gameObject);
 
+            await UniTask.DelayFrame(1);
             //お菓子の位置を更新
             sm.SearchSweets();
         }
