@@ -67,9 +67,11 @@ public class TestPlayer : MonoBehaviour
         //カーソルオブジェクトの設定
         if (cc.instance != null)
         {
+            cc.SetEventSystems();
             GameObject canvas = GameObject.Find("Canvas");
             cc.instance.transform.SetParent(canvas.transform);
             cc.instance.SetActive(false);
+            cc.SetCursor();
         }
     }
 

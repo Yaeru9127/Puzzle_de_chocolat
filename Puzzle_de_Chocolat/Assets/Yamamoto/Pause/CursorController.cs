@@ -39,7 +39,7 @@ public class CursorController : MonoBehaviour
         action = manager.GetActions();
         speed =5f;
         currentUI = null;
-        SetEventSystens();
+        SetEventSystems();
 
         //テスト
         ChangeCursorEnable(true);
@@ -47,7 +47,11 @@ public class CursorController : MonoBehaviour
         DeviceCheck();
     }
 
-    public void SetEventSystens()
+    /// <summary>
+    /// シーンロード時に各変数を設定する関数
+    /// </summary>
+    /// シーンロードのたびに毎回呼び出す
+    public void SetEventSystems()
     {
         eventSystem = EventSystem.current;
         pointerData = new PointerEventData(eventSystem);
@@ -87,9 +91,7 @@ public class CursorController : MonoBehaviour
             instance.transform.SetParent(canvas.transform);
 
             //位置を調整
-            instance.transform.SetAsLastSibling();
-            instance.transform.position = Vector2.zero;
-            instance.GetComponent<Image>().raycastTarget = false;
+            SetCursor();
 
             DontDestroyOnLoad(instance);
         }
@@ -111,6 +113,16 @@ public class CursorController : MonoBehaviour
     }
 
     /// <summary>
+    /// GamePad操作時にカーソルの設定をする関数
+    /// </summary>
+    public void SetCursor()
+    {
+        instance.transform.SetAsLastSibling();
+        instance.transform.position = Vector2.zero;
+        instance.GetComponent<Image>().raycastTarget = false;
+    }
+
+    /// <summary>
     /// カーソルのオンオフを設定する関数
     /// </summary>
     /// <param name="torf"></param> trueなら表示、falseなら非表示
@@ -120,17 +132,21 @@ public class CursorController : MonoBehaviour
         if (instance != null)
         {
             instance.SetActive(torf);
-            instance.transform.SetAsLastSibling();
-            instance.transform.position = Vector2.zero;
-            instance.GetComponent<Image>().raycastTarget = false;
+            SetCursor();
 
         }
     }
 
-    private void CheckButton(GameObject hitUI)
+    /// <summary>
+    /// カーソル操作時にボタンアニメーションを実行する関数
+    /// </summary>
+    /// <param name="hitUI"></param>
+    private void CheckUI(GameObject hitUI)
     {
+        GameObject obj = GetParentObject(hitUI);
+
         //現在選択しているUIと前に選択したUIが違うなら
-        if (hitUI != currentUI)
+        if (obj != currentUI)
         {
             //手動でPointerEnter / PointerExit を送る
             if (currentUI != null)
@@ -138,14 +154,36 @@ public class CursorController : MonoBehaviour
                 ExecuteEvents.Execute<IPointerExitHandler>(currentUI, pointerData, ExecuteEvents.pointerExitHandler);
             }
 
-            if (hitUI != null)
+            if (obj != null)
             {
-                ExecuteEvents.Execute<IPointerEnterHandler>(hitUI, pointerData, ExecuteEvents.pointerEnterHandler);
-                EventSystem.current.SetSelectedGameObject(hitUI);
+                ExecuteEvents.Execute<IPointerEnterHandler>(obj, pointerData, ExecuteEvents.pointerEnterHandler);
+                EventSystem.current.SetSelectedGameObject(obj);
             }
 
-            currentUI = hitUI;
+            currentUI = obj;
         }
+    }
+
+    /// <summary>
+    /// 親オブジェクトにButtonがあるかどうか
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private GameObject GetParentObject(GameObject obj)
+    {
+        if (obj == null) return null;
+
+        Transform current = obj.transform;
+        while (current != null)
+        {
+            if (current.GetComponent<Button>() != null || current.GetComponent<Slider>() != null)
+            {
+                return current.gameObject;
+            }
+            current = current.parent;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -153,6 +191,9 @@ public class CursorController : MonoBehaviour
     /// </summary>
     private void GamePadClick(GameObject hitUI, float movex)
     {
+        GameObject obj = GetParentObject (hitUI);
+        if (obj == hitUI) return;
+
         //ボタン
         if (hitUI.GetComponent<UnityEngine.UI.Button>() != null)
         {
@@ -195,7 +236,7 @@ public class CursorController : MonoBehaviour
             if (candidate != instance) hitUI = candidate;
         }
 
-        CheckButton(hitUI);
+        CheckUI(hitUI);
 
         if (avalue > 0.5f && hitUI != null) GamePadClick(hitUI, read.x);
     }
