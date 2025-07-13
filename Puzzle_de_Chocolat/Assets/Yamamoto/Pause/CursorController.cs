@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using System.Collections.Generic;
+using UnityEditor.Rendering.Universal.ShaderGUI;
+using Cysharp.Threading.Tasks.Triggers;
 
 public class CursorController : MonoBehaviour
 {
@@ -9,13 +13,17 @@ public class CursorController : MonoBehaviour
 
     private InputSystem_Manager manager;
     private InputSystem_Actions action;
+    public InputAction input;
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
     public GameObject instance;
-    public InputAction input;
     private float speed;
-    private GameObject buttonObject;
+
+    private GameObject currentUI;
+    private RectTransform rect;
+    private PointerEventData pointerData;
+    private EventSystem eventSystem;
 
     private void Awake()
     {
@@ -30,11 +38,19 @@ public class CursorController : MonoBehaviour
         manager = InputSystem_Manager.manager;
         action = manager.GetActions();
         speed =5f;
+        currentUI = null;
+        SetEventSystens();
 
         //テスト
         ChangeCursorEnable(true);
 
         DeviceCheck();
+    }
+
+    public void SetEventSystens()
+    {
+        eventSystem = EventSystem.current;
+        pointerData = new PointerEventData(eventSystem);
     }
 
     /// <summary>
@@ -58,17 +74,22 @@ public class CursorController : MonoBehaviour
             //カーソルオブジェクトが生成されているかによって処理を変える
             if (instance == null)
             {
-                instance = Instantiate(cursorobj, new Vector3(0, 0, -3), Quaternion.identity);
+                instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
             }
             else
             {
-                instance.transform.position = new Vector3(0, 0, -3);
+                instance.transform.position = Vector3.zero;
                 instance.SetActive(true);
             }
 
             //ImageなのでCanvasの子オブジェクトに設定
             GameObject canvas = GameObject.Find("Canvas");
             instance.transform.SetParent(canvas.transform);
+
+            //位置を調整
+            instance.transform.SetAsLastSibling();
+            instance.transform.position = Vector2.zero;
+            instance.GetComponent<Image>().raycastTarget = false;
 
             DontDestroyOnLoad(instance);
         }
@@ -96,67 +117,86 @@ public class CursorController : MonoBehaviour
     public void ChangeCursorEnable(bool torf)
     {
         Cursor.visible = torf;
+        if (instance != null)
+        {
+            instance.SetActive(torf);
+            instance.transform.SetAsLastSibling();
+            instance.transform.position = Vector2.zero;
+            instance.GetComponent<Image>().raycastTarget = false;
+
+        }
+    }
+
+    private void CheckButton(GameObject hitUI)
+    {
+        //現在選択しているUIと前に選択したUIが違うなら
+        if (hitUI != currentUI)
+        {
+            //手動でPointerEnter / PointerExit を送る
+            if (currentUI != null)
+            {
+                ExecuteEvents.Execute<IPointerExitHandler>(currentUI, pointerData, ExecuteEvents.pointerExitHandler);
+            }
+
+            if (hitUI != null)
+            {
+                ExecuteEvents.Execute<IPointerEnterHandler>(hitUI, pointerData, ExecuteEvents.pointerEnterHandler);
+                EventSystem.current.SetSelectedGameObject(hitUI);
+            }
+
+            currentUI = hitUI;
+        }
     }
 
     /// <summary>
-    /// GamePadでの操作時にボタンをクリックする関数
+    /// GamePad操作でUIを操作する関数
     /// </summary>
-    private void GamePadButtonSelect()
+    private void GamePadClick(GameObject hitUI, float movex)
     {
-        //選択しているUIを格納
-        GameObject select = EventSystem.current.currentSelectedGameObject;
-
-        //選択UIが存在しない => return
-        if (select == null)
+        //ボタン
+        if (hitUI.GetComponent<UnityEngine.UI.Button>() != null)
         {
-            buttonObject = null;
-            return;
+            UnityEngine.UI.Button button = hitUI.GetComponent<UnityEngine.UI.Button>();
+            ExecuteEvents.Execute<ISubmitHandler>(hitUI, pointerData, ExecuteEvents.submitHandler);
         }
-
-        UnityEngine.UI.Button bt = select.GetComponent<UnityEngine.UI.Button>();
-
-        //選択UIがボタンではない => return
-        if (bt == null) return;
-
-        //確認デバッグ
-        Debug.Log(bt.name);
-
-        //ボタンオブジェクトを格納
-        buttonObject = bt.gameObject;
-    }
-
-    private void GamePadClick()
-    {
-        //選択するボタンがない => return
-        if (buttonObject == null) return;
-
-        UnityEngine.UI.Button button = buttonObject.GetComponent<UnityEngine.UI.Button>();
-        
-        //ボタンComponentがない => return
-        if (button == null) return;
-
-        //ボタンのOnClickを実行
-        button.onClick.Invoke();
+        //スライダー
+        if (hitUI.GetComponent<Slider>() != null)
+        {
+            if (Mathf.Abs(movex) > 0.1f)
+            {
+                Slider slider = hitUI.GetComponent<Slider>();
+                slider.value += movex * Time.deltaTime;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (input == null) return;
+        if (instance == null) return;
 
         //入力を読み込む
-        Vector3 read = new Vector3(input.ReadValue<Vector2>().x, input.ReadValue<Vector2>().y, 0);
+        float avalue = action.GamePad.Click.ReadValue<float>();
+        Vector2 read = action.GamePad.Point.ReadValue<Vector2>();
 
-        //カーソルオブジェクトが存在したらカーソルを動かす
-        if (instance != null)
+        Vector2 now = (Vector2)instance.transform.position;
+        instance.transform.position = now + read * speed * Time.deltaTime;
+
+        //UI要素にRaycast
+        rect = instance.GetComponent<RectTransform>();
+        pointerData.position = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+        GameObject hitUI = null;
+        if (raycastResults.Count > 0)
         {
-            Vector3 now = new Vector3(instance.transform.position.x, instance.transform.position.y, -7);
-            instance.transform.position = now + read * speed * Time.deltaTime;
-
-            GamePadButtonSelect();
-
-            float avalue = action.GamePad.Click.ReadValue<float>();
-            if (avalue > 0.5f) GamePadClick();
+            GameObject candidate = raycastResults[0].gameObject;
+            if (candidate != instance) hitUI = candidate;
         }
+
+        CheckButton(hitUI);
+
+        if (avalue > 0.5f && hitUI != null) GamePadClick(hitUI, read.x);
     }
 }
