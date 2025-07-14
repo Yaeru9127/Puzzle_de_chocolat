@@ -89,8 +89,7 @@ public class FadeManager : MonoBehaviour
     {
         FadeOut(() =>
         {
-            if(cc.instance != null) cc.instance.transform.SetParent(cc.gameObject.transform);
-            if (game == "stageselect") stage.stagenum = 0;
+            if (game == "Stageselect") stage.stagenum = 0;
             else if (game == "Stage01") stage.stagenum = 1;
             SceneManager.LoadScene(game);
         });

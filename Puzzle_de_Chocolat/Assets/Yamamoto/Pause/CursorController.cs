@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEditor.Rendering.Universal.ShaderGUI;
 using Cysharp.Threading.Tasks.Triggers;
@@ -29,21 +29,47 @@ public class CursorController : MonoBehaviour
     {
         if (cc == null) cc = this;
         else if (cc != null) Destroy(this);
+
+        DontDestroyOnLoad(this.gameObject);
+        manager = InputSystem_Manager.manager;
+        if (manager == null)
+        {
+            Debug.LogError("InputSystem_Manager が見つかりません。");
+            return;
+        }
+
+        action = manager.GetActions();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
-        manager = InputSystem_Manager.manager;
-        action = manager.GetActions();
         speed =5f;
         currentUI = null;
+
         SetEventSystems();
+        DeviceCheck();
+    }
 
-        //テスト
-        ChangeCursorEnable(true);
+    /// <summary>
+    /// シーンロード時に再設定する
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
 
+    private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        SetEventSystems();
         DeviceCheck();
     }
 
@@ -69,7 +95,7 @@ public class CursorController : MonoBehaviour
         if (deviceCheck)
         {
             //GamePad操作をオン
-            input = action.GamePad.Point;
+            //input = action.GamePad.Point;
             manager.GamePadOn();
 
             //マウス操作をオフ
@@ -80,33 +106,39 @@ public class CursorController : MonoBehaviour
             {
                 instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
             }
-            else
-            {
-                instance.transform.position = Vector3.zero;
-                instance.SetActive(true);
-            }
+            //else
+            //{
+            //    instance.transform.position = Vector3.zero;
+            //    instance.SetActive(true);
+            //}
 
             //ImageなのでCanvasの子オブジェクトに設定
             GameObject canvas = GameObject.Find("Canvas");
-            instance.transform.SetParent(canvas.transform);
+            if (canvas != null)
+            {
+                instance.transform.SetParent(canvas.transform, true);
+            }
 
             //位置を調整
+            instance.SetActive(true);
             SetCursor();
 
-            DontDestroyOnLoad(instance);
+            //カーソル非表示
+            //ChangeCursorEnable(false);
         }
         //コントローラーが接続されていなかったら
         else
         {
             //マウス操作をオン
-            input = action.Mouse.Point;
+            //input = action.Mouse.Point;
             manager.MouseOn();
 
             //ゲームパッド操作をオフ
             manager.GamePadOff();
 
-            //画像をカーソルの位置にセットする
+            //カーソルセット
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+            ChangeCursorEnable(true);
 
             if (instance != null) instance.SetActive(false);
         }
