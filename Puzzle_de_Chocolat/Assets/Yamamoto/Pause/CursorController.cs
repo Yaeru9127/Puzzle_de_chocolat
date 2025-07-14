@@ -1,11 +1,9 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using UnityEditor.Rendering.Universal.ShaderGUI;
-using Cysharp.Threading.Tasks.Triggers;
 
 public class CursorController : MonoBehaviour
 {
@@ -13,17 +11,19 @@ public class CursorController : MonoBehaviour
 
     private InputSystem_Manager manager;
     private InputSystem_Actions action;
+
     public InputAction input;
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
     public GameObject instance;
-    private float speed;
 
+    private float speed = 5f;
     private GameObject currentUI;
     private RectTransform rect;
     private PointerEventData pointerData;
     private EventSystem eventSystem;
+    private InputAction east;
 
     private void Awake()
     {
@@ -32,9 +32,10 @@ public class CursorController : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
         manager = InputSystem_Manager.manager;
+
         if (manager == null)
         {
-            Debug.LogError("InputSystem_Manager ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñB");
+            Debug.LogError("InputSystem_Manager ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚");
             return;
         }
 
@@ -51,21 +52,13 @@ public class CursorController : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoad;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        speed =5f;
         currentUI = null;
-
+        east = action.GamePad.Click;
         SetEventSystems();
         DeviceCheck();
     }
-
-    /// <summary>
-    /// ƒV[ƒ“ƒ[ƒh‚ÉÄİ’è‚·‚é
-    /// </summary>
-    /// <param name="scene"></param>
-    /// <param name="mode"></param>
 
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
@@ -73,70 +66,35 @@ public class CursorController : MonoBehaviour
         DeviceCheck();
     }
 
-    /// <summary>
-    /// ƒV[ƒ“ƒ[ƒh‚ÉŠe•Ï”‚ğİ’è‚·‚éŠÖ”
-    /// </summary>
-    /// ƒV[ƒ“ƒ[ƒh‚Ì‚½‚Ñ‚É–ˆ‰ñŒÄ‚Ño‚·
     public void SetEventSystems()
     {
         eventSystem = EventSystem.current;
         pointerData = new PointerEventData(eventSystem);
     }
 
-    /// <summary>
-    /// ƒRƒ“ƒgƒ[ƒ‰[‚ÌÚ‘±‚ğŒŸ’m‚·‚éŠÖ”
-    /// </summary>
     private void DeviceCheck()
     {
-        // ƒRƒ“ƒgƒ[ƒ‰[‚ÌÚ‘±‚ğŒŸ’m
         bool deviceCheck = Gamepad.all.Count > 0;
 
-        //ƒRƒ“ƒgƒ[ƒ‰[‚ªÚ‘±‚³‚ê‚Ä‚¢‚½‚ç
         if (deviceCheck)
         {
-            //GamePad‘€ì‚ğƒIƒ“
-            //input = action.GamePad.Point;
             manager.GamePadOn();
-
-            //ƒ}ƒEƒX‘€ì‚ğƒIƒt
             manager.MouseOff();
 
-            //ƒJ[ƒ\ƒ‹ƒIƒuƒWƒFƒNƒg‚ª¶¬‚³‚ê‚Ä‚¢‚é‚©‚É‚æ‚Á‚Äˆ—‚ğ•Ï‚¦‚é
             if (instance == null)
             {
                 instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
-            }
-            //else
-            //{
-            //    instance.transform.position = Vector3.zero;
-            //    instance.SetActive(true);
-            //}
-
-            //Image‚È‚Ì‚ÅCanvas‚ÌqƒIƒuƒWƒFƒNƒg‚Éİ’è
-            GameObject canvas = GameObject.Find("Canvas");
-            if (canvas != null)
-            {
-                instance.transform.SetParent(canvas.transform, true);
+                instance.transform.parent = GameObject.Find("Canvas").transform;
             }
 
-            //ˆÊ’u‚ğ’²®
+            //AttachCursorToSceneCanvas();
             instance.SetActive(true);
             SetCursor();
-
-            //ƒJ[ƒ\ƒ‹”ñ•\¦
-            //ChangeCursorEnable(false);
         }
-        //ƒRƒ“ƒgƒ[ƒ‰[‚ªÚ‘±‚³‚ê‚Ä‚¢‚È‚©‚Á‚½‚ç
         else
         {
-            //ƒ}ƒEƒX‘€ì‚ğƒIƒ“
-            //input = action.Mouse.Point;
             manager.MouseOn();
-
-            //ƒQ[ƒ€ƒpƒbƒh‘€ì‚ğƒIƒt
             manager.GamePadOff();
-
-            //ƒJ[ƒ\ƒ‹ƒZƒbƒg
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
             ChangeCursorEnable(true);
 
@@ -144,20 +102,19 @@ public class CursorController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// GamePad‘€ì‚ÉƒJ[ƒ\ƒ‹‚Ìİ’è‚ğ‚·‚éŠÖ”
-    /// </summary>
     public void SetCursor()
     {
         instance.transform.SetAsLastSibling();
-        instance.transform.position = Vector2.zero;
+        RectTransform rt = instance.GetComponent<RectTransform>();
+
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+
         instance.GetComponent<Image>().raycastTarget = false;
     }
 
-    /// <summary>
-    /// ƒJ[ƒ\ƒ‹‚ÌƒIƒ“ƒIƒt‚ğİ’è‚·‚éŠÖ”
-    /// </summary>
-    /// <param name="torf"></param> true‚È‚ç•\¦Afalse‚È‚ç”ñ•\¦
     public void ChangeCursorEnable(bool torf)
     {
         Cursor.visible = torf;
@@ -165,42 +122,32 @@ public class CursorController : MonoBehaviour
         {
             instance.SetActive(torf);
             SetCursor();
-
         }
     }
 
-    /// <summary>
-    /// ƒJ[ƒ\ƒ‹‘€ì‚Éƒ{ƒ^ƒ“ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÀs‚·‚éŠÖ”
-    /// </summary>
-    /// <param name="hitUI"></param>
     private void CheckUI(GameObject hitUI)
     {
         GameObject obj = GetParentObject(hitUI);
 
-        //Œ»İ‘I‘ğ‚µ‚Ä‚¢‚éUI‚Æ‘O‚É‘I‘ğ‚µ‚½UI‚ªˆá‚¤‚È‚ç
         if (obj != currentUI)
         {
-            //è“®‚ÅPointerEnter / PointerExit ‚ğ‘—‚é
             if (currentUI != null)
-            {
                 ExecuteEvents.Execute<IPointerExitHandler>(currentUI, pointerData, ExecuteEvents.pointerExitHandler);
-            }
 
             if (obj != null)
             {
                 ExecuteEvents.Execute<IPointerEnterHandler>(obj, pointerData, ExecuteEvents.pointerEnterHandler);
                 EventSystem.current.SetSelectedGameObject(obj);
             }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
 
             currentUI = obj;
         }
     }
 
-    /// <summary>
-    /// eƒIƒuƒWƒFƒNƒg‚ÉButton‚ª‚ ‚é‚©‚Ç‚¤‚©
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
     private GameObject GetParentObject(GameObject obj)
     {
         if (obj == null) return null;
@@ -218,22 +165,17 @@ public class CursorController : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// GamePad‘€ì‚ÅUI‚ğ‘€ì‚·‚éŠÖ”
-    /// </summary>
-    private void GamePadClick(GameObject hitUI, float movex)
+    private void GamePadClick(GameObject hitUI, float movex, bool east)
     {
-        GameObject obj = GetParentObject (hitUI);
+        GameObject obj = GetParentObject(hitUI);
         if (obj == hitUI) return;
 
-        //ƒ{ƒ^ƒ“
-        if (hitUI.GetComponent<UnityEngine.UI.Button>() != null)
+        if (hitUI.GetComponent<Button>() != null)
         {
-            UnityEngine.UI.Button button = hitUI.GetComponent<UnityEngine.UI.Button>();
             ExecuteEvents.Execute<ISubmitHandler>(hitUI, pointerData, ExecuteEvents.submitHandler);
         }
-        //ƒXƒ‰ƒCƒ_[
-        if (hitUI.GetComponent<Slider>() != null)
+
+        if (hitUI.GetComponent<Slider>() != null && east)
         {
             if (Mathf.Abs(movex) > 0.1f)
             {
@@ -243,21 +185,22 @@ public class CursorController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (instance == null) return;
+        if (instance == null || !instance.activeSelf) return;
 
-        //“ü—Í‚ğ“Ç‚İ‚Ş
         float avalue = action.GamePad.Click.ReadValue<float>();
+        bool isEastPressed = east != null && east.ReadValue<float>() > 0.5f;
         Vector2 read = action.GamePad.Point.ReadValue<Vector2>();
 
         Vector2 now = (Vector2)instance.transform.position;
         instance.transform.position = now + read * speed * Time.deltaTime;
 
-        //UI—v‘f‚ÉRaycast
         rect = instance.GetComponent<RectTransform>();
-        pointerData.position = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
+
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
+        pointerData.position = screenPos;
+
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, raycastResults);
 
@@ -270,6 +213,9 @@ public class CursorController : MonoBehaviour
 
         CheckUI(hitUI);
 
-        if (avalue > 0.5f && hitUI != null) GamePadClick(hitUI, read.x);
+        if (avalue > 0.5f && hitUI != null)
+        {
+            GamePadClick(hitUI, read.x, isEastPressed);
+        }
     }
 }
