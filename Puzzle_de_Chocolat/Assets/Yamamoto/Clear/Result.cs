@@ -1,12 +1,8 @@
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class Result : MonoBehaviour
 {
     private InputSystem_Manager manager;
-    private InputSystem_Actions action;
     private CursorController cc;
     private StageManager stage;
 
@@ -16,7 +12,6 @@ public class Result : MonoBehaviour
         cc = CursorController.cc;
         stage = StageManager.stage;
         manager = InputSystem_Manager.manager;
-        action = manager.GetActions();
         stage.phase = StageManager.Phase.Result;
 
         manager.PlayerOff();

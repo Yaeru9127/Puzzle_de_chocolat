@@ -33,6 +33,7 @@ public class GameClear : MonoBehaviour
     public void ShowClearResult(int retry)
     {
         clearImage.gameObject.SetActive(true);  // クリア結果画像を表示する
+        AudioManager.Instance.PlaySE("Game clear");
 
         // 最短クリアで、リトライなしの場合
         if (retry == 0 && stepsTaken <= minStepsToClear)

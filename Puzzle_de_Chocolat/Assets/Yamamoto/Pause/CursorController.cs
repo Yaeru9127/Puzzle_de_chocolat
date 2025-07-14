@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.Windows;
 
 public class CursorController : MonoBehaviour
 {
@@ -11,8 +12,6 @@ public class CursorController : MonoBehaviour
 
     private InputSystem_Manager manager;
     private InputSystem_Actions action;
-
-    public InputAction input;
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
@@ -23,7 +22,8 @@ public class CursorController : MonoBehaviour
     private RectTransform rect;
     private PointerEventData pointerData;
     private EventSystem eventSystem;
-    private InputAction east;
+    private float sliderCooldown = 0f;
+    private float sliderCooldownDuration = 0.2f;
 
     private void Awake()
     {
@@ -55,7 +55,6 @@ public class CursorController : MonoBehaviour
     private void Start()
     {
         currentUI = null;
-        east = action.GamePad.Click;
         SetEventSystems();
         DeviceCheck();
     }
@@ -84,12 +83,16 @@ public class CursorController : MonoBehaviour
             if (instance == null)
             {
                 instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
-                instance.transform.parent = GameObject.Find("Canvas").transform;
+                instance.transform.SetParent(GameObject.Find("Canvas").transform, false);
             }
 
-            //AttachCursorToSceneCanvas();
             instance.SetActive(true);
             SetCursor();
+
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.sendNavigationEvents = false;
+            }
         }
         else
         {
@@ -148,6 +151,11 @@ public class CursorController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 選択UIの親オブジェクトを取得する関数
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
     private GameObject GetParentObject(GameObject obj)
     {
         if (obj == null) return null;
@@ -165,39 +173,54 @@ public class CursorController : MonoBehaviour
         return null;
     }
 
-    private void GamePadClick(GameObject hitUI, float movex, bool east)
+    private void GamePadClick(GameObject hitUI, float movex, bool isClick)
     {
         GameObject obj = GetParentObject(hitUI);
-        if (obj == hitUI) return;
+        if (obj == null) return;
 
-        if (hitUI.GetComponent<Button>() != null)
+        //Button
+        if (obj.GetComponent<Button>() != null && isClick)
         {
-            ExecuteEvents.Execute<ISubmitHandler>(hitUI, pointerData, ExecuteEvents.submitHandler);
+            ExecuteEvents.Execute<ISubmitHandler>(obj, pointerData, ExecuteEvents.submitHandler);
+            return;
         }
 
-        if (hitUI.GetComponent<Slider>() != null && east)
+        //Slider
+        if (obj.GetComponent<Slider>() != null)
         {
-            if (Mathf.Abs(movex) > 0.1f)
+
+            if (Mathf.Abs(movex) < 0.2f) movex = 0f;
+
+            if (isClick && Mathf.Abs(movex) > 0.2f && sliderCooldown <= 0f)
             {
-                Slider slider = hitUI.GetComponent<Slider>();
-                slider.value += movex * Time.deltaTime;
+                Slider slider = obj.GetComponent<Slider>();
+
+                if (slider != null)
+                {
+                    slider.value += Mathf.Sign(movex) * 0.05f;
+                    sliderCooldown = sliderCooldownDuration;
+                }
             }
+
+            return;
         }
     }
 
     private void Update()
     {
+        //GamePad操作時以外は無視
         if (instance == null || !instance.activeSelf) return;
 
-        float avalue = action.GamePad.Click.ReadValue<float>();
-        bool isEastPressed = east != null && east.ReadValue<float>() > 0.5f;
-        Vector2 read = action.GamePad.Point.ReadValue<Vector2>();
+        //ユーザー入力を受け取る
+        bool isClickHoled = action.GamePad.Click.IsPressed();
+        Vector2 input = action.GamePad.Point.ReadValue<Vector2>();
 
+        //カーソルの移動
         Vector2 now = (Vector2)instance.transform.position;
-        instance.transform.position = now + read * speed * Time.deltaTime;
+        instance.transform.position = now + input * speed * Time.deltaTime;
 
+        //UIにRaycast
         rect = instance.GetComponent<RectTransform>();
-
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
         pointerData.position = screenPos;
 
@@ -212,10 +235,12 @@ public class CursorController : MonoBehaviour
         }
 
         CheckUI(hitUI);
+        if (sliderCooldown > 0f)
+            sliderCooldown -= Time.deltaTime;
 
-        if (avalue > 0.5f && hitUI != null)
+        if (hitUI != null && isClickHoled)
         {
-            GamePadClick(hitUI, read.x, isEastPressed);
+            GamePadClick(hitUI, input.x, isClickHoled);
         }
     }
 }

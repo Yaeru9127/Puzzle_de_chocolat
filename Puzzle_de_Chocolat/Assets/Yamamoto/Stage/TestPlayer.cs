@@ -446,10 +446,25 @@ public class TestPlayer : MonoBehaviour
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
+        //自身の子オブジェクトが0以外 = 移動するお菓子がある
+        if (this.gameObject.transform.childCount != 0 && AudioManager.Instance != null)
+        {
+            //お菓子を移動させるときのSEを流す
+            AudioManager.Instance.PlaySE("move");
+        }
+        else if (AudioManager.Instance != null)
+        {
+            //移動SEを流す
+            AudioManager.Instance.PlaySE("RUN");
+        }
+
         //移動が終わるまで処理を待つ
         await this.gameObject.transform.DOMove(pos, speed)
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
+
+        //移動SEを止める
+        AudioManager.Instance.seAudioSource.Stop();
 
         //元のマスのひびチェック
         //ReturnNowTileScript().ChangeSprite();
