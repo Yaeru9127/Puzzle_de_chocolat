@@ -75,7 +75,7 @@ public class CursorController : MonoBehaviour
     {
         bool deviceCheck = Gamepad.all.Count > 0;
 
-        if (deviceCheck)
+        if (deviceCheck)    //GamePad操作設定
         {
             manager.GamePadOn();
             manager.MouseOff();
@@ -93,15 +93,17 @@ public class CursorController : MonoBehaviour
             {
                 EventSystem.current.sendNavigationEvents = false;
             }
+
+            ChangeCursorEnable(false);
         }
-        else
+        else    //Mouse操作設定
         {
             manager.MouseOn();
             manager.GamePadOff();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
-            ChangeCursorEnable(true);
 
             if (instance != null) instance.SetActive(false);
+            ChangeCursorEnable(true);
         }
     }
 

@@ -513,12 +513,17 @@ public class TestPlayer : MonoBehaviour
 
         //クリアチェック
         //残り移動数が0以下だったら = これ以上移動できない状態なら
-        if (remain.currentLife <= 0)
+        if (remain.currentLife <= 0 && nowmass != cg.goal)
         {
             manager.PlayerOff();
+            manager.GamePadOff();
 
             //もしゴールできないなら、GameOverの設定
-            if (!cg.CanMassThrough(ReturnNowTileScript())) goc.ShowGameOver();
+            if (!cg.CanMassThrough(ReturnNowTileScript()))
+            {
+                goc.ShowGameOver();
+                stage.phase = StageManager.Phase.Result;
+            }
         }
 
         //ゴールマスについたら
@@ -529,6 +534,7 @@ public class TestPlayer : MonoBehaviour
             gameClear.ShowClearResult(rcm.ReloadCount);
         }
 
+        //アニメーション設定
         animator.speed = 0f;
         animator.SetFloat("MoveX", 0);
         animator.SetFloat("MoveY", 0);
@@ -616,9 +622,8 @@ public class TestPlayer : MonoBehaviour
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
-        float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.Space
         float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
-        float r = actions.Player.Retry.ReadValue<float>();              //KeyCode.R
+        float r = actions.Player.Retry.ReadValue<float>();              //GamePad.Y or KeyCode.R
 
         //移動
         if (!inProcess && vec2 != Vector2.zero)

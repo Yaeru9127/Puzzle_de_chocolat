@@ -10,9 +10,12 @@ public class PauseController : MonoBehaviour
     private InputSystem_Manager manager;
     private CursorController cc;
     private ReloadCountManager rm;
-    private Remainingaircraft remain;
 
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
+
+    //操作説明オブジェクト
+    [SerializeField] private GameObject Mouse;
+    [SerializeField] private GameObject GamePad;
 
     private void Awake()
     {
@@ -28,10 +31,33 @@ public class PauseController : MonoBehaviour
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
         rm = ReloadCountManager.Instance;
-        remain = Remainingaircraft.remain;
+        cc.ChangeCursorEnable(false);
+        SetOperationObject();
 
         //もし表示状態なら非表示にする
         if (pauseobj.activeSelf) pauseobj.SetActive(false);
+    }
+
+    /// <summary>
+    /// 操作方法によって表示するオブジェクトを変える
+    /// </summary>
+    private void SetOperationObject()
+    {
+        //操作方法によって判別
+        GameObject operation = null;
+        if (Gamepad.all.Count > 0)  //GamePad
+        {
+            operation = Instantiate(GamePad,
+            new Vector2(6.4f, -2.7f), Quaternion.identity);
+        }
+        else
+        {
+            operation = Instantiate(Mouse,
+                new Vector2(6.4f, -2.7f), Quaternion.identity);
+        }
+
+        //場所を設定
+        operation.transform.position = new Vector3(6.45f, -2.5f, 0);
     }
 
     /// <summary>
@@ -96,8 +122,6 @@ public class PauseController : MonoBehaviour
 
     private void OnDestroy()
     {
-        //remain.UpdateLifeDisplay();
-
         //シーンを跨ぐときにメモリから消す
         if (pause == this) pause = null;
     }
