@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using UnityEngine;
 
 //製菓後のお菓子を格納するクラス
@@ -21,6 +22,7 @@ public class SweetsManager : MonoBehaviour
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
+    [SerializeField] private GameObject effect;
     [SerializeField] private GaugeController gaugeCC;
 
     /*レシピ　メモ
@@ -98,6 +100,18 @@ public class SweetsManager : MonoBehaviour
         {
             Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
         }*/
+
+        SetEffect();
+    }
+
+    private void SetEffect()
+    {
+        foreach (KeyValuePair<Vector2, Sweets> pair in sweets)
+        {
+            Vector3 generate = new Vector3(pair.Key.x, pair.Key.y, 0);
+            GameObject effectObj = Instantiate(effect, generate, Quaternion.identity);
+            effectObj.transform.SetParent(this.gameObject.transform);
+        }
     }
 
     /// <summary>
