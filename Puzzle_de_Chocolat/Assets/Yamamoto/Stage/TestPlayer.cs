@@ -499,7 +499,8 @@ public class TestPlayer : MonoBehaviour
         }
 
         //お菓子の位置を更新
-        sm.SearchSweets(false);
+        sm.SearchSweets();
+        sm.SetEffect();
 
         //もし生クリームを踏んだ時の処理   
         Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
@@ -610,7 +611,8 @@ public class TestPlayer : MonoBehaviour
         sm.CallDecreaseFoodGauge();
 
         //お菓子の位置の更新
-        sm.SearchSweets(false);
+        sm.SearchSweets();
+        sm.SetEffect();
 
         //処理フラグの更新
         inProcess = false;

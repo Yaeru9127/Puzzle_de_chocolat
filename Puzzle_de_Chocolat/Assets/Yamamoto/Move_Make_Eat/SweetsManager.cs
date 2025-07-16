@@ -1,5 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 //製菓後のお菓子を格納するクラス
@@ -19,14 +18,13 @@ public class SweetsManager : MonoBehaviour
     //お菓子オブジェクト格納のList<Dictionary<座標, スクリプト>>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
-    //エフェクトオブジェクト格納のList<Dictionary<座標, オブジェクト>>
-    public Dictionary<Sweets, GameObject> effects = new Dictionary<Sweets, GameObject>();
+    public List<GameObject> effects = new List<GameObject>();
 
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
-    [SerializeField] private GameObject zairyouEffect;
-    [SerializeField] private GameObject eatEffect;
+    [SerializeField] private GameObject ZairyouEffect;
+    [SerializeField] private GameObject EatEffect;
 
     [SerializeField] private GaugeController gaugeCC;
 
@@ -59,7 +57,8 @@ public class SweetsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SearchSweets(true);
+        SearchSweets();
+        SetEffect();
     }
 
     /// <summary>
@@ -68,7 +67,7 @@ public class SweetsManager : MonoBehaviour
     /// <param name="pos"></param> 探すマスの座標
     public Sweets GetSweets(Vector2 pos)
     {
-        Sweets returnsweetts = null;;
+        Sweets returnsweetts = null; ;
 
         //座標で検索
         foreach (Vector2 sweetspos in sweets.Keys)
@@ -82,81 +81,58 @@ public class SweetsManager : MonoBehaviour
     /// <summary>
     /// マス上のすべてのお菓子を取得する関数
     /// </summary>
-    /// <param name="add"></param> Dictionaryに追加するフラグ
     /// <returns></returns>
-    public void SearchSweets(bool add)
+    public void SearchSweets()
     {
+        //初期化
         sweets.Clear();
 
+        //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            var child = this.gameObject.transform.GetChild(i);
-            var sweetsComp = child.GetComponent<Sweets>();
-            if (sweetsComp != null)
+            if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
             {
-                Vector2 posKey = (Vector2)child.position;
-
-                if (!sweets.ContainsKey(posKey))
+                if (!sweets.ContainsKey(this.gameObject.transform.GetChild(i).GetComponent<Sweets>().transform.position))
                 {
-                    sweets.Add(posKey, sweetsComp);
-                }
-                else
-                {
-                    sweets[posKey] = sweetsComp;
+                    sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
                 }
             }
         }
 
-        if (add)
+        /*//デバッグ
+        foreach (var sw in sweets)
         {
-            foreach (var kvp in sweets)
-            {
-                var sweetsComp = kvp.Value;
-
-                // すでにeffectsに登録されていれば生成しない
-                if (!effects.ContainsKey(sweetsComp))
-                {
-                    GenerateEffect(kvp.Key, sweetsComp);
-                }
-            }
-        }
+            Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
+        }*/
     }
 
     /// <summary>
-    /// sweetsの子オブジェクトにエフェクトが存在するかを判定する関数
+    /// エフェクト生成関数
     /// </summary>
-    //private bool HasEffectChild(Sweets sweetsComp)
-    //{
-    //    foreach (Transform child in sweetsComp.transform)
-    //    {
-    //        if (child.GetComponent<EatEffect>() != null) return true;
-    //        if (child.GetComponent<ZairyouEffect>() != null) return true;
-    //    }
-    //    return false;
-    //}
-
-    /// <summary>
-    /// 指定した sweets に対応するエフェクトを生成し effects に登録する
-    /// </summary>
-    private void GenerateEffect(Vector2 posKey, Sweets sweetsComp)
+    public void SetEffect()
     {
-        GameObject effectObj = null;
+        //初期化
+        effects.Clear();
 
-        if (sweetsComp.material == Sweets.Material.Maked)
-            effectObj = eatEffect;
-        else
-            effectObj = zairyouEffect;
-
-        if (effectObj != null)
+        foreach (KeyValuePair<Vector2, Sweets> pair in sweets)
         {
-            Vector3 generatePos = new Vector3(posKey.x, posKey.y, 0);
-            GameObject obj = Instantiate(effectObj, generatePos, Quaternion.identity);
+            if (pair.Value.gameObject.transform.childCount == 0)
+            {
+                Vector3 pos = pair.Value.gameObject.transform.position;
+                pos.z = 0;
 
-            obj.transform.SetParent(sweetsComp.transform, true);
-            obj.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                GameObject obj = null;
+                GameObject instance = null;
+                if (pair.Value.material == Sweets.Material.Maked) obj = EatEffect;
+                else obj = ZairyouEffect;
 
-            // sweetsをキーにエフェクトを管理
-            effects[sweetsComp] = obj;
+                instance = Instantiate(obj, pos, Quaternion.identity);
+                instance.transform.SetParent(pair.Value.gameObject.transform, true);
+                instance.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            }
+
+            GameObject child = pair.Value.gameObject.transform.GetChild(0).gameObject;
+            effects.Add(child);
         }
     }
 
@@ -199,6 +175,6 @@ public class SweetsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
