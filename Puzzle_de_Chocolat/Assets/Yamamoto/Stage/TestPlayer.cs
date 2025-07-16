@@ -55,7 +55,6 @@ public class TestPlayer : MonoBehaviour
         stage = StageManager.stage;
         animator = this.gameObject.GetComponent<Animator>();
 
-        //cc.ChangeCursorEnable(false);
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
         manager.PlayerOn();
@@ -452,6 +451,7 @@ public class TestPlayer : MonoBehaviour
             //お菓子を移動させるときのSEを流す
             AudioManager.Instance.PlaySE("move");
         }
+        //移動するお菓子がない
         else if (AudioManager.Instance != null)
         {
             //移動SEを流す
@@ -499,7 +499,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //お菓子の位置を更新
-        sm.SearchSweets();
+        sm.SearchSweets(false);
 
         //もし生クリームを踏んだ時の処理   
         Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
@@ -610,7 +610,7 @@ public class TestPlayer : MonoBehaviour
         sm.CallDecreaseFoodGauge();
 
         //お菓子の位置の更新
-        sm.SearchSweets();
+        sm.SearchSweets(false);
 
         //処理フラグの更新
         inProcess = false;

@@ -185,7 +185,7 @@ public class Sweets : MonoBehaviour
 
             await UniTask.DelayFrame(1);
             //お菓子の位置を更新
-            sm.SearchSweets();
+            sm.SearchSweets(false);
         }
         else Debug.Log("this sweets is can not eat");
     }

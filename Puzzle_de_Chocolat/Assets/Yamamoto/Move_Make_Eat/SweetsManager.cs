@@ -19,10 +19,15 @@ public class SweetsManager : MonoBehaviour
     //お菓子オブジェクト格納のList<Dictionary<座標, スクリプト>>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
+    //エフェクトオブジェクト格納のList<Dictionary<座標, オブジェクト>>
+    public Dictionary<Sweets, GameObject> effects = new Dictionary<Sweets, GameObject>();
+
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
 
-    [SerializeField] private GameObject effect;
+    [SerializeField] private GameObject zairyouEffect;
+    [SerializeField] private GameObject eatEffect;
+
     [SerializeField] private GaugeController gaugeCC;
 
     /*レシピ　メモ
@@ -54,7 +59,7 @@ public class SweetsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SearchSweets();
+        SearchSweets(true);
     }
 
     /// <summary>
@@ -77,40 +82,81 @@ public class SweetsManager : MonoBehaviour
     /// <summary>
     /// マス上のすべてのお菓子を取得する関数
     /// </summary>
+    /// <param name="add"></param> Dictionaryに追加するフラグ
     /// <returns></returns>
-    public void SearchSweets()
+    public void SearchSweets(bool add)
     {
-        //初期化
         sweets.Clear();
 
-        //自身の子オブジェクトの中からSweetsスクリプトを持つオブジェクトを探す
         for (int i = 0; i < this.gameObject.transform.childCount; i++)
         {
-            if (this.gameObject.transform.GetChild(i).GetComponent<Sweets>())
+            var child = this.gameObject.transform.GetChild(i);
+            var sweetsComp = child.GetComponent<Sweets>();
+            if (sweetsComp != null)
             {
-                if (!sweets.ContainsKey(this.gameObject.transform.GetChild(i).GetComponent<Sweets>().transform.position))
+                Vector2 posKey = (Vector2)child.position;
+
+                if (!sweets.ContainsKey(posKey))
                 {
-                    sweets.Add(this.gameObject.transform.GetChild(i).gameObject.transform.position, this.gameObject.transform.GetChild(i).gameObject.GetComponent<Sweets>());
+                    sweets.Add(posKey, sweetsComp);
+                }
+                else
+                {
+                    sweets[posKey] = sweetsComp;
                 }
             }
         }
 
-        /*//デバッグ
-        foreach (var sw in sweets)
+        if (add)
         {
-            Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
-        }*/
+            foreach (var kvp in sweets)
+            {
+                var sweetsComp = kvp.Value;
 
-        SetEffect();
+                // すでにeffectsに登録されていれば生成しない
+                if (!effects.ContainsKey(sweetsComp))
+                {
+                    GenerateEffect(kvp.Key, sweetsComp);
+                }
+            }
+        }
     }
 
-    private void SetEffect()
+    /// <summary>
+    /// sweetsの子オブジェクトにエフェクトが存在するかを判定する関数
+    /// </summary>
+    //private bool HasEffectChild(Sweets sweetsComp)
+    //{
+    //    foreach (Transform child in sweetsComp.transform)
+    //    {
+    //        if (child.GetComponent<EatEffect>() != null) return true;
+    //        if (child.GetComponent<ZairyouEffect>() != null) return true;
+    //    }
+    //    return false;
+    //}
+
+    /// <summary>
+    /// 指定した sweets に対応するエフェクトを生成し effects に登録する
+    /// </summary>
+    private void GenerateEffect(Vector2 posKey, Sweets sweetsComp)
     {
-        foreach (KeyValuePair<Vector2, Sweets> pair in sweets)
+        GameObject effectObj = null;
+
+        if (sweetsComp.material == Sweets.Material.Maked)
+            effectObj = eatEffect;
+        else
+            effectObj = zairyouEffect;
+
+        if (effectObj != null)
         {
-            Vector3 generate = new Vector3(pair.Key.x, pair.Key.y, 0);
-            GameObject effectObj = Instantiate(effect, generate, Quaternion.identity);
-            effectObj.transform.SetParent(this.gameObject.transform);
+            Vector3 generatePos = new Vector3(posKey.x, posKey.y, 0);
+            GameObject obj = Instantiate(effectObj, generatePos, Quaternion.identity);
+
+            obj.transform.SetParent(sweetsComp.transform, true);
+            obj.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+
+            // sweetsをキーにエフェクトを管理
+            effects[sweetsComp] = obj;
         }
     }
 

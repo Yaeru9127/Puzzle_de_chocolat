@@ -3265,63 +3265,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1477476961650256646, guid: f1b6e5598d1835241a66259260d264db, type: 3}
   m_PrefabInstance: {fileID: 1286000781}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1292528400
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.1240544
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -2.4688525
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -180
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3535204167813950920, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4491990148530286681, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
-      propertyPath: m_Name
-      value: CanEatEffect
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
 --- !u!1 &1319832601
 GameObject:
   m_ObjectHideFlags: 0
@@ -3365,7 +3308,8 @@ MonoBehaviour:
     makedName: maritozzo
   - makedSweets: {fileID: 5924880099824159555, guid: 553f36214b3a8454a8008d30177f2b4c, type: 3}
     makedName: baumkuchen
-  effect: {fileID: 4491990148530286681, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
+  zairyouEffect: {fileID: 2798761608580405818, guid: cfa95775ea836264a9a08bf22fc9252c, type: 3}
+  eatEffect: {fileID: 4491990148530286681, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
   gaugeCC: {fileID: 1048206900}
 --- !u!4 &1319832603
 Transform:
@@ -6667,4 +6611,3 @@ SceneRoots:
   - {fileID: 1150791155}
   - {fileID: 1743189592}
   - {fileID: 1048206902}
-  - {fileID: 1292528400}
