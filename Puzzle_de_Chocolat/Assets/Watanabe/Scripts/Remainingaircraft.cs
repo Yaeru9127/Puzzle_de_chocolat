@@ -21,6 +21,9 @@ public class Remainingaircraft : MonoBehaviour
     // 現在の残機数
     public int currentLife;
 
+    // ゲームクリア済みフラグ ← 追加
+    public bool isGameCleared = false;
+
     private void Awake()
     {
         if (remain == null) remain = this;
@@ -35,7 +38,8 @@ public class Remainingaircraft : MonoBehaviour
 
     public void ReduceLife()
     {
-        if (currentLife > 0)
+        // ゲームクリア後は処理しない
+        if (currentLife > 0 && !isGameCleared)
         {
             currentLife--;
 
@@ -59,23 +63,14 @@ public class Remainingaircraft : MonoBehaviour
 
     public void UpdateLifeDisplay()
     {
-        int tens = currentLife / 10;
-        int ones = currentLife % 10;
-
-        if (currentLife < 10)
+        if (currentLife >= 0 && currentLife < numberSprites.Length)
         {
             numberDisplay.sprite = numberSprites[currentLife];
+            numberDisplay.gameObject.SetActive(true);
         }
-        else
-        {
-            numberDisplay.sprite = numberSprites[currentLife];
-        }
-
-        numberDisplay.gameObject.SetActive(true);
     }
 
-
-    //追加
+    // 数字スプライト取得用（他クラスから呼び出す用）
     public Sprite GetNumberSprite(int value)
     {
         if (numberSprites != null && value >= 0 && value < numberSprites.Length)
