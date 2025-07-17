@@ -13,9 +13,9 @@ public class GameOverController : MonoBehaviour
     private CursorController cc;
     private StageManager stage;
 
-    public Image gameOverImage;
-    public float fadeDuration = 1.5f;
-    public float waitBeforeRetry = 3.0f;
+    public Image gameOverImage;          // GameOver表示用UI
+    public float fadeDuration = 1.5f;    // フェードイン時間
+    public float waitBeforeRetry = 3.0f; // リトライ前の待機時間
 
     private bool isGameOver = false;
 
@@ -29,6 +29,7 @@ public class GameOverController : MonoBehaviour
     {
         if (gameOverImage != null)
         {
+            // 透明にして非表示
             gameOverImage.color = new Color(1, 1, 1, 0);
             gameOverImage.gameObject.SetActive(false);
         }
@@ -39,11 +40,12 @@ public class GameOverController : MonoBehaviour
         stage = StageManager.stage;
     }
 
+    // GameOver演出を開始
     public void ShowGameOver()
     {
-        if (isGameOver) return;
+        if (isGameOver) return; // すでに実行中なら無視
 
-        manager.PlayerOff();
+        manager.PlayerOff(); // プレイヤー操作無効
         isGameOver = true;
 
         if (gameOverImage != null)
@@ -51,6 +53,7 @@ public class GameOverController : MonoBehaviour
             gameOverImage.gameObject.SetActive(true);
             stage.phase = StageManager.Phase.Result;
 
+            // カーソル表示
             if (cc.instance != null)
                 cc.instance.SetActive(true);
 
@@ -58,12 +61,14 @@ public class GameOverController : MonoBehaviour
         }
     }
 
+    // フェードインして一定時間後にリトライシーンへ
     private IEnumerator FadeInAndRetry()
     {
         float elapsed = 0f;
         Color color = gameOverImage.color;
         color.a = 0f;
 
+        // フェードイン処理
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
@@ -73,15 +78,18 @@ public class GameOverController : MonoBehaviour
             yield return null;
         }
 
+        // フル表示
         color.a = 1f;
         gameOverImage.color = color;
 
+        // 一定時間待機してリトライシーンへ
         yield return new WaitForSeconds(waitBeforeRetry);
         SceneManager.LoadScene("RetryScene");
     }
 
     private void OnDestroy()
     {
+        // シングルトン解除（次のシーンで再生成可能にする）
         if (over == this) over = null;
     }
 }
