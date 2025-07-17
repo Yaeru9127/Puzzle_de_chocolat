@@ -23,7 +23,7 @@ public class playermove2 : MonoBehaviour
         // フェードコントローラーを取得
         fadeController = Object.FindFirstObjectByType<FadeController>();
 
-        // ノード接続定義：双方向
+        // 座標ごとにいける方向を指定
         nodeConnections[0] = new List<int> { 1 };         // 座標1 → 座標2
         nodeConnections[1] = new List<int> { 0, 2 };      // 座標2 → 座標1,3
         nodeConnections[2] = new List<int> { 1, 3 };      // 座標3 → 座標2,4
@@ -51,7 +51,9 @@ public class playermove2 : MonoBehaviour
                 input = pad.leftStick.ReadValue();
             }
 #endif
-            input.x += Input.GetAxisRaw("Horizontal");
+            
+            input.x -= Input.GetAxisRaw("Horizontal");
+            //input.x = -input.x;  // これで入力の方向が逆になります
 
             if (Mathf.Abs(input.x) > 0.5f)
             {
@@ -61,8 +63,9 @@ public class playermove2 : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))//スペースキーとAボタン(仮)でステージ選択
             {
                 SceneChange();
-            }           
-        }else
+            }
+        }
+        else
         {
             MoveToTarget();
         }

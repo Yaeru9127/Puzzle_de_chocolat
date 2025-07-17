@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class scenereload : MonoBehaviour
 {
     public GameObject confirmationDialog;
+    private bool isConfirming = false;
 
     void Start()
     {
@@ -13,17 +14,21 @@ public class scenereload : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton3))
+        if (!isConfirming && (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton3)))
         {
             ShowConfirmationDialog();
         }
 
-        HandleConfirmationInput();
+        if (isConfirming)
+        {
+            HandleConfirmationInput();
+        }
     }
 
     void ShowConfirmationDialog()
     {
         confirmationDialog.SetActive(true);
+        isConfirming = true;
         Debug.Log("リロードしますか？[Y] はい、[N] いいえ");
     }
 
@@ -43,6 +48,7 @@ public class scenereload : MonoBehaviour
     void OnConfirmReload()
     {
         confirmationDialog.SetActive(false);
+        isConfirming = false;
         ReloadCountManager.Instance.IncrementReloadCount();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -50,6 +56,7 @@ public class scenereload : MonoBehaviour
     void OnCancelReload()
     {
         confirmationDialog.SetActive(false);
+        isConfirming = false;
         Debug.Log("リロードがキャンセルされました");
     }
 
