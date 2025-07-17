@@ -3,6 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
+using UnityEditor;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -464,6 +465,9 @@ public class TestPlayer : MonoBehaviour
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
 
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
+
         //移動SEを止める
         AudioManager.Instance.seAudioSource.Stop();
 
@@ -527,8 +531,6 @@ public class TestPlayer : MonoBehaviour
             //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript()))
             {
-                manager.PlayerOff();
-                manager.GamePadOff();
                 goc.ShowGameOver();
                 stage.phase = StageManager.Phase.Result;
             }
@@ -547,6 +549,9 @@ public class TestPlayer : MonoBehaviour
         animator.speed = 0f;
         animator.SetFloat("MoveX", 0);
         animator.SetFloat("MoveY", 0);
+
+        //入力を受け付ける
+        manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
@@ -572,6 +577,9 @@ public class TestPlayer : MonoBehaviour
     private async void TryEat(Direction dire)
     {
         if (!inProcess) inProcess = true;
+
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
 
         //向いている方向から位置関係Vector2を取得
         Vector2 original = direction switch
@@ -622,8 +630,14 @@ public class TestPlayer : MonoBehaviour
         sm.SearchSweets();
         sm.SetEffect();
 
-        //処理フラグの更新
-        inProcess = false;
+        if (remain.currentLife > 0)
+        {
+            //入力を受け付けるようにする
+            manager.PlayerOn();
+
+            //処理フラグの更新
+            inProcess = false;
+        }
     }
 
     // Update is called once per frame
