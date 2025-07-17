@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -512,16 +513,22 @@ public class TestPlayer : MonoBehaviour
             }
         }
 
+        /*//デバッグ
+        cg.searched.Clear();
+        Debug.Log(cg.CanMassThrough(ReturnNowTileScript()));*/
+
         //クリアチェック
-        //残り移動数が0以下だったら = これ以上移動できない状態なら
-        if (remain.currentLife <= 0 && nowmass != cg.goal)
+        //現在の残り工程数が0 && 現在のマスがゴールでないなら
+        if (remain.currentLife == 0 && nowmass != cg.goal)
         {
-            manager.PlayerOff();
-            manager.GamePadOff();
+            //ゴール判定リストの初期化
+            cg.searched.Clear();
 
             //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript()))
             {
+                manager.PlayerOff();
+                manager.GamePadOff();
                 goc.ShowGameOver();
                 stage.phase = StageManager.Phase.Result;
             }
@@ -532,6 +539,7 @@ public class TestPlayer : MonoBehaviour
         {
             Debug.Log("reach goal");
             manager.PlayerOff();
+            cc.ChangeCursorEnable(true);
             gameClear.ShowClearResult(rcm.ReloadCount);
         }
 
@@ -654,7 +662,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //ポーズ
-        if (!inProcess && escape > 0.5f)
+        if (!inProcess && escape > 0.5f && stage.phase == StageManager.Phase.Game)
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();

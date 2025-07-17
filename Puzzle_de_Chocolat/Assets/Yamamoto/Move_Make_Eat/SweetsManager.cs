@@ -116,16 +116,20 @@ public class SweetsManager : MonoBehaviour
 
         foreach (KeyValuePair<Vector2, Sweets> pair in sweets)
         {
+            //子オブジェクトの有無で判定
             if (pair.Value.gameObject.transform.childCount == 0)
             {
+                //場所の設定
                 Vector3 pos = pair.Value.gameObject.transform.position;
                 pos.z = 0;
 
+                //生成するエフェクトの判別
                 GameObject obj = null;
                 GameObject instance = null;
-                if (pair.Value.material == Sweets.Material.Maked) obj = EatEffect;
+                if (pair.Value.material == Sweets.Material.Maked || pair.Value.material == Sweets.Material.None) obj = EatEffect;
                 else obj = ZairyouEffect;
 
+                //微調整
                 instance = Instantiate(obj, pos, Quaternion.identity);
                 instance.transform.SetParent(pair.Value.gameObject.transform, true);
                 instance.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);

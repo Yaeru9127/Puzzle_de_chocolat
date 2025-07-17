@@ -16,7 +16,7 @@ public class Sweets : MonoBehaviour
         Egg,                //卵
         Milk,               //牛乳
         Maked,              //合体後
-        None                //作れない材料
+        None                //その他
     }
     public Material material;
 
