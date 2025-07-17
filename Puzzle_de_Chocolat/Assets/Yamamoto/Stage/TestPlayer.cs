@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using System;
+using UnityEditor;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -463,6 +465,9 @@ public class TestPlayer : MonoBehaviour
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
 
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
+
         //移動SEを止める
         AudioManager.Instance.seAudioSource.Stop();
 
@@ -512,12 +517,16 @@ public class TestPlayer : MonoBehaviour
             }
         }
 
+        /*//デバッグ
+        cg.searched.Clear();
+        Debug.Log(cg.CanMassThrough(ReturnNowTileScript()));*/
+
         //クリアチェック
-        //残り移動数が0以下だったら = これ以上移動できない状態なら
-        if (remain.currentLife <= 0 && nowmass != cg.goal)
+        //現在の残り工程数が0 && 現在のマスがゴールでないなら
+        if (remain.currentLife == 0 && nowmass != cg.goal)
         {
-            manager.PlayerOff();
-            manager.GamePadOff();
+            //ゴール判定リストの初期化
+            cg.searched.Clear();
 
             //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript()))
@@ -532,6 +541,7 @@ public class TestPlayer : MonoBehaviour
         {
             Debug.Log("reach goal");
             manager.PlayerOff();
+            cc.ChangeCursorEnable(true);
             gameClear.ShowClearResult(rcm.ReloadCount);
         }
 
@@ -539,6 +549,9 @@ public class TestPlayer : MonoBehaviour
         animator.speed = 0f;
         animator.SetFloat("MoveX", 0);
         animator.SetFloat("MoveY", 0);
+
+        //入力を受け付ける
+        manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
@@ -564,6 +577,9 @@ public class TestPlayer : MonoBehaviour
     private async void TryEat(Direction dire)
     {
         if (!inProcess) inProcess = true;
+
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
 
         //向いている方向から位置関係Vector2を取得
         Vector2 original = direction switch
@@ -614,8 +630,14 @@ public class TestPlayer : MonoBehaviour
         sm.SearchSweets();
         sm.SetEffect();
 
-        //処理フラグの更新
-        inProcess = false;
+        if (remain.currentLife > 0)
+        {
+            //入力を受け付けるようにする
+            manager.PlayerOn();
+
+            //処理フラグの更新
+            inProcess = false;
+        }
     }
 
     // Update is called once per frame
@@ -654,7 +676,7 @@ public class TestPlayer : MonoBehaviour
         }
 
         //ポーズ
-        if (!inProcess && escape > 0.5f)
+        if (!inProcess && escape > 0.5f && stage.phase == StageManager.Phase.Game)
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
