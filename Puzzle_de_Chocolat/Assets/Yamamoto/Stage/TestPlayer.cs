@@ -2,13 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using UnityEngine.SceneManagement;
-using System;
 
 public class TestPlayer : MonoBehaviour
 {
-    public static event Action<GameObject> OnPlayerSpawned;
-
     /// <summary>
     /// Other Scripts
     /// </summary>
@@ -18,6 +14,12 @@ public class TestPlayer : MonoBehaviour
     private SweetsManager sm;
     private PauseController pause;
     private CanGoal cg;
+    private CursorController cc;
+    private Remainingaircraft remain;
+    private GameOverController goc;
+    private ReloadCountManager rcm;
+    private StageManager stage;
+    [SerializeField] private GameClear gameClear;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -29,38 +31,47 @@ public class TestPlayer : MonoBehaviour
     }
     public Direction direction;
 
-    /*directionSprites => 0:↑ , 1:↓ , 2:← , 3:→*/
-    [SerializeField] private Sprite[] directionSprites = new Sprite[4];
-    
+    private Animator animator;
+    [SerializeField] private Sprite[] sprites = new Sprite[4];
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
-    private GameObject sweets;          //一時的なお菓子変数
     private bool inProcess;             //処理中フラグ
-    private string stageselect;
-
-    private void Awake()
-    {
-        
-    }
+    private float lastX;
+    private float lastY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        OnPlayerSpawned?.Invoke(this.gameObject);
-
         //初期化
         manager = InputSystem_Manager.manager;
         tm = TileManager.tm;
         sm = SweetsManager.sm;
         pause = PauseController.pause;
         cg = CanGoal.cg;
+        cc = CursorController.cc;
+        remain = Remainingaircraft.remain;
+        goc = GameOverController.over;
+        rcm = ReloadCountManager.Instance;
+        stage = StageManager.stage;
+        animator = this.gameObject.GetComponent<Animator>();
 
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
         manager.PlayerOn();
-        //manager.UIOff();
+        manager.GamePadOff();
+        stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
+
+        //カーソルオブジェクトの設定
+        if (cc.instance != null)
+        {
+            cc.SetEventSystems();
+            GameObject canvas = GameObject.Find("Canvas");
+            cc.instance.transform.SetParent(canvas.transform);
+            cc.instance.SetActive(false);
+            cc.SetCursor();
+        }
     }
 
     /// <summary>
@@ -76,7 +87,7 @@ public class TestPlayer : MonoBehaviour
     /// 入力値から向きを算出する関数
     /// </summary>
     /// <param name="dir"></param>         入力値
-    /// <param name="button"></param>      (X or Shift) or (A or C)ボタンを押しているか
+    /// <param name="button"></param>      X or Shift ボタンを押しているか
     private void CheckDirection(Vector2 dir, float button)
     {
         if (!inProcess) inProcess = true;
@@ -107,6 +118,9 @@ public class TestPlayer : MonoBehaviour
             else directo = Vector2.down;
         }
 
+        lastX = directo.x;
+        lastY = directo.y;
+
         //入力値が0だったらreturn
         if (directo == Vector2.zero)
         {
@@ -118,7 +132,7 @@ public class TestPlayer : MonoBehaviour
         SetPlayerDirection(directo);
 
         //入力方向にある次のマスを取得
-        Tile nowtile = nowmass.GetComponent<Tile>();
+        Tile nowtile = ReturnNowTileScript();
         GameObject nexttileobj = nowtile.ReturnNextMass(directo);
 
         /*次のマスが存在する場合*/
@@ -131,30 +145,10 @@ public class TestPlayer : MonoBehaviour
             //移動チェック
             TryMove(nexttileobj, button, directo);
         }
-        //食べる
-        else if (nexttileobj != null)
-        {
-            //食べるお菓子のスクリプトを取得
-            Sweets eatnext = sm.GetSweets(nexttileobj.transform.position);
-
-            //nullじゃなかったら食べる処理へ
-            if (eatnext != null)
-            {
-                //お菓子を食べる
-                eatnext.EatSweets();
-
-                //食料ゲージの増加
-                Debug.Log("food gauge is increase");
-            }
-            else Debug.Log("script of to eat is null");
-
-            inProcess = false;
-            return;
-        }
         //次のマスが存在しない場合
-        else
+        else if (nexttileobj == null)
         {
-            Debug.Log($"next mass is null");
+            //Debug.Log($"next mass is null");
             inProcess = false;
             return;
         }
@@ -169,25 +163,19 @@ public class TestPlayer : MonoBehaviour
     {
         //入力値から判断
         SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
-        if (dir == Vector2.up)
+        if (dir == Vector2.up) direction = Direction.Up;
+        else if (dir == Vector2.down) direction = Direction.Down;
+        else if (dir == Vector2.left) direction = Direction.Left;
+        else if (dir == Vector2.right) direction = Direction.Right;
+
+        animator.SetFloat("MoveX", dir.x);
+        animator.SetFloat("MoveY", dir.y);
+        animator.speed = 1f;        // アニメーション再開
+
+        // X方向入力がある場合だけ反転処理
+        if (dir.x != 0)
         {
-            direction = Direction.Up;
-            renderer.sprite = directionSprites[0];
-        }
-        else if (dir == Vector2.down)
-        {
-            direction = Direction.Down;
-            renderer.sprite = directionSprites[1];
-        }
-        else if (dir == Vector2.left)
-        {
-            direction = Direction.Left;
-            renderer.sprite = directionSprites[2];
-        }
-        else if (dir == Vector2.right)
-        {
-            direction = Direction.Right;
-            renderer.sprite = directionSprites[3];
+            renderer.flipX = (dir.x > 0);
         }
     }
 
@@ -237,8 +225,9 @@ public class TestPlayer : MonoBehaviour
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
         else Debug.Log("sweetsscript is null");*/
 
-        GameObject nextnextmass = null;     //上書き用マスオブジェクト
-        Sweets nextnextsweets = null;       //上書き用お菓子スクリプト
+        GameObject newnextmass = null;     //マスオブジェクト
+        Sweets nextnextsweets = null;      //お菓子スクリプト
+        Sweets pairnextsweets = null;      //ペアのお菓子スクリプト
 
         //前か後ろのマスにお菓子があったら
         if (sweetsscript != null)
@@ -258,44 +247,83 @@ public class TestPlayer : MonoBehaviour
                 //後ろのマス変数がnull => 後ろのマスを探していない
                 if (backmass == null)
                 {
-                    /*↓お菓子の先のマスにお菓子があるか探す*/
+                    /*↓お菓子の先のマスを探す*/
                     //お菓子の先のマスを取得
-                    nextnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
+                    newnextmass = next.GetComponent<Tile>().ReturnNextMass(dire);
 
-                    //お菓子の先のマスのお菓子を取得
+                    //2マスのお菓子の場合はペアのお菓子の先のマスも探す
+                    if (sweetsscript.pair != null)
+                    {
+                        //ペアのお菓子のマスを取得
+                        GameObject pairmass = tm.GetNowMass(sweetsscript.pair);
+
+                        //ペアのお菓子の先のマスを取得
+                        GameObject pairnextmass = pairmass.GetComponent<Tile>().ReturnNextMass(dire);
+
+                        //ペアのお菓子の先のマスがあったら
+                        if (pairnextmass != null)
+                        {
+                            //ペアのお菓子の先のマスにあるお菓子を探す
+                            foreach (KeyValuePair<Vector2, Sweets> sweetspair in sm.sweets)
+                            {
+                                //座標で検索
+                                //ペアのお菓子の先のマスにあるお菓子の座標 == ペアのお菓子の先のマスの座標
+                                if (sweetspair.Key == (Vector2)pairmass.transform.position)
+                                {
+                                    //ペアのお菓子変数に設定
+                                    pairnextsweets = sweetspair.Value;
+                                }
+                            }
+                        }
+                        //ペアのお菓子の先のマスがなかったら
+                        else
+                        {
+                            inProcess = false;
+                            return;
+                        }
+                    }
+
+                    //移動させるお菓子の先のマスを探す
                     foreach (KeyValuePair<Vector2, Sweets> pair in sm.sweets)
                     {
-                        //移動させるお菓子の座標 と (Vector2)お菓子のその先のマス の座標を比較
-                        if (nextnextmass != null && pair.Key == (Vector2)nextnextmass.transform.position)
+                        //座標で検索
+                        //移動させるお菓子の先のマスがある &&
+                        //移動させるお菓子の先のマスにあるお菓子の座標 == 移動させるお菓子の先のマスの座標
+                        if (newnextmass != null && pair.Key == (Vector2)newnextmass.transform.position)
                         {
                             nextnextsweets = pair.Value;
-
                             break;
                         }
                     }
                 }
+
                 //----------------------------------------------------
                 //向いている方向とは逆方向に移動する
                 //後ろのマス変数がnull以外 => 後ろのマスにお菓子がある
                 else if (backmass != null)
                 {
                     //自分の後ろのマスを取得
-                    nextnextmass = backmass;
+                    newnextmass = backmass;
                 }
 
                 //----------------------------------------------------
                 //お菓子の先のマスがない or 後ろにマスがない
-                if (nextnextmass == null)
+                if (newnextmass == null)
                 {
                     inProcess = false;
                     return;
                 }
 
-                nextnextmass = next;
+                newnextmass = next;
 
                 //お菓子を自身の子オブジェクトにする
-                sweets = sweetsscript.gameObject;
-                sweets.transform.SetParent(this.gameObject.transform);
+                sweetsscript.gameObject.transform.SetParent(this.gameObject.transform);
+                if (sweetsscript.pair != null)
+                {
+                    //移動用に親オブジェクトを設定
+                    sweetsscript.pair.transform.SetParent(this.gameObject.transform);
+                    Debug.Log(sweetsscript.pair.name);
+                }
             }
             //X or Shiftを押していない
             else
@@ -312,18 +340,17 @@ public class TestPlayer : MonoBehaviour
                 }
 
                 //移動先のマスにお菓子がない
-                nextnextmass = next;
+                newnextmass = next;
             }
         }
         else
         {
-            nextnextmass = next;
+            newnextmass = next;
         }
 
-        /*↓次のマスのトラップ処理*/
-        //次のマスのトラップを取得
+        /*//次のマスのトラップを取得
         Trap trap = null;
-        Collider2D[] col = Physics2D.OverlapPointAll(nextnextmass.transform.position);
+        Collider2D[] col = Physics2D.OverlapPointAll(newnextmass.transform.position);
         foreach (Collider2D col2 in col)
         {
             if (col2.gameObject.GetComponent<Trap>())
@@ -331,25 +358,19 @@ public class TestPlayer : MonoBehaviour
                 trap = col2.gameObject.GetComponent<Trap>();
             }
         }
-
-        /*//残り工程数が0以下 && トラップが生クリーム
-        if (remainingnum <= 0 && trap.type == Trap.Type.FrischeSahne)
+        if (trap != null)
         {
-            //踏むと残り工程数が0未満になるので移動はしない
-            inProcess = false;
-            return;
-        }
-        //残り工程数が0以上 && トラップが生クリーム
-        else if (remainingnum > 0 && trap.type == Trap.Type.FrischeSahne)
-        {
-            //工程数をひとつ減らす
-            Debug.Log("decrease remaining num by FrischeSahne");
-            
-            //生クリームを踏む処理（現在はなにもない）
-            trap.CaseFrischeSahne();
+            //移動前の段階で次のマスのトラップが作用する場合はそのトラップを処理
         }*/
 
-        MoveMass(nextnextmass, sweetsscript, nextnextsweets).Forget();
+        //ペアのお菓子のスクリプトを取得
+        Sweets pairsweetsscript = null;
+        if (sweetsscript != null && sweetsscript.pair != null && sweetsscript.pair.GetComponent<Sweets>())
+        {
+            pairsweetsscript = sweetsscript.pair.GetComponent<Sweets>();
+        }
+
+        MoveMass(newnextmass, sweetsscript, nextnextsweets, pairsweetsscript, pairnextsweets).Forget();
     }
 
     /// <summary>
@@ -358,16 +379,63 @@ public class TestPlayer : MonoBehaviour
     /// <param name="next"></param>         移動先のマスオブジェクト
     /// <param name="sweetsscript"></param> 移動させるお菓子スクリプト
     /// <param name="beyond"></param>       移動先のマスにあるお菓子スクリプト
-    private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond)
+    /// 
+    /// <param name="pairsweets"></param>   移動させるお菓子のペアスクリプト
+    /// <param name="pairbeyond"></param>   移動させるお菓子の移動先のマスにあるお菓子スクリプト
+    private async UniTask MoveMass(GameObject next, Sweets sweetsscript, Sweets beyond, Sweets pairsweets, Sweets pairbeyond)
     {
-        //移動先のマスにお菓子オブジェクトがある
-        if (beyond != null)
+        //自身の子オブジェクトを取得
+        List<GameObject> children = new List<GameObject>();
+        foreach (Transform child in this.gameObject.transform)
         {
-            //"移動するお菓子"と"移動先のお菓子"で作れるか
-            //作れる = true  作れない = false
-            //作れない場合は移動処理なし
+            //Debug.Log(child.name);
+            children.Add(child.gameObject);
+        }
+
+        //移動させるお菓子がある && ペアのお菓子が存在する
+        if (sweetsscript != null && pairsweets != null)
+        {
+            //移動先のマスにお菓子が存在する && ペアのお菓子の移動先にお菓子がある
+            //= 2マスのお菓子の場合は移動することはできない
+            if (beyond != null && pairbeyond != null)
+            {
+                //親オブジェクトをリセット
+                ResetParent(children);
+
+                inProcess = false;
+                return;
+            }
+            //ペアのお菓子の移動先にお菓子がない
+            //= お菓子が移動できる
+            else if (pairbeyond == null)
+            {
+                //移動先のマスにお菓子がある && 移動させるお菓子と移動先のお菓子で作れない
+                //= 移動処理なし
+                if (beyond != null && !sweetsscript.TryMake(beyond))
+                {
+                    Debug.Log("can not make");
+
+                    //親子関係をリセット
+                    ResetParent(children);
+
+                    inProcess = false;
+                    return;
+                }
+
+                //移動のためにペアのお菓子の親オブジェクトを設定
+                pairsweets.gameObject.transform.SetParent(this.gameObject.transform);
+            }
+        }
+        //移動させるお菓子がある && 移動先のマスにお菓子が存在する && ペアのお菓子が存在しない
+        else if (sweetsscript != null && beyond != null && pairsweets == null)
+        {
             if (!sweetsscript.TryMake(beyond))
             {
+                //Debug.Log("can not make");
+
+                //親子関係をリセット
+                ResetParent(children);
+
                 inProcess = false;
                 return;
             }
@@ -377,107 +445,169 @@ public class TestPlayer : MonoBehaviour
         Vector3 pos = next.transform.position;
         pos.z = -5;
 
+        //自身の子オブジェクトが0以外 = 移動するお菓子がある
+        if (this.gameObject.transform.childCount != 0 && AudioManager.Instance != null)
+        {
+            //お菓子を移動させるときのSEを流す
+            AudioManager.Instance.PlaySE("move");
+        }
+        //移動するお菓子がない
+        else if (AudioManager.Instance != null)
+        {
+            //移動SEを流す
+            AudioManager.Instance.PlaySE("RUN");
+        }
+
         //移動が終わるまで処理を待つ
         await this.gameObject.transform.DOMove(pos, speed)
             .SetEase(Ease.Linear)
             .AsyncWaitForCompletion();
 
-        //////////////
-        if (nowmass == null)
-        {
-            Debug.LogError("nowmass is null");
-        }
-            else
-        {
-            Debug.Log("nowmass: " + nowmass.name);
-        }
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
 
-        if (TileManager.tm == null)
-        {
-            Debug.LogError("TileManager.tm is null! TileManagerが初期化されていないか、シングルトンインスタンスが正しく設定されていません。");
-        }
-        else
-        {
-            Debug.Log("TileManager.tm は正常に取得されました。");
-        }
+        //移動SEを止める
+        AudioManager.Instance.seAudioSource.Stop();
+
+        //元のマスのひびチェック
+        //ReturnNowTileScript().ChangeSprite();
+
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
 
-        //お菓子変数がnullじゃない && 自身の子オブジェクトが0以外
-        // = 移動するお菓子がある
-        if (sweets != null && this.gameObject.transform.childCount != 0)
+        //マス情報を更新
+        tm.GetAllMass();
+
+        //自身の子オブジェクトが0以外 = 移動するお菓子がある
+        if (this.gameObject.transform.childCount != 0)
         {
             //お菓子を作れるとき
-            if (sweetsscript != null && beyond != null) sweetsscript.MakeSweets(beyond.gameObject);
-            //作れないとき
-            else
+            //-> 移動先にお菓子が存在していてペアのお菓子が存在していないとき
+            if (sweetsscript != null && beyond != null && pairsweets == null)
             {
-                //お菓子オブジェクトの親を初期化
-                sweets.transform.SetParent(sm.gameObject.transform);
-                sweets = null;
+                sweetsscript.MakeSweets(beyond.gameObject);
+            }
+            //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
+            else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
+            {
+                pairsweets.MakeSweets(pairbeyond.gameObject);
             }
 
-            /*工程数をひとつ減らす*/
-            Debug.Log("decrease remaining num");
+            //親子関係をリセット
+            ResetParent(children);
+
+            /*残り工程数をひとつ減らす*/
+            //Debug.Log("decrease remaining num");
+            remain.ReduceLife();
         }
 
         //お菓子の位置を更新
         sm.SearchSweets();
+        sm.SetEffect();
 
-        /*//残り工程数が0になったときにクリアできるかのチェック
-        if (remaining <= 0)
+        //もし生クリームを踏んだ時の処理   
+        Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
+        foreach (Collider2D col2 in col)
         {
-            //ゴールに到達できない場合
+            if (col2.gameObject.GetComponent<Trap>() && col2.gameObject.GetComponent<Trap>().type == Trap.Type.FrischeSahne)
+            {
+                remain.ReduceLife();
+            }
+        }
+
+        /*//デバッグ
+        cg.searched.Clear();
+        Debug.Log(cg.CanMassThrough(ReturnNowTileScript()));*/
+
+        //クリアチェック
+        //現在の残り工程数が0 && 現在のマスがゴールでないなら
+        if (remain.currentLife == 0 && nowmass != cg.goal)
+        {
+            //ゴール判定リストの初期化
+            cg.searched.Clear();
+
+            //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript()))
             {
-                //ゲームオーバー処理
+                goc.ShowGameOver();
+                stage.phase = StageManager.Phase.Result;
             }
-        }*/
+        }
+
+        //ゴールマスについたら
+        if (nowmass == cg.goal)
+        {
+            Debug.Log("reach goal");
+            manager.PlayerOff();
+            cc.ChangeCursorEnable(true);
+            gameClear.ShowClearResult(rcm.ReloadCount);
+        }
+
+        //アニメーション設定
+        animator.speed = 0f;
+        animator.SetFloat("MoveX", 0);
+        animator.SetFloat("MoveY", 0);
+
+        //入力を受け付ける
+        manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
     }
 
     /// <summary>
+    /// 親子関係をリセットする関数
+    /// </summary>
+    /// <param name="child"></param> 
+    private void ResetParent(List<GameObject> child)
+    {
+        foreach (GameObject ch in child)
+        {
+            ch.transform.SetParent(sm.gameObject.transform);
+            //Debug.Log(ch.name);
+        }
+    }
+
+    /// <summary>
     /// お菓子が食べれるかチェックする関数
     /// </summary>
     /// <param name="dire"></param> Direction = 向いている方向
-    private void TryEat(Direction dire)
+    private async void TryEat(Direction dire)
     {
         if (!inProcess) inProcess = true;
 
+        //一時的に入力を受け付けなくする
+        manager.PlayerOff();
+
         //向いている方向から位置関係Vector2を取得
-        Vector2 original = Vector2.zero;
-        switch (dire)
+        Vector2 original = direction switch
         {
-            case Direction.Up:
-                original = Vector2.up;
-                break;
-            case Direction.Down:
-                original = Vector2.down;
-                break;
-            case Direction.Left:
-                original = Vector2.left;
-                break;
-            case Direction.Right:
-                original = Vector2.right;
-                break;
-        }
+            Direction.Up => Vector2.up,
+            Direction.Down => Vector2.down,
+            Direction.Left => Vector2.left,
+            Direction.Right => Vector2.right,
+            _ => Vector2.zero
+        };
 
         //方向nullチェック
         if (original == Vector2.zero)
         {
+            //入力を受け付けるようにする
+            manager.PlayerOn();
+
             inProcess = false;
             return;
         }
 
         //向いている方向の次のマスを取得
-        Tile nowtile = nowmass.GetComponent<Tile>();
-        GameObject nexttile = nowtile.ReturnNextMass(original);
+        GameObject nexttile = nowmass.GetComponent<Tile>().ReturnNextMass(original);
 
         //マスのnullチェック
         if (nexttile == null)
         {
+            //入力を受け付けるようにする
+            manager.PlayerOn();
+
             inProcess = false;
             return;
         }
@@ -486,57 +616,88 @@ public class TestPlayer : MonoBehaviour
         Sweets eatnext = sm.GetSweets(nexttile.transform.position);
 
         //お菓子スクリプトがnull or 食べれないお菓子 なら
-        if (eatnext == null)
+        if (eatnext == null || !eatnext.canEat)
         {
+            //入力を受け付けるようにする
+            manager.PlayerOn();
+
             inProcess = false;
             return;
         }
 
-        if (eatnext.canEat)
+        await eatnext.EatSweets();
+
+        //工程数をひとつ減らす
+        //remain.ReduceLife();
+
+        //食料ゲージの増加
+        sm.CallDecreaseFoodGauge();
+
+        //お菓子の位置の更新
+        sm.SearchSweets();
+        sm.SetEffect();
+
+        await UniTask.Delay(1000);
+
+        if (remain.currentLife > 0)
         {
-            //お菓子を食べる
-            eatnext.EatSweets();
+            //入力を受け付けるようにする
+            manager.PlayerOn();
 
-            //食料ゲージの増加
-            //sm.CallDecreaseFoodGauge();
+            //処理フラグの更新
+            inProcess = false;
         }
-        else Debug.Log("this food can not eat");
-
-
-        //処理フラグの更新
-        inProcess = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
-        float avalue = actions.Player.Eat.ReadValue<float>();           //GamePad.A or KeyCode.C
         float escape = actions.Player.Pause.ReadValue<float>();         //GamePad.Start or KeyCode.Escape
-        
+        float r = actions.Player.Retry.ReadValue<float>();              //GamePad.Y or KeyCode.R
+
         //移動
         if (!inProcess && vec2 != Vector2.zero)
         {
             CheckDirection(vec2, xvalue);
         }
+        else if (!inProcess && vec2 == Vector2.zero)
+        {
+            // 移動がゼロのときは停止処理（最後の方向でフレーム停止）
+            animator.speed = 0f;        // アニメーション停止
+            animator.SetFloat("MoveX", lastX);
+            animator.SetFloat("MoveY", lastY);
+
+
+            SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
+            if (lastX != 0)
+            {
+                renderer.flipX = (lastX > 0);
+            }
+        }
+
         //食べる
-        else if (!inProcess && avalue > 0.5f)
+        if (!inProcess && actions.Player.Eat.WasPressedThisFrame())
         {
             TryEat(direction);
         }
+
         //ポーズ
-        else if (!inProcess && escape > 0.5f)
+        if (!inProcess && escape > 0.5f && stage.phase == StageManager.Phase.Game)
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown("joystick button 5"))
+        //リトライ
+        if (!inProcess && r > 0.5f)
         {
-            SceneManager.LoadScene("stageselect");
+            rcm.IncrementReloadCount();     //リロードカウントを増やす
+            manager.Retry();
         }
-
     }
 }

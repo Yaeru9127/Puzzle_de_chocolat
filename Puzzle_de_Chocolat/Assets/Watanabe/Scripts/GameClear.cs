@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class GameClear : MonoBehaviour
 {
+    private StageManager stage;
+
     public Image clearImage;
 
     public Sprite noRetryFastClearSprite;        // ƒŠƒgƒ‰ƒC‚È‚µ•Å’Z
@@ -15,6 +17,11 @@ public class GameClear : MonoBehaviour
 
     public int stepsTaken = 0;
 
+    private void Start()
+    {
+        stage = StageManager.stage;
+    }
+
     public void AddStep()
     {
         stepsTaken++;
@@ -22,6 +29,7 @@ public class GameClear : MonoBehaviour
 
     public void ShowClearResult(int retry)
     {
+        stage.phase = StageManager.Phase.Result;
         clearImage.gameObject.SetActive(true);
         AudioManager.Instance.PlaySE("Game clear");
 
