@@ -173,7 +173,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      stagesentaku_masu_0: -8317101419254172643
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

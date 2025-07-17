@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 
 public class FadeManager : MonoBehaviour
@@ -12,6 +13,8 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 1.0f;//fade‚ÌŽ‘±ŽžŠÔ
     [SerializeField] private Ease fadeEase = Ease.Linear;
 
+    private InputSystem_Actions action;
+    private InputSystem_Manager manager;
     private StageManager stage;
     private CursorController cc;
 
@@ -33,6 +36,7 @@ public class FadeManager : MonoBehaviour
             fadePanel.gameObject.SetActive(true);
         }
 
+        //action = manager.GetActions();
         stage = StageManager.stage;
         cc = CursorController.cc;
 
@@ -89,8 +93,13 @@ public class FadeManager : MonoBehaviour
     {
         FadeOut(() =>
         {
-            if (game == "Stageselect") stage.stagenum = 0;
+            if (game == "StageSelect") stage.stagenum = 0;
             else if (game == "Stage01") stage.stagenum = 1;
+
+            //manager.GamePadOff();
+            //manager.MouseOff();
+            //manager.PlayerOff();
+
             SceneManager.LoadScene(game);
         });
     }
