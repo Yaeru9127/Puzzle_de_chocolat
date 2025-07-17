@@ -38,10 +38,9 @@ public class Remainingaircraft : MonoBehaviour
         UpdateLifeDisplay();
     }
 
-    // 残機を1つ減らす
     public void ReduceLife()
     {
-        // ゲームクリア後はGameOverを発生させない
+        // ゲームクリア済みなら無視
         if (currentLife > 0 && !isGameCleared)
         {
             currentLife--;
@@ -52,9 +51,18 @@ public class Remainingaircraft : MonoBehaviour
             // 数字を更新
             UpdateLifeDisplay();
 
-            // 残機ゼロならGameOver処理
+            // --- GameOver前にゴール判定を追加 ---
             if (currentLife <= 0)
             {
+                // ゴールに到達していたら GameClear を優先
+                if (CanGoal.cg != null && CanGoal.cg.IsPlayerOnGoal())
+                {
+                    isGameCleared = true; // GameOverを止める
+                    Debug.Log("ゴールに到達していたので GameOver 回避");
+                    return;
+                }
+
+                // GameOver処理
                 if (gameOverController != null)
                 {
                     numberDisplay.gameObject.SetActive(false);
@@ -67,6 +75,7 @@ public class Remainingaircraft : MonoBehaviour
             }
         }
     }
+
 
     // 数字表示を更新（スプライト切替）
     public void UpdateLifeDisplay()
@@ -87,4 +96,5 @@ public class Remainingaircraft : MonoBehaviour
         }
         return null;
     }
+
 }
