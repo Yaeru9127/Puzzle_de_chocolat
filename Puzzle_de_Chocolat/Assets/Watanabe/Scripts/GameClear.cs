@@ -4,55 +4,106 @@ using UnityEngine.UI;
 
 public class GameClear : MonoBehaviour
 {
-    private StageManager stage;
+    public static GameClear clear { get; private set; }
 
+    private CursorController cc;
+
+    [Header("UI")]
     public Image clearImage;
 
-    public Sprite noRetryFastClearSprite;        // リトライなし＆最短
-    public Sprite retryOrNoRetryClearSprite;     // リトライなし or 最短でない
-    public Sprite retryClearSprite;              // リトライあり
+    public Sprite noRetryFastClearSprite;               //星3   Sprite
+    public Sprite retryOrNoRetryClearSprite;            //星2   Sprite
+    public Sprite retryClearSprite;                     //星1   Sprite
 
-    public int minStepsToClear = 10;
-    public int minRetriesToClear = 2;
+    [Header("クリア評価設定")]
+    public int minStepsToClear;                    // 最短ステップ数
+    public int marginSteps;                         //
+    public int stepsTaken = 0;                          // 現在のステップ数
 
-    public int stepsTaken = 0;
+    public bool wasEat;
+    public bool wasMaked;
+
+    [Header("ゲージ評価設定")]
+    [Tooltip("noRetryFastClear を許容するゲージ増加回数（例: 3）")]
+    public int allowedGaugeCount = 3;
+
+    private void Awake()
+    {
+        if (clear == null) clear = this;
+        else if (clear != null) Destroy(this.gameObject);
+    }
 
     private void Start()
     {
-        stage = StageManager.stage;
+        cc = CursorController.cc;
+        wasEat = false;
+        wasMaked = false;
     }
 
+    // ステップ数を加算する
     public void AddStep()
     {
         stepsTaken++;
     }
 
+    // クリア演出を実行
     public void ShowClearResult(int retry)
     {
-        stage.phase = StageManager.Phase.Result;
         clearImage.gameObject.SetActive(true);
         AudioManager.Instance.PlaySE("Game clear");
+        cc.ChangeCursorEnable(true);
 
-        // ★GameOverを無効化
+        // ゲームクリア済みフラグを立てる → GameOverを防ぐ
         if (Remainingaircraft.remain != null)
         {
             Remainingaircraft.remain.isGameCleared = true;
         }
 
-        if (retry == 0 && stepsTaken <= minStepsToClear)
+        if (stepsTaken <= 4)
         {
-            clearImage.sprite = noRetryFastClearSprite;
+            if (wasEat) clearImage.sprite = retryOrNoRetryClearSprite;
+            else clearImage.sprite = noRetryFastClearSprite;
         }
-        else if (retry >= minRetriesToClear || stepsTaken > minStepsToClear)
+        else if (stepsTaken >= 5)
         {
-            clearImage.sprite = retryClearSprite;
+            if (wasEat) clearImage.sprite = retryClearSprite;
+            else clearImage.sprite = retryOrNoRetryClearSprite;
         }
         else
         {
-            clearImage.sprite = retryOrNoRetryClearSprite;
+            clearImage.sprite = retryClearSprite;
         }
+
+        //if (stepsTaken <= minStepsToClear && !wasEat)
+        //{
+        //    clearImage.sprite = noRetryFastClearSprite;
+        //}
+        //else if (stepsTaken <= minStepsToClear + marginSteps)
+        //{
+        //    clearImage.sprite = retryOrNoRetryClearSprite;
+        //}
+        //else if (stepsTaken >= minStepsToClear + marginSteps && wasEat)
+        //{
+        //    clearImage.sprite = retryClearSprite;
+        //}
+        ///// 許容回数以内なら最短評価を許可
+        //bool allowFastClear = GaugeController.gaugeIncreaseCount <= allowedGaugeCount;
+
+        //if (stepsTaken <= minStepsToClear && allowFastClear)
+        //{
+        //    clearImage.sprite = noRetryFastClearSprite;
+        //}
+        //else if (stepsTaken <= minStepsToClear + marginSteps)
+        //{
+        //    clearImage.sprite = retryOrNoRetryClearSprite;
+        //}
+        //else
+        //{
+        //    clearImage.sprite = retryClearSprite;
+        //}
     }
 
+    // リザルトシーンに移動
     public void LoadResultScene()
     {
         SceneManager.LoadScene("RetryScene");

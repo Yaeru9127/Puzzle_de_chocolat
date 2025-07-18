@@ -862,11 +862,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dc081f9bfbb2e94b8d32bedd5fe4846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seAudioSource: {fileID: 1317928449}
-  seClips: []
-  bgmAudioSource: {fileID: 477821003}
-  bgmClips:
-  - {fileID: 8300000, guid: 6b627868535378349b6abcf8a69d62cb, type: 3}
 --- !u!4 &674401120
 Transform:
   m_ObjectHideFlags: 0
@@ -1008,9 +1003,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce6decb730d1d344b184b795b87474d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gaugeSlider: {fileID: 0}
+  gaugeFillImage: {fileID: 0}
+  gaugeNumberDisplay: {fileID: 0}
+  gameOverController: {fileID: 0}
+  remainingAircraft: {fileID: 0}
   increaseDuration: 0.5
   defaultIncreaseAmount: 1
+  maxValue: 10
 --- !u!1 &1185067046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,7 +1059,7 @@ MonoBehaviour:
   retryOrNoRetryClearSprite: {fileID: 6988131999265186270, guid: 4735b59b3a282e842902b6c8c5babb28, type: 3}
   retryClearSprite: {fileID: -2879146970348422962, guid: 7d6af4644afe81845a76e44c4b486674, type: 3}
   minStepsToClear: 10
-  minRetriesToClear: 2
+  marginSteps: 5
   stepsTaken: 0
 --- !u!1001 &1246595342
 PrefabInstance:
@@ -1953,7 +1952,9 @@ MonoBehaviour:
   - {fileID: 241595672, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
   - {fileID: 1210119792, guid: 844d444fb39bb854d89c6a214c9d58ec, type: 3}
   numberDisplay: {fileID: 1981350901}
+  gameOverController: {fileID: 0}
   currentLife: 4
+  isGameCleared: 0
 --- !u!1001 &3017289450035489138
 PrefabInstance:
   m_ObjectHideFlags: 0

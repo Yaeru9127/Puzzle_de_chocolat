@@ -79,4 +79,14 @@ public class CanGoal : MonoBehaviour
     {
 
     }
+    // ゴールにいるかどうかのチェック関数
+    public bool IsPlayerOnGoal()
+    {
+        if (playerscript != null && goal != null)
+        {
+            // プレイヤーの位置とゴールの位置が近ければゴールしたとみなす
+            return Vector2.Distance(playerscript.transform.position, goal.transform.position) < 0.1f;
+        }
+        return false;
+    }
 }
