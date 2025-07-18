@@ -19,7 +19,7 @@ public class TestPlayer : MonoBehaviour
     private GameOverController goc;
     private ReloadCountManager rcm;
     private StageManager stage;
-    [SerializeField] private GameClear gameClear;
+    private GameClear clear;
 
     //プレイヤーが向いている向き
     public enum Direction
@@ -53,6 +53,7 @@ public class TestPlayer : MonoBehaviour
         goc = GameOverController.over;
         rcm = ReloadCountManager.Instance;
         stage = StageManager.stage;
+        clear = GameClear.clear;
         animator = this.gameObject.GetComponent<Animator>();
 
         actions = manager.GetActions();
@@ -486,11 +487,13 @@ public class TestPlayer : MonoBehaviour
             if (sweetsscript != null && beyond != null && pairsweets == null)
             {
                 sweetsscript.MakeSweets(beyond.gameObject);
+                clear.wasMaked = true;
             }
             //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
             else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
             {
                 pairsweets.MakeSweets(pairbeyond.gameObject);
+                clear.wasMaked = true;
             }
 
             //親子関係をリセット
@@ -527,20 +530,44 @@ public class TestPlayer : MonoBehaviour
             cg.searched.Clear();
 
             //もしゴールできないなら、GameOverの設定
-            if (!cg.CanMassThrough(ReturnNowTileScript()))
-            {
-                goc.ShowGameOver();
-                stage.phase = StageManager.Phase.Result;
-            }
+            //if (!cg.CanMassThrough(ReturnNowTileScript()))
+            //{
+            //    Debug.Log("in can not goal");
+            //    goc.ShowGameOver();
+            //    stage.phase = StageManager.Phase.Result;
+            //}
         }
+
+        /*if (manager == null)
+        {
+            Debug.LogError("manager is null");
+        }
+        if (cc == null)
+        {
+            Debug.LogError("cc is null");
+        }
+        if (clear == null)
+        {
+            Debug.LogError("clear is null");
+        }
+        if (rcm == null)
+        {
+            Debug.LogError("rcm is null");
+        }
+        if (nowmass == null || cg.goal == null)
+        {
+            Debug.LogError("nowmass or cg.goal is null");
+        }*/
 
         //ゴールマスについたら
         if (nowmass == cg.goal)
         {
-            Debug.Log("reach goal");
+            //Debug.Log("reach goal");
             manager.PlayerOff();
             cc.ChangeCursorEnable(true);
-            gameClear.ShowClearResult(rcm.ReloadCount);
+            clear.ShowClearResult(rcm.ReloadCount);
+
+            return;
         }
 
         //アニメーション設定
@@ -548,8 +575,11 @@ public class TestPlayer : MonoBehaviour
         animator.SetFloat("MoveX", 0);
         animator.SetFloat("MoveY", 0);
 
-        //入力を受け付ける
-        manager.PlayerOn();
+        if (remain.currentLife > 0)
+        {
+            //入力を受け付ける
+            manager.PlayerOn();
+        }
 
         //処理フラグ更新
         inProcess = false;
@@ -662,7 +692,6 @@ public class TestPlayer : MonoBehaviour
         if (!inProcess && vec2 != Vector2.zero)
         {
             if ((Mathf.Abs(vec2.x) < 0.3f && Mathf.Abs(vec2.y) < 0.3f)) return;
-            Debug.Log($"dir.x : {vec2.x} , dir.y : {vec2.y}");
             CheckDirection(vec2, xvalue);
         }
         else if (!inProcess && vec2 == Vector2.zero)

@@ -42,7 +42,6 @@ public class GameOverController : MonoBehaviour
     public void ShowGameOver()
     {
         if (isGameOver) return;
-
         manager.PlayerOff();
         isGameOver = true;
 

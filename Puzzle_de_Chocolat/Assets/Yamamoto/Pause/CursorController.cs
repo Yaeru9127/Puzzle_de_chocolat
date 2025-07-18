@@ -129,15 +129,22 @@ public class CursorController : MonoBehaviour
     /// <param name="torf"></param> GamePadカーソルのオンオフ
     public void ChangeCursorEnable(bool torf)
     {
+        //GamePad
         if (instance != null && Gamepad.all.Count > 0)
         {
             Cursor.visible = false;
+            manager.PlayerOff();
+            manager.MouseOff();
+            manager.GamePadOn();
             instance.SetActive(torf);
             SetCursor();
         }
         else if (instance == null && Gamepad.all.Count <= 0)
         {
             Cursor.visible = true;
+            manager.PlayerOff();
+            manager.GamePadOff();
+            manager.MouseOn();
             instance.SetActive(torf);
         }
     }

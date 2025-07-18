@@ -184,9 +184,13 @@ public class Sweets : MonoBehaviour
             Destroy(this.gameObject);
 
             await UniTask.DelayFrame(1);
+
             //お菓子の位置を更新
             sm.SearchSweets();
             sm.SetEffect();
+
+            //食べたフラグを更新
+            sm.clear.wasEat = true;
         }
         else Debug.Log("this sweets is can not eat");
     }

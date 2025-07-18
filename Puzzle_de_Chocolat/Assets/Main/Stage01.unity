@@ -2640,7 +2640,7 @@ MonoBehaviour:
   minStepsToClear: 4
   marginSteps: 6
   stepsTaken: 0
-  wasEat: 1
+  wasEat: 0
   wasMaked: 0
   allowedGaugeCount: 1
 --- !u!1001 &1056631700
@@ -3438,6 +3438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage: {fileID: 0}
+  clear: {fileID: 0}
   effects: []
   mixtures:
   - makedSweets: {fileID: 6587333138416083492, guid: e5709828ead7d4b4aad6950f6f1dbdd7, type: 3}
