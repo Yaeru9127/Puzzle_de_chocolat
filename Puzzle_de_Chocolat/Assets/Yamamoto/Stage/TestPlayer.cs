@@ -652,8 +652,6 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
@@ -663,6 +661,8 @@ public class TestPlayer : MonoBehaviour
         //移動
         if (!inProcess && vec2 != Vector2.zero)
         {
+            if ((Mathf.Abs(vec2.x) < 0.3f && Mathf.Abs(vec2.y) < 0.3f)) return;
+            Debug.Log($"dir.x : {vec2.x} , dir.y : {vec2.y}");
             CheckDirection(vec2, xvalue);
         }
         else if (!inProcess && vec2 == Vector2.zero)

@@ -31,7 +31,6 @@ public class PauseController : MonoBehaviour
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
         rm = ReloadCountManager.Instance;
-        cc.ChangeCursorEnable(false);
         SetOperationObject();
 
         //もし表示状態なら非表示にする
@@ -86,7 +85,7 @@ public class PauseController : MonoBehaviour
     {
         //カーソルを非表示
         cc.ChangeCursorEnable(false);
-
+        
         //ポーズパネルを非表示にする
         pauseobj.SetActive(false);
 

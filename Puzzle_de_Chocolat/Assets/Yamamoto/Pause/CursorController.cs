@@ -56,7 +56,7 @@ public class CursorController : MonoBehaviour
     {
         currentUI = null;
         SetEventSystems();
-        DeviceCheck();
+        //DeviceCheck();
     }
 
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
@@ -94,7 +94,7 @@ public class CursorController : MonoBehaviour
                 EventSystem.current.sendNavigationEvents = false;
             }
 
-            ChangeCursorEnable(false);
+            ChangeCursorEnable(true);
         }
         else    //Mouse操作設定
         {
@@ -103,10 +103,13 @@ public class CursorController : MonoBehaviour
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
             if (instance != null) instance.SetActive(false);
-            ChangeCursorEnable(true);
+            ChangeCursorEnable(false);
         }
     }
 
+    /// <summary>
+    /// GamePadカーソルの初期位置を設定する関数
+    /// </summary>
     public void SetCursor()
     {
         instance.transform.SetAsLastSibling();
@@ -120,13 +123,22 @@ public class CursorController : MonoBehaviour
         instance.GetComponent<Image>().raycastTarget = false;
     }
 
+    /// <summary>
+    /// カーソルの表示のオンオフを設定する関数
+    /// </summary>
+    /// <param name="torf"></param> GamePadカーソルのオンオフ
     public void ChangeCursorEnable(bool torf)
     {
-        Cursor.visible = torf;
-        if (instance != null)
+        if (instance != null && Gamepad.all.Count > 0)
         {
+            Cursor.visible = false;
             instance.SetActive(torf);
             SetCursor();
+        }
+        else if (instance == null && Gamepad.all.Count <= 0)
+        {
+            Cursor.visible = true;
+            instance.SetActive(torf);
         }
     }
 

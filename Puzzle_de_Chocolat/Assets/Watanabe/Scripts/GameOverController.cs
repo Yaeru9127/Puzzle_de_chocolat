@@ -51,9 +51,6 @@ public class GameOverController : MonoBehaviour
             gameOverImage.gameObject.SetActive(true);
             stage.phase = StageManager.Phase.Result;
 
-            if (cc.instance != null)
-                cc.instance.SetActive(true);
-
             StartCoroutine(FadeInAndRetry());
         }
     }
