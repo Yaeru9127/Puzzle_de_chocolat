@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks; 
 
 public class GameOverController : MonoBehaviour
 {
@@ -57,12 +57,12 @@ public class GameOverController : MonoBehaviour
             if (cc.instance != null)
                 cc.instance.SetActive(true);
 
-            StartCoroutine(FadeInAndRetry());
+            FadeInAndRetry().Forget(); // 非同期で開始
         }
     }
 
     // フェードインして一定時間後にリトライシーンへ
-    private IEnumerator FadeInAndRetry()
+    private async UniTaskVoid FadeInAndRetry()
     {
         float elapsed = 0f;
         Color color = gameOverImage.color;
@@ -75,15 +75,17 @@ public class GameOverController : MonoBehaviour
             float alpha = Mathf.Clamp01(elapsed / fadeDuration);
             color.a = alpha;
             gameOverImage.color = color;
-            yield return null;
+            await UniTask.Yield(); // フレームを待つ
         }
 
         // フル表示
         color.a = 1f;
         gameOverImage.color = color;
 
-        // 一定時間待機してリトライシーンへ
-        yield return new WaitForSeconds(waitBeforeRetry);
+        // 一定時間待機
+        await UniTask.Delay(System.TimeSpan.FromSeconds(waitBeforeRetry));
+
+        // リトライシーンへ
         SceneManager.LoadScene("RetryScene");
     }
 

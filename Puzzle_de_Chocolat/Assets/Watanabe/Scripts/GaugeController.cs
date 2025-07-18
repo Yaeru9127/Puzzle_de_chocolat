@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// ゲージの制御を行うクラス。
@@ -52,33 +53,33 @@ public class GaugeController : MonoBehaviour
         increaseQueue.Enqueue(increaseAmount); // 増加要求をキューに追加
         if (!isIncreasing)
         {
-            StartCoroutine(ProcessQueue()); // キュー処理開始
+            ProcessQueueAsync().Forget(); // ★ Coroutine → UniTask 
         }
     }
 
     /// <summary>
-    /// キューに入っている増加処理を順番に実行
+    /// キューに入っている増加処理を順番に実行（Coroutine → UniTask）
     /// </summary>
-    private IEnumerator ProcessQueue()
+    private async UniTaskVoid ProcessQueueAsync()
     {
         isIncreasing = true;
 
         while (increaseQueue.Count > 0)
         {
             int amount = increaseQueue.Dequeue();
-            yield return StartCoroutine(IncreaseGaugeSmoothly(amount));
+            await IncreaseGaugeSmoothlyAsync(amount); // ★ Coroutine → await
         }
 
         isIncreasing = false;
     }
 
     /// <summary>
-    /// ゲージを指定量だけスムーズに増加させる処理
+    /// ゲージを指定量だけスムーズに増加させる処理（Coroutine → UniTask）
     /// </summary>
-    private IEnumerator IncreaseGaugeSmoothly(int amount)
+    private async UniTask IncreaseGaugeSmoothlyAsync(int amount)
     {
         if (gaugeFillImage == null)
-            yield break;
+            return;
 
         gaugeIncreased = true;
         gaugeIncreaseCount++; // 増加回数カウント
@@ -94,7 +95,7 @@ public class GaugeController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             gaugeFillImage.fillAmount = Mathf.Lerp(startFill, endFill, elapsed / increaseDuration);
-            yield return null;
+            await UniTask.Yield(); // ★ コルーチンの代替（次のフレームまで待つ）
         }
 
         gaugeFillImage.fillAmount = endFill;
