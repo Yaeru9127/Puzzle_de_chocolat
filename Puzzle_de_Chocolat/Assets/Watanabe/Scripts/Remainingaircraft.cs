@@ -6,6 +6,8 @@ public class Remainingaircraft : MonoBehaviour
 {
     public static Remainingaircraft remain { get; private set; }
 
+    private GameClear clear;
+
     // 残機（UI上に表示するアイコンなど）
     public List<GameObject> lifeSprites;
 
@@ -33,6 +35,8 @@ public class Remainingaircraft : MonoBehaviour
 
     void Start()
     {
+        clear = GameClear.clear;
+
         // 残機数を初期化
         currentLife = lifeSprites.Count;
         UpdateLifeDisplay();
@@ -44,6 +48,7 @@ public class Remainingaircraft : MonoBehaviour
         if (currentLife > 0 && !isGameCleared)
         {
             currentLife--;
+            clear.AddStep();
 
             // 表示用スプライトを非表示に
             lifeSprites[currentLife].SetActive(false);
