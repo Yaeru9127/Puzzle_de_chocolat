@@ -14,20 +14,7 @@ public class Result : MonoBehaviour
         manager = InputSystem_Manager.manager;
         stage.phase = StageManager.Phase.Result;
 
-        manager.PlayerOff();
-        if (cc.instance != null)
-        {
-            GameObject canvas = GameObject.Find("Canvas");
-            cc.instance.transform.SetParent(canvas.transform);
-            cc.instance.SetActive(true);
-            manager.MouseOff();
-            manager.GamePadOn();
-        }
-        else
-        {
-            manager.GamePadOff();
-            manager.MouseOn();
-        }
+        cc.ChangeCursorEnable(true);
     }
 
     public void LoadResultScene()

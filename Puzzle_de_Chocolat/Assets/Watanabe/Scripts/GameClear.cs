@@ -11,9 +11,10 @@ public class GameClear : MonoBehaviour
     [Header("UI")]
     public Image clearImage;
 
-    public Sprite noRetryFastClearSprite;               //星3   Sprite
-    public Sprite retryOrNoRetryClearSprite;            //星2   Sprite
-    public Sprite retryClearSprite;                     //星1   Sprite
+    public Sprite star3;            //星3   Sprite
+    public Sprite star2;            //星2   Sprite
+    public Sprite star1;            //星1   Sprite
+    public Sprite star0;            //星0   Sprite
 
     [Header("クリア評価設定")]
     public int minStepsToClear;                    // 最短ステップ数
@@ -59,20 +60,57 @@ public class GameClear : MonoBehaviour
             Remainingaircraft.remain.isGameCleared = true;
         }
 
-        if (stepsTaken <= 4)
+        int star = 3;
+        if (wasEat)
         {
-            if (wasEat) clearImage.sprite = retryOrNoRetryClearSprite;
-            else clearImage.sprite = noRetryFastClearSprite;
+            star--;
+            //Debug.Log("eat");
         }
-        else if (stepsTaken >= 5)
+        if (stepsTaken > 4)
         {
-            if (wasEat) clearImage.sprite = retryClearSprite;
-            else clearImage.sprite = retryOrNoRetryClearSprite;
+            star--;
+            //Debug.Log("step is over 4");
         }
-        else
+        if (stepsTaken > 6)
         {
-            clearImage.sprite = retryClearSprite;
+            star--;
+            //Debug.Log("step is over 6");
         }
+        switch (star)
+        {
+            case 0:
+                clearImage.sprite = star0;
+                break;
+            case 1:
+                clearImage.sprite = star1;
+                break;
+            case 2:
+                clearImage.sprite = star2;
+                break;
+            case 3:
+                clearImage.sprite = star3;
+                break;
+            default:
+                clearImage.sprite = null;
+                break;
+        }
+
+        ////手数 <= 4    => 4手以内
+        //if (stepsTaken <= 4)
+        //{
+        //    if (wasEat) clearImage.sprite = star2;      //4手以内で食べたら
+        //    else clearImage.sprite = star3;             //4手以内で食べてないなら
+        //}
+        ////6 <= 手数 >= 5
+        //else if (stepsTaken >= 5 && stepsTaken <= 6)
+        //{
+        //    if (wasEat) clearImage.sprite = star1;      //5,6手で食べたら
+        //    else clearImage.sprite = star2;             //5,6手で食べてないなら
+        //}
+        //else
+        //{
+        //    clearImage.sprite = star1;
+        //}
 
         //if (stepsTaken <= minStepsToClear && !wasEat)
         //{

@@ -65,16 +65,16 @@ public class PauseController : MonoBehaviour
     public void SetPause()
     {
         //プレイヤー操作をオフ、UI操作をオン
-        manager.PlayerOff();
+        //manager.PlayerOff();
 
-        bool deviceCheck = Gamepad.all.Count > 0;
-        if (deviceCheck) manager.GamePadOn();
-        else manager.MouseOn();
+        //bool deviceCheck = Gamepad.all.Count > 0;
+        //if (deviceCheck) manager.GamePadOn();
+        //else manager.MouseOn();
 
         //ポーズパネルを表示する
         pauseobj.SetActive(true);
 
-        //カーソルを表示
+        //カーソルの表示、操作のオンオフ
         cc.ChangeCursorEnable(true);
     }
 
@@ -90,10 +90,10 @@ public class PauseController : MonoBehaviour
         pauseobj.SetActive(false);
 
         //UI操作をオフ、プレイヤー操作をオン
-        bool deviceCheck = Gamepad.all.Count > 0;
-        if (deviceCheck) manager.GamePadOff();
-        else manager.MouseOff();
-        manager.PlayerOn();
+        //bool deviceCheck = Gamepad.all.Count > 0;
+        //if (deviceCheck) manager.GamePadOff();
+        //else manager.MouseOff();
+        //manager.PlayerOn();
         
     }
 

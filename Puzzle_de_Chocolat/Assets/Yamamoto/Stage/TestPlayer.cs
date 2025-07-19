@@ -58,21 +58,12 @@ public class TestPlayer : MonoBehaviour
 
         actions = manager.GetActions();
         nowmass = tm.GetNowMass(this.gameObject);
-        manager.PlayerOn();
-        manager.GamePadOff();
+        //manager.PlayerOn();
+        //manager.GamePadOff();
+        cc.ChangeCursorEnable(false);
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
-
-        //カーソルオブジェクトの設定
-        if (cc.instance != null)
-        {
-            cc.SetEventSystems();
-            GameObject canvas = GameObject.Find("Canvas");
-            cc.instance.transform.SetParent(canvas.transform);
-            cc.instance.SetActive(false);
-            cc.SetCursor();
-        }
     }
 
     /// <summary>
@@ -538,32 +529,11 @@ public class TestPlayer : MonoBehaviour
             //}
         }
 
-        /*if (manager == null)
-        {
-            Debug.LogError("manager is null");
-        }
-        if (cc == null)
-        {
-            Debug.LogError("cc is null");
-        }
-        if (clear == null)
-        {
-            Debug.LogError("clear is null");
-        }
-        if (rcm == null)
-        {
-            Debug.LogError("rcm is null");
-        }
-        if (nowmass == null || cg.goal == null)
-        {
-            Debug.LogError("nowmass or cg.goal is null");
-        }*/
-
         //ゴールマスについたら
         if (nowmass == cg.goal)
         {
             //Debug.Log("reach goal");
-            manager.PlayerOff();
+            //manager.PlayerOff();
             cc.ChangeCursorEnable(true);
             clear.ShowClearResult(rcm.ReloadCount);
 
@@ -575,11 +545,8 @@ public class TestPlayer : MonoBehaviour
         animator.SetFloat("MoveX", 0);
         animator.SetFloat("MoveY", 0);
 
-        if (remain.currentLife > 0)
-        {
-            //入力を受け付ける
-            manager.PlayerOn();
-        }
+        //入力を受け付ける
+        manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
@@ -667,7 +634,7 @@ public class TestPlayer : MonoBehaviour
         sm.SearchSweets();
         sm.SetEffect();
 
-        await UniTask.Delay(1000);
+        await UniTask.Delay(800);
 
         if (remain.currentLife > 0)
         {
@@ -716,7 +683,8 @@ public class TestPlayer : MonoBehaviour
         }
 
         //ポーズ
-        if (!inProcess && escape > 0.5f && stage.phase == StageManager.Phase.Game)
+        if (!inProcess && escape > 0.5f && stage.phase == StageManager.Phase.Game &&
+            (!goc.gameOverImage.gameObject.activeSelf || !clear.clearImage.gameObject.activeSelf))
         {
             if (pause == null) Debug.Log("pause is null");
             pause.SetPause();
@@ -727,6 +695,13 @@ public class TestPlayer : MonoBehaviour
         {
             rcm.IncrementReloadCount();     //リロードカウントを増やす
             manager.Retry();
+        }
+
+        //GameOver or GameClear
+        if (goc.gameOverImage.gameObject.activeSelf || clear.clearImage.gameObject.activeSelf)
+        {
+            //入力を受け付けない
+            manager.PlayerOff();
         }
     }
 }

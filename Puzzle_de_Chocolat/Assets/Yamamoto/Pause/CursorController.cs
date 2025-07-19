@@ -33,11 +33,7 @@ public class CursorController : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         manager = InputSystem_Manager.manager;
 
-        if (manager == null)
-        {
-            Debug.LogError("InputSystem_Manager が見つかりません。");
-            return;
-        }
+        if (manager == null) return;
 
         action = manager.GetActions();
     }
@@ -54,56 +50,63 @@ public class CursorController : MonoBehaviour
 
     private void Start()
     {
+        manager.PlayerOff();
         currentUI = null;
         SetEventSystems();
-        //DeviceCheck();
+        ChangeCursorEnable(true);
     }
 
+    /// <summary>
+    /// シーンロード時に実行する関数
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         SetEventSystems();
         DeviceCheck();
+        if (instance != null && instance.activeSelf) SetCursor();
     }
 
+    /// <summary>
+    /// GamePad操作時に必要なEventSystem関連の設定関数
+    /// </summary>
     public void SetEventSystems()
     {
         eventSystem = EventSystem.current;
         pointerData = new PointerEventData(eventSystem);
     }
 
+    /// <summary>
+    /// コントローラーの有無によってカーソルオブジェクトの生成をする関数
+    /// </summary>
     private void DeviceCheck()
     {
         bool deviceCheck = Gamepad.all.Count > 0;
 
         if (deviceCheck)    //GamePad操作設定
         {
-            manager.GamePadOn();
-            manager.MouseOff();
-
-            if (instance == null)
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas != null)
             {
-                instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
-                instance.transform.SetParent(GameObject.Find("Canvas").transform, false);
+                if (instance == null) instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
             }
 
-            instance.SetActive(true);
-            SetCursor();
+            if (instance.transform.parent == null || instance.transform.parent != canvas.transform)
+            {
+                instance.transform.SetParent(canvas.transform, false);
+            }
 
             if (EventSystem.current != null)
             {
                 EventSystem.current.sendNavigationEvents = false;
             }
-
-            ChangeCursorEnable(true);
         }
         else    //Mouse操作設定
         {
-            manager.MouseOn();
-            manager.GamePadOff();
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
             if (instance != null) instance.SetActive(false);
-            ChangeCursorEnable(false);
         }
     }
 
@@ -124,28 +127,53 @@ public class CursorController : MonoBehaviour
     }
 
     /// <summary>
-    /// カーソルの表示のオンオフを設定する関数
+    /// カーソルの表示のオンオフと操作のオンオフを設定する関数
     /// </summary>
     /// <param name="torf"></param> GamePadカーソルのオンオフ
     public void ChangeCursorEnable(bool torf)
     {
-        //GamePad
-        if (instance != null && Gamepad.all.Count > 0)
+        //UI操作をOnにする
+        if (torf)
         {
-            Cursor.visible = false;
             manager.PlayerOff();
-            manager.MouseOff();
-            manager.GamePadOn();
-            instance.SetActive(torf);
-            SetCursor();
+
+            //GamePad
+            if (Gamepad.all.Count > 0)
+            {
+                //マウスOff
+                Cursor.visible = !torf;
+                manager.MouseOff();
+
+                //GamePad操作On
+                manager.GamePadOn();
+                GameObject canvas = GameObject.Find("Canvas");
+                if (instance != null)
+                {
+                    instance.SetActive(torf);
+                    SetCursor();
+                }
+                instance.transform.SetParent(canvas.transform, true);
+            }
+            //Mouse
+            else if (Gamepad.all.Count <= 0)
+            {
+                //GamePadOff
+                manager.GamePadOff();
+                if (instance != null) instance.SetActive(false);
+
+                //マウスOn
+                Cursor.visible = torf;
+            }
         }
-        else if (instance == null && Gamepad.all.Count <= 0)
+        //UI操作をOffにする
+        else if (!torf)
         {
-            Cursor.visible = true;
-            manager.PlayerOff();
+            if (instance != null) instance.SetActive(torf);
+
+            Cursor.visible = torf;
+            manager.MouseOff();
             manager.GamePadOff();
-            manager.MouseOn();
-            instance.SetActive(torf);
+            manager.PlayerOn();
         }
     }
 
