@@ -95,7 +95,7 @@ public class GaugeController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             gaugeFillImage.fillAmount = Mathf.Lerp(startFill, endFill, elapsed / increaseDuration);
-            await UniTask.Yield(); // ★ コルーチンの代替（次のフレームまで待つ）
+            await UniTask.Yield(); // コルーチンの代替（次のフレームまで待つ）
         }
 
         gaugeFillImage.fillAmount = endFill;
@@ -107,10 +107,10 @@ public class GaugeController : MonoBehaviour
         }
 
         // ゲージが最大値に達したらゲームオーバー表示
-        if (currentValue >= maxValue && gameOverController != null)
-        {
-            gameOverController.ShowGameOver();
-        }
+        //if (currentValue >= maxValue && gameOverController != null)
+        //{
+        //    gameOverController.ShowGameOver();
+        //}
     }
 
     /// <summary>
