@@ -4,6 +4,16 @@ public class StageManager : MonoBehaviour
 {
     public static StageManager stage { get; private set; }
 
+    private CursorController cc;
+
+    public enum Phase
+    {
+        Title,
+        Game,
+        Result
+    }
+    public Phase phase;
+
     public int stagenum;    //ステージナンバー
 
     private void Awake()
@@ -16,6 +26,8 @@ public class StageManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        cc = CursorController.cc;
+        phase = Phase.Title;
         DontDestroyOnLoad(this.gameObject);
     }
 

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Button
   - Candy
+  - sweet
+  - zyoukenn
   layers:
   - Default
   - TransparentFX

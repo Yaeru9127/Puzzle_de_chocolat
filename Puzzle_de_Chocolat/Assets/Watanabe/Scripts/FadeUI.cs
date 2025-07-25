@@ -30,7 +30,7 @@ public class FadeUI : MonoBehaviour
             fadeImage.color = c;
             yield return null;
 
-            if (fadeImage.color.a >= 1) break;
+            if (fadeImage.color.a >= 1) Debug.Log("end fade");  break;
         }
 
         //c.a = 1f;
@@ -49,7 +49,7 @@ public class FadeUI : MonoBehaviour
             fadeImage.color = c;
             yield return null;
 
-            if (fadeImage.color.a <= 0) break;
+            if (fadeImage.color.a <= 0) Debug.Log("end fade"); break;
         }
 
         c.a = 0f;

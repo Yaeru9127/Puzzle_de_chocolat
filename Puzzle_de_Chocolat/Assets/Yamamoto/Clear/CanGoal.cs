@@ -10,10 +10,10 @@ public class CanGoal : MonoBehaviour
     private SweetsManager sm;
 
     [SerializeField] private TestPlayer playerscript;   //プレイヤー変数
-    [SerializeField] private GameObject goal;           //ゴールマスオブジェクト
+    public GameObject goal;           //ゴールマスオブジェクト
 
     //ゴールできるかの判定時に使う検索済み格納関数
-    private List<GameObject> searched = new List<GameObject>();
+    public List<GameObject> searched = new List<GameObject>();
 
     private void Awake()
     {
@@ -55,13 +55,14 @@ public class CanGoal : MonoBehaviour
             if (pair.Key == goal)
             {
                 //デバッグ
-                //Debug.Log($"serachmass : {now.gameObject.name}  goal : {pair.Key.name}");
+                //Debug.Log($"Reached goal from {now.gameObject.name}");
 
                 return true;
             }
 
             //隣接マスの隣接マスを検索
-            if (CanMassThrough(pair.Key.GetComponent<Tile>())) return true;
+            Tile nextTile = pair.Key.GetComponent<Tile>();
+            if (nextTile != null && CanMassThrough(nextTile)) return true;
         }
 
         return false;
@@ -77,5 +78,15 @@ public class CanGoal : MonoBehaviour
     void Update()
     {
 
+    }
+    // ゴールにいるかどうかのチェック関数
+    public bool IsPlayerOnGoal()
+    {
+        if (playerscript != null && goal != null)
+        {
+            // プレイヤーの位置とゴールの位置が近ければゴールしたとみなす
+            return Vector2.Distance(playerscript.transform.position, goal.transform.position) < 0.1f;
+        }
+        return false;
     }
 }

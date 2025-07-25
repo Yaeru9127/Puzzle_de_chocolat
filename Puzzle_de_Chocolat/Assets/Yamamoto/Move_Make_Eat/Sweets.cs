@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class Sweets : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Sweets : MonoBehaviour
         Egg,                //卵
         Milk,               //牛乳
         Maked,              //合体後
-        None                //作れない材料
+        None                //その他
     }
     public Material material;
 
@@ -71,13 +72,13 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Sugar) name = "pretzel";
                     else if (comparison.material == Material.Egg) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "maritozzo";
@@ -87,12 +88,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "pretzel";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "tiramisu";
                     else if (comparison.material == Material.Butter) name = "maritozzo";
@@ -102,12 +103,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     return false;
                 }
@@ -115,11 +116,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //牛乳
             case Material.Milk:
-                if (sm.stage.stagenum == 0)
+                if (sm.stage.stagenum == 1)
                 {
                     return false;
                 }
-                else if (sm.stage.stagenum == 1)
+                else if (sm.stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Butter) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "tiramisu";
@@ -171,7 +172,7 @@ public class Sweets : MonoBehaviour
     /// <summary>
     /// お菓子を食べる関数
     /// </summary>
-    public void EatSweets()
+    public async UniTask EatSweets()
     {
         //このお菓子が食べれたら
         if (canEat)
@@ -182,8 +183,14 @@ public class Sweets : MonoBehaviour
             if (pair != null) Destroy(pair);
             Destroy(this.gameObject);
 
+            await UniTask.DelayFrame(1);
+
             //お菓子の位置を更新
             sm.SearchSweets();
+            sm.SetEffect();
+
+            //食べたフラグを更新
+            sm.clear.wasEat = true;
         }
         else Debug.Log("this sweets is can not eat");
     }
@@ -191,6 +198,6 @@ public class Sweets : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

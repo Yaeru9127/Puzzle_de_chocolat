@@ -1,7 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using UnityEngine.Windows;
 
 public class CursorController : MonoBehaviour
 {
@@ -12,71 +15,95 @@ public class CursorController : MonoBehaviour
 
     [SerializeField] private Texture2D cursorTexture;
     [SerializeField] private GameObject cursorobj;
-    private GameObject instance;
-    public InputAction input;
-    private float speed;
+    public GameObject instance;
+
+    private float speed = 5f;
+    private GameObject currentUI;
+    private RectTransform rect;
+    private PointerEventData pointerData;
+    private EventSystem eventSystem;
+    private float sliderCooldown = 0f;
+    private float sliderCooldownDuration = 0.2f;
 
     private void Awake()
     {
         if (cc == null) cc = this;
         else if (cc != null) Destroy(this);
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        manager = InputSystem_Manager.manager;
-        action = manager.GetActions();
-        speed =5f;
-
-        //ƒeƒXƒg
-        ChangeCursorEnable(true);
-
-        DeviceCheck();
 
         DontDestroyOnLoad(this.gameObject);
+        manager = InputSystem_Manager.manager;
+
+        if (manager == null) return;
+
+        action = manager.GetActions();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
+    private void Start()
+    {
+        manager.PlayerOff();
+        currentUI = null;
+        SetEventSystems();
+        ChangeCursorEnable(true);
     }
 
     /// <summary>
-    /// ƒRƒ“ƒgƒ[ƒ‰[‚ÌÚ‘±‚ğŒŸ’m‚·‚éŠÖ”
+    /// ã‚·ãƒ¼ãƒ³ãƒ­ãƒ¼ãƒ‰æ™‚ã«å®Ÿè¡Œã™ã‚‹é–¢æ•°
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
+    private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        SetEventSystems();
+        DeviceCheck();
+        if (instance != null && instance.activeSelf) SetCursor();
+    }
+
+    /// <summary>
+    /// GamePadæ“ä½œæ™‚ã«å¿…è¦ãªEventSystemé–¢é€£ã®è¨­å®šé–¢æ•°
+    /// </summary>
+    public void SetEventSystems()
+    {
+        eventSystem = EventSystem.current;
+        pointerData = new PointerEventData(eventSystem);
+    }
+
+    /// <summary>
+    /// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®æœ‰ç„¡ã«ã‚ˆã£ã¦ã‚«ãƒ¼ã‚½ãƒ«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆã‚’ã™ã‚‹é–¢æ•°
     /// </summary>
     private void DeviceCheck()
     {
-        // ƒRƒ“ƒgƒ[ƒ‰[‚ÌÚ‘±‚ğŒŸ’m
         bool deviceCheck = Gamepad.all.Count > 0;
 
-        //ƒRƒ“ƒgƒ[ƒ‰[‚ªÚ‘±‚³‚ê‚Ä‚¢‚½‚ç
-        if (deviceCheck)
+        if (deviceCheck)    //GamePadæ“ä½œè¨­å®š
         {
-            //GamePad‘€ì‚ğƒIƒ“
-            input = action.GamePad.Point;
-            manager.GamePadOn();
-
-            //ƒ}ƒEƒX‘€ì‚ğƒIƒt
-            manager.MouseOff();
-
-            //ƒJ[ƒ\ƒ‹ƒIƒuƒWƒFƒNƒg‚ª¶¬‚³‚ê‚Ä‚¢‚é‚©‚É‚æ‚Á‚Äˆ—‚ğ•Ï‚¦‚é
-            if (instance == null)
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas != null)
             {
-                instance = Instantiate(cursorobj, Vector2.zero, Quaternion.identity);
+                if (instance == null) instance = Instantiate(cursorobj, Vector3.zero, Quaternion.identity);
             }
-            else
+
+            if (instance.transform.parent == null || instance.transform.parent != canvas.transform)
             {
-                instance.transform.position = Vector2.zero;
-                instance.SetActive(true);
+                instance.transform.SetParent(canvas.transform, false);
+            }
+
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.sendNavigationEvents = false;
             }
         }
-        //ƒRƒ“ƒgƒ[ƒ‰[‚ªÚ‘±‚³‚ê‚Ä‚¢‚È‚©‚Á‚½‚ç
-        else
+        else    //Mouseæ“ä½œè¨­å®š
         {
-            //ƒ}ƒEƒX‘€ì‚ğƒIƒ“
-            input = action.Mouse.Point;
-            manager.MouseOn();
-
-            //ƒQ[ƒ€ƒpƒbƒh‘€ì‚ğƒIƒt
-            manager.GamePadOff();
-
-            //‰æ‘œ‚ğƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚ÉƒZƒbƒg‚·‚é
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
             if (instance != null) instance.SetActive(false);
@@ -84,50 +111,185 @@ public class CursorController : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒJ[ƒ\ƒ‹‚ÌƒIƒ“ƒIƒt‚ğİ’è‚·‚éŠÖ”
+    /// GamePadã‚«ãƒ¼ã‚½ãƒ«ã®åˆæœŸä½ç½®ã‚’è¨­å®šã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="torf"></param> true‚È‚ç•\¦Afalse‚È‚ç”ñ•\¦
-    public void ChangeCursorEnable(bool torf)
+    public void SetCursor()
     {
-        Cursor.visible = torf;
+        instance.transform.SetAsLastSibling();
+        RectTransform rt = instance.GetComponent<RectTransform>();
+
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+
+        instance.GetComponent<Image>().raycastTarget = false;
     }
 
-    private void GamePadClick()
+    /// <summary>
+    /// ã‚«ãƒ¼ã‚½ãƒ«ã®è¡¨ç¤ºã®ã‚ªãƒ³ã‚ªãƒ•ã¨æ“ä½œã®ã‚ªãƒ³ã‚ªãƒ•ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+    /// </summary>
+    /// <param name="torf"></param> GamePadã‚«ãƒ¼ã‚½ãƒ«ã®ã‚ªãƒ³ã‚ªãƒ•
+    public void ChangeCursorEnable(bool torf)
     {
-        //‘I‘ğ‚µ‚Ä‚¢‚éUI‚ğŠi”[
-        GameObject select = EventSystem.current.currentSelectedGameObject;
-
-        //‘I‘ğUI‚ª‘¶İ‚µ‚È‚¢ || ‘I‘ğUI‚ªƒ{ƒ^ƒ“‚Å‚Í‚È‚¢ => return
-        if (select == null || select.GetComponent<ButtonController>() == null) return;
-
-        //‘I‘ğUI‚ª‘¶İ‚·‚é && ‘I‘ğUI‚ªƒ{ƒ^ƒ“‚Å‚ ‚é
-        if (select != null && select.GetComponent<ButtonController>() != null)
+        //UIæ“ä½œã‚’Onã«ã™ã‚‹
+        if (torf)
         {
-            UnityEngine.UI.Button button = select.GetComponent<UnityEngine.UI.Button>();
+            manager.PlayerOff();
 
-            if (button != null)
+            //GamePad
+            if (Gamepad.all.Count > 0)
             {
-                Debug.Log(button.gameObject.name);
-                button.onClick.Invoke();
+                //ãƒã‚¦ã‚¹Off
+                Cursor.visible = !torf;
+                manager.MouseOff();
+
+                //GamePadæ“ä½œOn
+                manager.GamePadOn();
+                GameObject canvas = GameObject.Find("Canvas");
+                if (instance != null)
+                {
+                    instance.SetActive(torf);
+                    SetCursor();
+                }
+                instance.transform.SetParent(canvas.transform, true);
             }
+            //Mouse
+            else if (Gamepad.all.Count <= 0)
+            {
+                //GamePadOff
+                manager.GamePadOff();
+                if (instance != null) instance.SetActive(false);
+
+                //ãƒã‚¦ã‚¹On
+                Cursor.visible = torf;
+            }
+        }
+        //UIæ“ä½œã‚’Offã«ã™ã‚‹
+        else if (!torf)
+        {
+            if (instance != null) instance.SetActive(torf);
+
+            Cursor.visible = torf;
+            manager.MouseOff();
+            manager.GamePadOff();
+            manager.PlayerOn();
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CheckUI(GameObject hitUI)
     {
-        if (input == null) return;
+        GameObject obj = GetParentObject(hitUI);
 
-        //“ü—Í‚ğ“Ç‚İ‚Ş
-        Vector2 read = input.ReadValue<Vector2>();
-
-        //ƒJ[ƒ\ƒ‹ƒIƒuƒWƒFƒNƒg‚ª‘¶İ‚µ‚½‚çƒJ[ƒ\ƒ‹‚ğ“®‚©‚·
-        if (instance != null)
+        if (obj != currentUI)
         {
-            Vector2 now = instance.transform.position;
-            instance.transform.position = now + read * speed * Time.deltaTime;
+            if (currentUI != null)
+                ExecuteEvents.Execute<IPointerExitHandler>(currentUI, pointerData, ExecuteEvents.pointerExitHandler);
 
-            GamePadClick();
+            if (obj != null)
+            {
+                ExecuteEvents.Execute<IPointerEnterHandler>(obj, pointerData, ExecuteEvents.pointerEnterHandler);
+                EventSystem.current.SetSelectedGameObject(obj);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+
+            currentUI = obj;
+        }
+    }
+
+    /// <summary>
+    /// é¸æŠUIã®è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—ã™ã‚‹é–¢æ•°
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private GameObject GetParentObject(GameObject obj)
+    {
+        if (obj == null) return null;
+
+        Transform current = obj.transform;
+        while (current != null)
+        {
+            if (current.GetComponent<Button>() != null || current.GetComponent<Slider>() != null)
+            {
+                return current.gameObject;
+            }
+            current = current.parent;
+        }
+
+        return null;
+    }
+
+    private void GamePadClick(GameObject hitUI, float movex, bool isClick)
+    {
+        GameObject obj = GetParentObject(hitUI);
+        if (obj == null) return;
+
+        //Button
+        if (obj.GetComponent<Button>() != null && isClick)
+        {
+            ExecuteEvents.Execute<ISubmitHandler>(obj, pointerData, ExecuteEvents.submitHandler);
+            return;
+        }
+
+        //Slider
+        if (obj.GetComponent<Slider>() != null)
+        {
+
+            if (Mathf.Abs(movex) < 0.2f) movex = 0f;
+
+            if (isClick && Mathf.Abs(movex) > 0.2f && sliderCooldown <= 0f)
+            {
+                Slider slider = obj.GetComponent<Slider>();
+
+                if (slider != null)
+                {
+                    slider.value += Mathf.Sign(movex) * 0.05f;
+                    sliderCooldown = sliderCooldownDuration;
+                }
+            }
+
+            return;
+        }
+    }
+
+    private void Update()
+    {
+        //GamePadæ“ä½œæ™‚ä»¥å¤–ã¯ç„¡è¦–
+        if (instance == null || !instance.activeSelf) return;
+
+        //ãƒ¦ãƒ¼ã‚¶ãƒ¼å…¥åŠ›ã‚’å—ã‘å–ã‚‹
+        bool isClickHoled = action.GamePad.Click.IsPressed();
+        Vector2 input = action.GamePad.Point.ReadValue<Vector2>();
+
+        //ã‚«ãƒ¼ã‚½ãƒ«ã®ç§»å‹•
+        Vector2 now = (Vector2)instance.transform.position;
+        instance.transform.position = now + input * speed * Time.deltaTime;
+
+        //UIã«Raycast
+        rect = instance.GetComponent<RectTransform>();
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, rect.position);
+        pointerData.position = screenPos;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+        GameObject hitUI = null;
+        if (raycastResults.Count > 0)
+        {
+            GameObject candidate = raycastResults[0].gameObject;
+            if (candidate != instance) hitUI = candidate;
+        }
+
+        CheckUI(hitUI);
+        if (sliderCooldown > 0f)
+            sliderCooldown -= Time.deltaTime;
+
+        if (hitUI != null && isClickHoled)
+        {
+            GamePadClick(hitUI, input.x, isClickHoled);
         }
     }
 }

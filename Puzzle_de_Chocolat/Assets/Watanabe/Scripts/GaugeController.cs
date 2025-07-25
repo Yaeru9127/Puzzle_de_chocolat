@@ -2,98 +2,136 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
+/// <summary>
+/// ゲージの制御を行うクラス。
+/// オブジェクトの破壊によりゲージが増加し、
+/// 一定値に達するとゲームオーバーを発生させる処理を含む。
+/// </summary>
 public class GaugeController : MonoBehaviour
 {
     [Header("UI関連")]
-    [Tooltip("UIスライダー")]
-    [SerializeField] private Slider gaugeSlider; // ゲージのUIスライダー
-
-    private GameOverController gameOverController; // ゲームオーバーを管理するコントローラー
-
-    private Remainingaircraft remainingAircraft; // 残機管理クラスへの参照
+    [SerializeField] private Image gaugeFillImage; // ゲージの進行度を表すUI Image
+    [Tooltip("ゲージ残り回数を数字スプライトで表示するUI Image")]
+    [SerializeField] private Image gaugeNumberDisplay; // 残り回数を表示するUI
+    [SerializeField] private GameOverController gameOverController; // ゲームオーバー処理クラスへの参照
+    [SerializeField] private Remainingaircraft remainingAircraft; // 残機UIなどの処理クラスへの参照
 
     [Header("ゲージ設定")]
-    [Tooltip("ゲージが増加するのにかかる時間（秒）")]
-    [SerializeField] private float increaseDuration = 0.5f; // ゲージが増加する時間
+    [SerializeField] private float increaseDuration = 0.5f; // ゲージが増加するアニメーションの所要時間
+    [SerializeField] private int defaultIncreaseAmount = 1; // デフォルトの増加量（1回の増加あたり）
+    [SerializeField] private int maxValue = 6; // ゲージの最大値（到達でゲームオーバー）
 
-    [Tooltip("デフォルトのゲージ増加量（シーンごとに調整）")]
-    [SerializeField] private int defaultIncreaseAmount = 1; // デフォルトの増加量
+    private int currentValue = 0; // 現在のゲージの値
+    private Queue<int> increaseQueue = new Queue<int>(); // ゲージ増加のキュー（複数増加に対応）
+    private bool isIncreasing = false; // ゲージが現在増加中かどうかのフラグ
 
-    private const int maxValue = 10; // ゲージの最大値
-    private Queue<int> increaseQueue = new Queue<int>(); // 増加量を順番に処理するためのキュー
-    private bool isIncreasing = false; // 現在、ゲージが増加中かどうかを判定するフラグ
+    public bool gaugeIncreased = false; // ゲージが1度でも増加したか
+    public static int gaugeIncreaseCount = 0; // ゲージの増加が何回発生したか
 
-    private void Awake()
+    void Start()
     {
-        gameOverController = GameOverController.over;
-        remainingAircraft = Remainingaircraft.remain;
+        gaugeIncreased = false;
+        gaugeIncreaseCount = 0; // ステージ開始時にリセット
+        UpdateGaugeNumberDisplay(); // 初期の残り回数表示更新
     }
 
-    // オブジェクトが破壊された際にゲージを増加させる
-    /*public void OnObjectDestroyed()
+    /// <summary>
+    /// オブジェクト破壊時に呼ばれる（増加量デフォルト）
+    /// </summary>
+    public void OnObjectDestroyed()
     {
-        OnObjectDestroyed(defaultIncreaseAmount); // デフォルトの増加量でゲージを増加
-    }*/
+        OnObjectDestroyed(defaultIncreaseAmount);
+    }
 
-    // 引数で指定された増加量でゲージを増加させる
+    /// <summary>
+    /// オブジェクト破壊時に呼ばれる（指定量の増加）
+    /// </summary>
     public void OnObjectDestroyed(int increaseAmount)
     {
-        increaseQueue.Enqueue(increaseAmount); // 増加量をキューに追加
-
-        // まだ増加処理が行われていなければ、キューの処理を開始
+        increaseQueue.Enqueue(increaseAmount); // 増加要求をキューに追加
         if (!isIncreasing)
         {
-            StartCoroutine(ProcessQueue());
+            ProcessQueueAsync().Forget(); // ★ Coroutine → UniTask 
         }
     }
 
-    // キューにある増加量を順に処理
-    private IEnumerator ProcessQueue()
+    /// <summary>
+    /// キューに入っている増加処理を順番に実行（Coroutine → UniTask）
+    /// </summary>
+    private async UniTaskVoid ProcessQueueAsync()
     {
-        isIncreasing = true; // ゲージ増加中フラグを立てる
+        isIncreasing = true;
 
-        // キューに増加量が残っている間、処理を続ける
         while (increaseQueue.Count > 0)
         {
-            int amount = increaseQueue.Dequeue(); // キューから増加量を取り出す
-            yield return StartCoroutine(IncreaseGaugeSmoothly(amount)); // ゲージをスムーズに増加させる
+            int amount = increaseQueue.Dequeue();
+            await IncreaseGaugeSmoothlyAsync(amount); // ★ Coroutine → await
         }
 
-        isIncreasing = false; // ゲージ増加処理完了
+        isIncreasing = false;
     }
 
-    // ゲージをスムーズに増加させるコルーチン
-    private IEnumerator IncreaseGaugeSmoothly(int amount)
+    /// <summary>
+    /// ゲージを指定量だけスムーズに増加させる処理（Coroutine → UniTask）
+    /// </summary>
+    private async UniTask IncreaseGaugeSmoothlyAsync(int amount)
     {
-        if (gaugeSlider == null)
-            yield break; // ゲージスライダーが設定されていなければ処理を中断
+        if (gaugeFillImage == null)
+            return;
 
-        float startValue = gaugeSlider.value; // ゲージの現在の値
-        float endValue = Mathf.Clamp(startValue + amount, 0, maxValue); // 増加後の値（最大値を超えないように制限）
+        gaugeIncreased = true;
+        gaugeIncreaseCount++; // 増加回数カウント
 
-        float elapsed = 0f; // 経過時間
+        int oldValue = currentValue;
+        currentValue = Mathf.Clamp(currentValue + amount, 0, maxValue);
 
-        // ゲージが増加する時間（スムーズに変化）
+        float startFill = (float)oldValue / maxValue;
+        float endFill = (float)currentValue / maxValue;
+
+        float elapsed = 0f;
         while (elapsed < increaseDuration)
         {
-            elapsed += Time.deltaTime; // 経過時間を更新
-            gaugeSlider.value = Mathf.Lerp(startValue, endValue, elapsed / increaseDuration); // ゲージ値を線形補間
-            yield return null; // 次のフレームまで待機
+            elapsed += Time.deltaTime;
+            gaugeFillImage.fillAmount = Mathf.Lerp(startFill, endFill, elapsed / increaseDuration);
+            await UniTask.Yield(); // ★ コルーチンの代替（次のフレームまで待つ）
         }
 
-        gaugeSlider.value = endValue; // ゲージの最終値を設定
+        gaugeFillImage.fillAmount = endFill;
+        UpdateGaugeNumberDisplay(); // 数字UI更新
 
-        // ゲージが増加したタイミングで残機を減らす
         if (remainingAircraft != null)
         {
-            remainingAircraft.ReduceLife(); // 残機を1つ減らす
+            remainingAircraft.ReduceLife(); // 残機を1減らす
         }
 
-        // ゲージが最大値に達した場合、ゲームオーバー処理を行う
-        if (Mathf.Approximately(gaugeSlider.value, maxValue) && gameOverController != null)
+        // ゲージが最大値に達したらゲームオーバー表示
+        if (currentValue >= maxValue && gameOverController != null)
         {
-            gameOverController.ShowGameOver(); // ゲームオーバーを表示
+            gameOverController.ShowGameOver();
+        }
+    }
+
+    /// <summary>
+    /// 残り回数の数字スプライトを更新
+    /// </summary>
+    private void UpdateGaugeNumberDisplay()
+    {
+        if (gaugeNumberDisplay == null || remainingAircraft == null)
+            return;
+
+        int remaining = Mathf.Clamp(maxValue - currentValue, 0, 99);
+        Sprite sprite = remainingAircraft.GetNumberSprite(remaining);
+
+        if (sprite != null)
+        {
+            gaugeNumberDisplay.sprite = sprite;
+            gaugeNumberDisplay.gameObject.SetActive(true);
+        }
+        else
+        {
+            gaugeNumberDisplay.gameObject.SetActive(false);
         }
     }
 }

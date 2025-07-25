@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 //製菓後のお菓子を格納するクラス
@@ -13,13 +14,19 @@ public class SweetsManager : MonoBehaviour
 {
     public static SweetsManager sm { get; private set; }
 
-    public StageManager stage;
+    [HideInInspector] public StageManager stage;
+    [HideInInspector] public GameClear clear;
 
     //お菓子オブジェクト格納のList<Dictionary<座標, スクリプト>>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
+    public List<GameObject> effects = new List<GameObject>();
+
     //インスペクター設定用のList
     public List<MakedSweetsPair> mixtures = new List<MakedSweetsPair>();
+
+    [SerializeField] private GameObject ZairyouEffect;
+    [SerializeField] private GameObject EatEffect;
 
     [SerializeField] private GaugeController gaugeCC;
 
@@ -47,12 +54,14 @@ public class SweetsManager : MonoBehaviour
         else if (sm != null) Destroy(this.gameObject);
 
         stage = StageManager.stage;
+        clear = GameClear.clear;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         SearchSweets();
+        SetEffect();
     }
 
     /// <summary>
@@ -61,7 +70,7 @@ public class SweetsManager : MonoBehaviour
     /// <param name="pos"></param> 探すマスの座標
     public Sweets GetSweets(Vector2 pos)
     {
-        Sweets returnsweetts = null;;
+        Sweets returnsweetts = null; ;
 
         //座標で検索
         foreach (Vector2 sweetspos in sweets.Keys)
@@ -98,6 +107,40 @@ public class SweetsManager : MonoBehaviour
         {
             Debug.Log($"Key : {sw.Key} , Value : {sw.Value.gameObject.name}");
         }*/
+    }
+
+    /// <summary>
+    /// エフェクト生成関数
+    /// </summary>
+    public void SetEffect()
+    {
+        //初期化
+        effects.Clear();
+
+        foreach (KeyValuePair<Vector2, Sweets> pair in sweets)
+        {
+            //子オブジェクトの有無で判定
+            if (pair.Value.gameObject.transform.childCount == 0)
+            {
+                //場所の設定
+                Vector3 pos = pair.Value.gameObject.transform.position;
+                pos.z = 0;
+
+                //生成するエフェクトの判別
+                GameObject obj = null;
+                GameObject instance = null;
+                if (pair.Value.material == Sweets.Material.Maked || pair.Value.material == Sweets.Material.None) obj = EatEffect;
+                else obj = ZairyouEffect;
+
+                //微調整
+                instance = Instantiate(obj, pos, Quaternion.identity);
+                instance.transform.SetParent(pair.Value.gameObject.transform, true);
+                instance.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            }
+
+            GameObject child = pair.Value.gameObject.transform.GetChild(0).gameObject;
+            effects.Add(child);
+        }
     }
 
     /// <summary>
@@ -139,6 +182,6 @@ public class SweetsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
