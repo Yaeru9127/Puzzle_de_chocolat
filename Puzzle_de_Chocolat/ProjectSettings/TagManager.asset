@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Button
   - Candy
+  - OutlineImage
   layers:
   - Default
   - TransparentFX
