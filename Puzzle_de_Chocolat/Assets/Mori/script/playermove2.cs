@@ -1,13 +1,13 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class playermove2 : MonoBehaviour
 {
-    private FadeController fadeController;  // ƒtƒF[ƒhƒRƒ“ƒgƒ[ƒ‰[‚ÌQÆ
+    private FadeController fadeController;
 
-    public Transform[] nodes; // ƒm[ƒhÀ•W‚ğİ’è
+    public Transform[] nodes;
     private Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
 
     private int currentNodeIndex = 0;
@@ -18,97 +18,82 @@ public class playermove2 : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    // ğŸ‘‡ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã«å…¬é–‹
+    public bool IsMoving => isMoving;
+
+    public Vector3 MoveDirection
+    {
+        get
+        {
+            if (!isMoving) return Vector3.zero;
+            Vector3 dir = targetPosition - transform.position;
+            dir.y = 0;
+            return dir.normalized;
+        }
+    }
+
     void Start()
     {
-        // ƒtƒF[ƒhƒRƒ“ƒgƒ[ƒ‰[‚ğæ“¾
         fadeController = Object.FindFirstObjectByType<FadeController>();
 
-        // À•W‚²‚Æ‚É‚¢‚¯‚é•ûŒü‚ğw’è
-        nodeConnections[0] = new List<int> { 1 };         // À•W1 ¨ À•W2
-        nodeConnections[1] = new List<int> { 0, 2 };      // À•W2 ¨ À•W1,3
-        nodeConnections[2] = new List<int> { 1, 3 };      // À•W3 ¨ À•W2,4
-        nodeConnections[3] = new List<int> { 2 };         // À•W4 ¨ À•W3
+        nodeConnections[0] = new List<int> { 1 };
+        nodeConnections[1] = new List<int> { 0, 2 };
+        nodeConnections[2] = new List<int> { 1, 3 };
+        nodeConnections[3] = new List<int> { 2 };
 
-        // ‰ŠúˆÊ’u‚ğw’èÀ•W‚Éİ’è
         transform.position = new Vector3(6.75f, 2.73f, -1f);
     }
 
     void Update()
     {
-        // ƒ^ƒCƒgƒ‹‚É–ß‚éiEscƒL[‚Ü‚½‚ÍBƒ{ƒ^ƒ“j
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1))
-        {
-            Debug.Log("ƒ^ƒCƒgƒ‹‚Ö");
-            fadeController.FadeOutAndLoadScene("stag");
-        }
-
         if (!isMoving)
         {
-            // ƒRƒ“ƒgƒ[ƒ‰[“ü—Í‚Ìæ“¾
-            Gamepad pad = Gamepad.current;
-            bool padLeft = false, padRight = false, padUp = false, padDown = false;
-
-#if ENABLE_INPUT_SYSTEM
-            if (pad != null)
-            {
-                Vector2 stick = pad.leftStick.ReadValue();
-                padLeft = stick.x < -0.5f || pad.dpad.left.wasPressedThisFrame;
-                padRight = stick.x > 0.5f || pad.dpad.right.wasPressedThisFrame;
-                padUp = stick.y > 0.5f || pad.dpad.up.wasPressedThisFrame;
-                padDown = stick.y < -0.5f || pad.dpad.down.wasPressedThisFrame;
-            }
-#endif
-
-            // ƒm[ƒh‚²‚Æ‚Ì“ü—Íˆ—
-            switch (currentNodeIndex)
-            {
-                case 0: // À•W1 ¨ ¶‚Åi‚Ş
-                    if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft)
-                    {
-                        TryMove(1); // i‚Ş
-                    }
-                    break;
-
-                case 1: // À•W2 ¨ ‰º‚Åi‚Ş / ‰E‚Å–ß‚é
-                    if (Input.GetKeyDown(KeyCode.DownArrow) || padDown)
-                    {
-                        TryMove(1); // i‚Ş
-                    }
-                    else if (Input.GetKeyDown(KeyCode.RightArrow) || padRight)
-                    {
-                        TryMove(-1); // –ß‚é
-                    }
-                    break;
-
-                case 2: // À•W3 ¨ ¶‚Åi‚Ş / ã‚Å–ß‚é
-                    if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft)
-                    {
-                        TryMove(1); // i‚Ş
-                    }
-                    else if (Input.GetKeyDown(KeyCode.UpArrow) || padUp)
-                    {
-                        TryMove(-1); // –ß‚é
-                    }
-                    break;
-
-                case 3: // À•W4 ¨ ‰E‚Å–ß‚é
-                    if (Input.GetKeyDown(KeyCode.RightArrow) || padRight)
-                    {
-                        TryMove(-1); // –ß‚é
-                    }
-                    break;
-            }
-
-            // ƒXƒe[ƒW‘I‘ğiSpaceƒL[A"Fire1"A‚Ü‚½‚ÍAƒ{ƒ^ƒ“j
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") ||
-                (pad != null && pad.buttonSouth.wasPressedThisFrame))
-            {
-                SceneChange();
-            }
+            HandleInput();
         }
         else
         {
             MoveToTarget();
+        }
+    }
+
+    void HandleInput()
+    {
+        Gamepad pad = Gamepad.current;
+        bool padLeft = false, padRight = false, padUp = false, padDown = false;
+
+#if ENABLE_INPUT_SYSTEM
+        if (pad != null)
+        {
+            Vector2 stick = pad.leftStick.ReadValue();
+            padLeft = stick.x < -0.5f || pad.dpad.left.wasPressedThisFrame;
+            padRight = stick.x > 0.5f || pad.dpad.right.wasPressedThisFrame;
+            padUp = stick.y > 0.5f || pad.dpad.up.wasPressedThisFrame;
+            padDown = stick.y < -0.5f || pad.dpad.down.wasPressedThisFrame;
+        }
+#endif
+
+        switch (currentNodeIndex)
+        {
+            case 0:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
+                break;
+            case 1:
+                if (Input.GetKeyDown(KeyCode.DownArrow) || padDown) TryMove(1);
+                else if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
+                break;
+            case 2:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
+                else if (Input.GetKeyDown(KeyCode.UpArrow) || padUp) TryMove(-1);
+                break;
+            case 3:
+                if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
+                break;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") ||
+            (pad != null && pad.buttonSouth.wasPressedThisFrame))
+        {
+            SceneChange();
         }
     }
 
@@ -117,20 +102,16 @@ public class playermove2 : MonoBehaviour
         switch (currentNodeIndex)
         {
             case 0:
-                Debug.Log("ƒXƒe[ƒW1");
                 fadeController.FadeOutAndLoadScene("stag");
                 break;
             case 1:
-                Debug.Log("ƒXƒe[ƒW2");
-                // fadeController.FadeOutAndLoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸2");
                 break;
             case 2:
-                Debug.Log("ƒXƒe[ƒW3");
-                // fadeController.FadeOutAndLoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸3");
                 break;
             case 3:
-                Debug.Log("ƒXƒe[ƒW4");
-                // fadeController.FadeOutAndLoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸4");
                 break;
         }
     }
@@ -157,6 +138,7 @@ public class playermove2 : MonoBehaviour
     void MoveToTarget()
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
         {
             transform.position = targetPosition;
