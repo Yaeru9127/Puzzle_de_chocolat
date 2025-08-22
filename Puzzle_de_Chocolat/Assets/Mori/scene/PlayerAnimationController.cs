@@ -11,7 +11,7 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (moveScript == null)
         {
-            Debug.LogError("playermove2スクリプトの参照がセットされていません");
+            //Debug.LogError("playermove2スクリプトの参照がセットされていません");
         }
     }
 
