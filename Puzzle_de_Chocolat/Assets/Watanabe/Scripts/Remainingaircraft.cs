@@ -6,69 +6,68 @@ public class Remainingaircraft : MonoBehaviour
 {
     public static Remainingaircraft remain { get; private set; }
 
-    // 残機
+    private GameClear clear;
+
+    // 残機（UI上に表示するアイコンなど）
     public List<GameObject> lifeSprites;
 
     // 数字スプライト（0～99）
     public Sprite[] numberSprites;
 
-    // 数字表示用（UI用Image）
+    // 数字表示用のImage（UI）
     public Image numberDisplay;
 
-    // GameOver を制御するクラスへの参照
-    private GameOverController gameOverController;
+    // GameOverを管理するスクリプトへの参照
+    public GameOverController gameOverController;
 
     // 現在の残機数
     public int currentLife;
 
+    // ゲームクリア済みかどうかを示すフラグ ← GameOver防止用
+    public bool isGameCleared = false;
+
     private void Awake()
     {
+        // シングルトン化（複数生成防止）
         if (remain == null) remain = this;
         else if (remain != null) Destroy(this.gameObject);
     }
 
     void Start()
     {
-        gameOverController = GameOverController.over;
+        clear = GameClear.clear;
+
+        // 残機数を初期化
         currentLife = lifeSprites.Count;
         UpdateLifeDisplay();
-        SetLifes();
-    }
-
-    public void SetLifes()
-    {
-        foreach (GameObject obj in lifeSprites)
-        {
-            if (obj != null)
-            {
-                obj.SetActive(true);
-            }
-        }
-
-        lifeSprites.Clear();
-
-        if (GameOverController.over != null && GameOverController.over.gameObject != null)
-        {
-            for (int i = 0; i < this.gameObject.transform.childCount; i++)
-            {
-                Transform child = this.gameObject.transform.GetChild(i);
-                lifeSprites.Add(child.gameObject);
-            }
-            currentLife = lifeSprites.Count;
-        }
     }
 
     public void ReduceLife()
     {
-        if (currentLife > 0)
+        // ゲームクリア済みなら無視
+        if (currentLife > 0 && !isGameCleared)
         {
             currentLife--;
+            clear.AddStep();
 
+            // 表示用スプライトを非表示に
             lifeSprites[currentLife].SetActive(false);
+
+            // 数字を更新
             UpdateLifeDisplay();
 
+            // --- GameOver前にゴール判定を追加 ---
             if (currentLife <= 0)
             {
+                // ゴールに到達していたら GameClear を優先
+                if (CanGoal.cg != null && CanGoal.cg.IsPlayerOnGoal())
+                {
+                    isGameCleared = true; // GameOverを止める
+                    Debug.Log("ゴールに到達していたので GameOver 回避");
+                    return;
+                }
+
+                // GameOver処理
                 if (gameOverController != null)
                 {
                     numberDisplay.gameObject.SetActive(false);
@@ -82,26 +81,25 @@ public class Remainingaircraft : MonoBehaviour
         }
     }
 
-    void UpdateLifeDisplay()
-    {
-        int tens = currentLife / 10;
-        int ones = currentLife % 10;
 
-        if (currentLife < 10)
+    // 数字表示を更新（スプライト切替）
+    public void UpdateLifeDisplay()
+    {
+        if (currentLife >= 0 && currentLife < numberSprites.Length)
         {
             numberDisplay.sprite = numberSprites[currentLife];
+            numberDisplay.gameObject.SetActive(true);
         }
-        else
-        {
-            numberDisplay.sprite = numberSprites[currentLife];
-        }
-
-        numberDisplay.gameObject.SetActive(true);
     }
 
-    private void OnDestroy()
+    // 外部から数値スプライトを取得する関数
+    public Sprite GetNumberSprite(int value)
     {
-        //シーンを跨ぐときにメモリから消す
-        if (remain == this) remain = null;
+        if (numberSprites != null && value >= 0 && value < numberSprites.Length)
+        {
+            return numberSprites[value];
+        }
+        return null;
     }
+
 }

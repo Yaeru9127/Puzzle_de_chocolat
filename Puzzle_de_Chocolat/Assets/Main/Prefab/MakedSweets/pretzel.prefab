@@ -150,4 +150,4 @@ MonoBehaviour:
   material: 4
   pair: {fileID: 0}
   canMove: 1
-  canEat: 0
+  canEat: 1

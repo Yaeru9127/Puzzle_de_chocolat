@@ -4,7 +4,21 @@ public class StageManager : MonoBehaviour
 {
     public static StageManager stage { get; private set; }
 
+    private CursorController cc;
+
+    public enum Phase
+    {
+        Title,
+        Game,
+        Result
+    }
+    public Phase phase;
+
     public int stagenum;    //ステージナンバー
+
+    // ステージごとのゲージ最大値設定
+    // stage0の時最初0
+    public int[] stageGaugeMaxValues = { 6, 8, 10 }; // 例：ステージ事で変えれるように
 
     private void Awake()
     {
@@ -16,6 +30,8 @@ public class StageManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        cc = CursorController.cc;
+        phase = Phase.Title;
         DontDestroyOnLoad(this.gameObject);
     }
 

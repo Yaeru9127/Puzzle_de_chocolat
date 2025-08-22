@@ -104,7 +104,7 @@ MonoBehaviour:
   material: 4
   pair: {fileID: 0}
   canMove: 1
-  canEat: 0
+  canEat: 1
 --- !u!61 &7436547526585239384
 BoxCollider2D:
   m_ObjectHideFlags: 0

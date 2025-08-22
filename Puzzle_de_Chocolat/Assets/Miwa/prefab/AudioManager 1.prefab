@@ -256,9 +256,12 @@ MonoBehaviour:
   - sceneName: Menu
     bgmIndex: 2
     loopBGM: 1
-  seAudioSource: {fileID: 3524893141162368463}
+  seAudioSource: {fileID: 2944984199404558028}
   seClips:
   - {fileID: 8300000, guid: 10b30a5bd5e96a7459e0949bb51392d4, type: 3}
   - {fileID: 8300000, guid: bf64211fe89c2af4880d56f4a7c557dc, type: 3}
   - {fileID: 8300000, guid: 0786a9206fb1121488900aead30c035c, type: 3}
   - {fileID: 8300000, guid: eefef15510c87a74bb6114ee84f9c760, type: 3}
+  - {fileID: 8300000, guid: fea387c59e4826a45b301b665e05515c, type: 3}
+  - {fileID: 8300000, guid: 4693db5e528751247b457f4bb07f18e2, type: 3}
+  - {fileID: 8300000, guid: 63e42be739274614e879b4db2f81294f, type: 3}

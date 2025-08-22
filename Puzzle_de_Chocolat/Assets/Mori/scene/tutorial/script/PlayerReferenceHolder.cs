@@ -6,12 +6,12 @@ public class PlayerReferenceHolder : MonoBehaviour
 
     private void OnEnable()
     {
-        TestPlayer.OnPlayerSpawned += OnPlayerSpawned;
+        //TestPlayer.OnPlayerSpawned += OnPlayerSpawned;
     }
 
     private void OnDisable()
     {
-        TestPlayer.OnPlayerSpawned -= OnPlayerSpawned;
+        //TestPlayer.OnPlayerSpawned -= OnPlayerSpawned;
     }
 
     private void OnPlayerSpawned(GameObject player)
