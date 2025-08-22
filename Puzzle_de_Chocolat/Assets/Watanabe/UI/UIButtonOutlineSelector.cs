@@ -13,7 +13,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         // 子オブジェクトからButtonコンポーネントを全て取得
         buttons.AddRange(GetComponentsInChildren<Button>());
 
-        // ボタンが1つ以上あれば、最初のボタンを選択状態にしてアウトラインを有効にする
+       
         if (buttons.Count > 0)
         {
             EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
@@ -35,10 +35,10 @@ public class UIButtonOutlineSelector : MonoBehaviour
     // オプションメニューのボタンを追加登録する関数
     public void AddOptionButtons(GameObject optionMenuRoot)
     {
-        Button[] optionButtons = optionMenuRoot.GetComponentsInChildren<Button>(true); // 非アクティブでも取得
+        Button[] optionButtons = optionMenuRoot.GetComponentsInChildren<Button>(true); 
         foreach (var btn in optionButtons)
         {
-            if (!buttons.Contains(btn)) // 重複登録を防ぐ
+            if (!buttons.Contains(btn)) 
             {
                 buttons.Add(btn);
             }

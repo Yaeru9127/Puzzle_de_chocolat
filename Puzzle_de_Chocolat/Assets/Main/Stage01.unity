@@ -1533,6 +1533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 844036413}
+  - component: {fileID: 844036414}
   m_Layer: 5
   m_Name: PauseEmpty
   m_TagString: Untagged
@@ -1564,6 +1565,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &844036414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844036412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8820d8dd4426804cb2e2f67fe953cda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &857717206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2399,6 +2412,7 @@ GameObject:
   - component: {fileID: 1045788067}
   - component: {fileID: 1045788066}
   - component: {fileID: 1045788065}
+  - component: {fileID: 1045788068}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2498,6 +2512,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1045788068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045788063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8820d8dd4426804cb2e2f67fe953cda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1048206898
 GameObject:
   m_ObjectHideFlags: 0
@@ -2552,6 +2578,7 @@ MonoBehaviour:
   increaseDuration: 0.5
   defaultIncreaseAmount: 1
   maxValue: 2
+  currentValue: 0
   gaugeIncreased: 0
 --- !u!114 &1048206901
 MonoBehaviour:
@@ -2636,10 +2663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clearImage: {fileID: 1506960517}
-  star3: {fileID: 7594756466529926655, guid: d998e1170e507844097bec736e96ca0c, type: 3}
-  star2: {fileID: 6988131999265186270, guid: 4735b59b3a282e842902b6c8c5babb28, type: 3}
-  star1: {fileID: -2879146970348422962, guid: 7d6af4644afe81845a76e44c4b486674, type: 3}
-  star0: {fileID: 8407522820319608103, guid: 146c472fbb8158146a5ff59230f4d405, type: 3}
+  noRetryFastClearSprite: {fileID: 0}
+  retryOrNoRetryClearSprite: {fileID: 0}
+  retryClearSprite: {fileID: 0}
   minStepsToClear: 4
   marginSteps: 6
   stepsTaken: 0
@@ -3374,7 +3400,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stage: {fileID: 0}
-  clear: {fileID: 0}
   effects: []
   mixtures:
   - makedSweets: {fileID: 6587333138416083492, guid: e5709828ead7d4b4aad6950f6f1dbdd7, type: 3}
