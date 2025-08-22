@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class playermove2 : MonoBehaviour
 {
-    private FadeController fadeController;
-
     public Transform[] nodes;
     private Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
 
@@ -34,8 +32,7 @@ public class playermove2 : MonoBehaviour
 
     void Start()
     {
-        fadeController = Object.FindFirstObjectByType<FadeController>();
-
+        // ノード接続設定
         nodeConnections[0] = new List<int> { 1 };
         nodeConnections[1] = new List<int> { 0, 2 };
         nodeConnections[2] = new List<int> { 1, 3 };
@@ -72,6 +69,7 @@ public class playermove2 : MonoBehaviour
         }
 #endif
 
+        // ノード移動方向
         switch (currentNodeIndex)
         {
             case 0:
@@ -90,6 +88,7 @@ public class playermove2 : MonoBehaviour
                 break;
         }
 
+        // 決定ボタンでステージを選択
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") ||
             (pad != null && pad.buttonSouth.wasPressedThisFrame))
         {
@@ -102,15 +101,22 @@ public class playermove2 : MonoBehaviour
         switch (currentNodeIndex)
         {
             case 0:
-                fadeController.FadeOutAndLoadScene("stag");
+                StageManager.stage.SetStageNum(0);
+                SceneManager.LoadScene("stag"); 
                 break;
             case 1:
+                StageManager.stage.SetStageNum(1);
+                //SceneManager.LoadScene("");
                 Debug.Log("ステージ2");
                 break;
             case 2:
+                StageManager.stage.SetStageNum(2);
+                //SceneManager.LoadScene("");
                 Debug.Log("ステージ3");
                 break;
             case 3:
+                StageManager.stage.SetStageNum(3);
+                //SceneManager.LoadScene("");
                 Debug.Log("ステージ4");
                 break;
         }
@@ -126,6 +132,7 @@ public class playermove2 : MonoBehaviour
             {
                 targetNodeIndex = connectedNode;
 
+                // オフセットを調整してノード位置に移動
                 Vector3 basePos = nodes[targetNodeIndex].position;
                 targetPosition = new Vector3(basePos.x - 0.03f, basePos.y + 0.91f, -1f);
 

@@ -839,7 +839,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.52, y: -2.2040002, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.292425, y: 0.292425, z: 0.292425}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1156300705}
@@ -2518,7 +2518,9 @@ MonoBehaviour:
   lifeSprites: []
   numberSprites: []
   numberDisplay: {fileID: 0}
+  gameOverController: {fileID: 0}
   currentLife: 0
+  isGameCleared: 0
 --- !u!114 &1150791157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2531,9 +2533,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce6decb730d1d344b184b795b87474d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gaugeSlider: {fileID: 0}
+  gaugeFillImage: {fileID: 0}
+  gaugeNumberDisplay: {fileID: 0}
+  gameOverController: {fileID: 0}
+  remainingAircraft: {fileID: 0}
   increaseDuration: 0.5
   defaultIncreaseAmount: 1
+  maxValue: 0
+  currentValue: 0
+  gaugeIncreased: 0
 --- !u!1 &1156300703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2856,6 +2864,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda20f790867a834ab21e258c376f91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stage: {fileID: 0}
+  clear: {fileID: 0}
+  effects: []
   mixtures:
   - makedSweets: {fileID: 2938832293539609745, guid: 29f5f3b159c4a6247bd5d5a1c6ad3d89, type: 3}
     makedName: pretzel
@@ -2869,6 +2880,9 @@ MonoBehaviour:
     makedName: macaroon
   - makedSweets: {fileID: 5439221851590594595, guid: b10fe1fb2b1b8c24885352187f254832, type: 3}
     makedName: "canul\xE9"
+  ZairyouEffect: {fileID: 0}
+  EatEffect: {fileID: 0}
+  gaugeCC: {fileID: 0}
 --- !u!4 &1319832603
 Transform:
   m_ObjectHideFlags: 0
@@ -4048,8 +4062,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3d5e5698c55c4545be21acdacf01fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerscript: {fileID: 6714176638618182254}
+  playerscript: {fileID: 0}
   goal: {fileID: 0}
+  searched: []
 --- !u!1 &1860192778
 GameObject:
   m_ObjectHideFlags: 0
@@ -4486,17 +4501,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
---- !u!114 &6714176638618182254 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7943594801781301970, guid: 03d0e401720093a40923e3d3562309e4, type: 3}
-  m_PrefabInstance: {fileID: 6714176638618182253}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7c92f684a89f5c4db3940facb56efc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
