@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Main/TitleScene.unity
     guid: 4490bbd8a8927ee488c9eaff4736146d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Main/OpshonScene.unity
     guid: 586ea4140eac04a4ab761bffb055985f
   - enabled: 0
@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Main/RetryScene.unity
     guid: 80add36e203c5c343a055b72f6c90856
+  - enabled: 1
+    path: Assets/Watanabe/OpshonScene.unity
+    guid: b5e43a7b798cd0147ad6df16cb7bbe65
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7dfe699c6f5096449a10e40cf4230a00, type: 3}
   m_UseUCBPForAssetBundles: 0
