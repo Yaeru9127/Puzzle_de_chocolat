@@ -21,13 +21,20 @@ public class GameClear : MonoBehaviour
     public int marginSteps;                         //
     public int stepsTaken = 0;                          // 現在のステップ数
 
-    public bool wasEat;
-    public bool wasMaked;
-
     [Header("ゲージ評価設定")]
     [Tooltip("noRetryFastClear を許容するゲージ増加回数（例: 3）")]
     public int allowedGaugeCount = 3;
 
+    //public bool wasEat;
+    public int wasEat =0;
+    public bool wasMaked = false;
+
+
+    //お菓子が作られた記録するを追加
+    public bool hasPannacotta = false;
+    public bool hasThiramisu = false;
+
+    public int star = 3;
     private void Awake()
     {
         if (clear == null) clear = this;
@@ -37,9 +44,26 @@ public class GameClear : MonoBehaviour
     private void Start()
     {
         cc = CursorController.cc;
-        wasEat = false;
+        //v wasEat = false;
         wasMaked = false;
+        //増やしました
+        hasPannacotta = false;
+        hasThiramisu = false;
     }
+    //お菓子が作られたときに呼び出すwを追加
+    public void MadeSweets(string sweetsName)
+    {
+       if(sweetsName =="pannacotta")
+        {
+            hasPannacotta = true;
+        }
+       else if(sweetsName =="thiramisu")
+        {
+            hasThiramisu = true;
+        }
+            
+    }
+    
 
     // ステップ数を加算する
     public void AddStep()
@@ -60,18 +84,53 @@ public class GameClear : MonoBehaviour
             Remainingaircraft.remain.isGameCleared = true;
         }
 
-        int star = 3;
-        if (wasEat)
+        ////ここから
+        //int star = 3;
+        //if (wasEat >= 1)
+        //{
+        //    star--;
+        //    //Debug.Log("eat");
+        //}
+        //if (stepsTaken > 4)
+        //{
+        //    star--;
+        //    //Debug.Log("step is over 4");
+        //}
+        //if (stepsTaken > 6)
+        //{
+        //    star--;
+        //    //Debug.Log("step is over 6");
+        //}
+        //switch (star)
+        //{
+        //    case 0:
+        //        clearImage.sprite = star0;
+        //        break;
+        //    case 1:
+        //        clearImage.sprite = star1;
+        //        break;
+        //    case 2:
+        //        clearImage.sprite = star2;
+        //        break;
+        //    case 3:
+        //        clearImage.sprite = star3;
+        //        break;
+        //    default:
+        //        clearImage.sprite = null;
+        //        break;
+        //}
+
+        if (!hasPannacotta)
         {
             star--;
             //Debug.Log("eat");
         }
-        if (stepsTaken > 4)
+        if (!hasThiramisu)
         {
             star--;
             //Debug.Log("step is over 4");
         }
-        if (stepsTaken > 6)
+        if (wasEat >= 3)
         {
             star--;
             //Debug.Log("step is over 6");
@@ -94,51 +153,6 @@ public class GameClear : MonoBehaviour
                 clearImage.sprite = null;
                 break;
         }
-
-        ////手数 <= 4    => 4手以内
-        //if (stepsTaken <= 4)
-        //{
-        //    if (wasEat) clearImage.sprite = star2;      //4手以内で食べたら
-        //    else clearImage.sprite = star3;             //4手以内で食べてないなら
-        //}
-        ////6 <= 手数 >= 5
-        //else if (stepsTaken >= 5 && stepsTaken <= 6)
-        //{
-        //    if (wasEat) clearImage.sprite = star1;      //5,6手で食べたら
-        //    else clearImage.sprite = star2;             //5,6手で食べてないなら
-        //}
-        //else
-        //{
-        //    clearImage.sprite = star1;
-        //}
-
-        //if (stepsTaken <= minStepsToClear && !wasEat)
-        //{
-        //    clearImage.sprite = noRetryFastClearSprite;
-        //}
-        //else if (stepsTaken <= minStepsToClear + marginSteps)
-        //{
-        //    clearImage.sprite = retryOrNoRetryClearSprite;
-        //}
-        //else if (stepsTaken >= minStepsToClear + marginSteps && wasEat)
-        //{
-        //    clearImage.sprite = retryClearSprite;
-        //}
-        ///// 許容回数以内なら最短評価を許可
-        //bool allowFastClear = GaugeController.gaugeIncreaseCount <= allowedGaugeCount;
-
-        //if (stepsTaken <= minStepsToClear && allowFastClear)
-        //{
-        //    clearImage.sprite = noRetryFastClearSprite;
-        //}
-        //else if (stepsTaken <= minStepsToClear + marginSteps)
-        //{
-        //    clearImage.sprite = retryOrNoRetryClearSprite;
-        //}
-        //else
-        //{
-        //    clearImage.sprite = retryClearSprite;
-        //}
     }
 
     // リザルトシーンに移動
