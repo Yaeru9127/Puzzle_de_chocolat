@@ -16,6 +16,10 @@ public class StageManager : MonoBehaviour
 
     public int stagenum;    //ステージナンバー
 
+    // ステージごとのゲージ最大値設定
+    // stage0の時最初0
+    public int[] stageGaugeMaxValues = { 6, 8, 10 }; // 例：ステージ事で変えれるように
+
     private void Awake()
     {
         //初期化
