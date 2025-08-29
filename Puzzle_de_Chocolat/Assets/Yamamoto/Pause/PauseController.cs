@@ -8,7 +8,7 @@ public class PauseController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
-    private CursorController cc;
+    //private CursorController cc;
     private ReloadCountManager rm;
 
     [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
@@ -27,7 +27,7 @@ public class PauseController : MonoBehaviour
     void Start()
     {
         //初期化
-        cc = CursorController.cc;
+        //cc = CursorController.cc;
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
         rm = ReloadCountManager.Instance;
@@ -75,7 +75,7 @@ public class PauseController : MonoBehaviour
         pauseobj.SetActive(true);
 
         //カーソルの表示、操作のオンオフ
-        cc.ChangeCursorEnable(true);
+        //cc.ChangeCursorEnable(true);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public class PauseController : MonoBehaviour
     public void ReturnGame()
     {
         //カーソルを非表示
-        cc.ChangeCursorEnable(false);
+        //cc.ChangeCursorEnable(false);
         
         //ポーズパネルを非表示にする
         pauseobj.SetActive(false);
