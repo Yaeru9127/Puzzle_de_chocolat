@@ -17,18 +17,17 @@ public class UIButtonOutlineSelector : MonoBehaviour
     [SerializeField]
     private List<SliderLabelPair> sliderLabelPairs = new List<SliderLabelPair>();
 
+    [SerializeField]
+    private GameObject firstSelectObject; // 最初に選択させたいオブジェクト（インスペクタで指定）
+
     void Start()
     {
-        // 子オブジェクトにある全てのButtonを登録
         buttons.AddRange(GetComponentsInChildren<Button>());
-
-        // 最初の選択を設定
         SelectFirst();
     }
 
     void OnEnable()
     {
-        // シーン切替や再表示時にも必ず最初を選択する
         SelectFirst();
     }
 
@@ -36,33 +35,40 @@ public class UIButtonOutlineSelector : MonoBehaviour
     {
         var selectedObj = EventSystem.current.currentSelectedGameObject;
 
-        // ① ボタンの選択判定
+        // ① ボタン
         foreach (var btn in buttons)
         {
             bool isSelected = (btn.gameObject == selectedObj);
             SetOutline(btn, isSelected);
         }
 
-        // ② スライダーの選択判定
+        // ② スライダー
         foreach (var pair in sliderLabelPairs)
         {
             bool isSelected = (pair.slider != null && pair.slider.gameObject == selectedObj);
             if (pair.label != null)
             {
-                // ラベル自体は選択されないけど、見た目で枠を出す
                 SetOutline(pair.label, isSelected);
             }
         }
     }
 
-    // 最初のボタンを選択状態にする
     private void SelectFirst()
     {
-        if (buttons.Count > 0 && EventSystem.current != null)
+        if (EventSystem.current == null) return;
+
+        GameObject target = firstSelectObject;
+
+        // firstSelectObject が指定されていない場合はボタン[0]を使う
+        if (target == null && buttons.Count > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null); // いったんリセット
-            EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
-            SetOutline(buttons[0], true);
+            target = buttons[0].gameObject;
+        }
+
+        if (target != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(target);
         }
     }
 
