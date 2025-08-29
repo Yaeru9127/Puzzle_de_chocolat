@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttanClickSoundName: ENTER
-  targetSceneName: TitleScene
+  targetSceneName: TitleScene1
 --- !u!4 &579167307
 Transform:
   m_ObjectHideFlags: 0

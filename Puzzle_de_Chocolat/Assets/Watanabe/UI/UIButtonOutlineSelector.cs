@@ -22,6 +22,13 @@ public class UIButtonOutlineSelector : MonoBehaviour
         // 子オブジェクトにある全てのButtonを登録
         buttons.AddRange(GetComponentsInChildren<Button>());
 
+        // 各ボタンのナビゲーションを設定（デフォルトの設定を有効にする）
+        foreach (var btn in buttons)
+        {
+            Button btnComponent = btn.GetComponent<Button>();
+            btnComponent.navigation = Navigation.defaultNavigation;  // デフォルトのナビゲーション設定
+        }
+
         // 最初の選択を設定
         SelectFirst();
     }
