@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.Windows;
+using System;
 
 public class CursorController : MonoBehaviour
 {
@@ -291,5 +292,10 @@ public class CursorController : MonoBehaviour
         {
             GamePadClick(hitUI, input.x, isClickHoled);
         }
+    }
+
+    public static implicit operator CursorController(CursorController1 v)
+    {
+        throw new NotImplementedException();
     }
 }

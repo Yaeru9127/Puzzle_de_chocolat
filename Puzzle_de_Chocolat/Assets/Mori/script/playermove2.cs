@@ -102,7 +102,7 @@ public class playermove2 : MonoBehaviour
         {
             case 0:
                 StageManager.stage.SetStageNum(0);
-                SceneManager.LoadScene("stag"); 
+                SceneManager.LoadScene("tutoriaru1"); 
                 break;
             case 1:
                 StageManager.stage.SetStageNum(1);

@@ -3,7 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-public class TestPlayer : MonoBehaviour
+public class moveplayer : MonoBehaviour
 {
     /// <summary>
     /// Other Scripts
@@ -60,7 +60,7 @@ public class TestPlayer : MonoBehaviour
         nowmass = tm.GetNowMass(this.gameObject);
         //manager.PlayerOn();
         //manager.GamePadOff();
-        cc.ChangeCursorEnable(false);
+        //cc.ChangeCursorEnable(false);
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
@@ -492,7 +492,7 @@ public class TestPlayer : MonoBehaviour
 
             /*残り工程数をひとつ減らす*/
             //Debug.Log("decrease remaining num");
-            //remain.ReduceLife();
+            remain.ReduceLife();
         }
 
         //お菓子の位置を更新
@@ -515,7 +515,7 @@ public class TestPlayer : MonoBehaviour
 
         //クリアチェック
         //現在の残り工程数が0 && 現在のマスがゴールでないなら
-        /*if (remain.currentLife == 0 && nowmass != cg.goal)
+        if (remain.currentLife == 0 && nowmass != cg.goal)
         {
             //ゴール判定リストの初期化
             cg.searched.Clear();
@@ -527,10 +527,10 @@ public class TestPlayer : MonoBehaviour
             //    goc.ShowGameOver();
             //    stage.phase = StageManager.Phase.Result;
             //}
-        }*/
+        }
 
         //ゴールマスについたら
-        /*if (nowmass == cg.goal)
+        if (nowmass == cg.goal)
         {
             //Debug.Log("reach goal");
             //manager.PlayerOff();
@@ -538,7 +538,7 @@ public class TestPlayer : MonoBehaviour
             clear.ShowClearResult(rcm.ReloadCount);
 
             return;
-        }*/
+        }
 
         //アニメーション設定
         animator.speed = 0f;
