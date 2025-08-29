@@ -1,140 +1,137 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameClear : MonoBehaviour
 {
-    public static GameClear clear { get; private set; }
+    [Serializable]
+    public class StageCondition
+    {
+        public List<int> stepPenalties;
+        public List<string> requiredSweets;
+        public int maxEat = 2;
+    }
 
+    public static GameClear clear { get; private set; }
     private CursorController cc;
 
     [Header("UI")]
     public Image clearImage;
+    public Sprite star3;
+    public Sprite star2;
+    public Sprite star1;
+    public Sprite star0;
 
-    public Sprite star3;            //星3   Sprite
-    public Sprite star2;            //星2   Sprite
-    public Sprite star1;            //星1   Sprite
-    public Sprite star0;            //星0   Sprite
-
-    [Header("クリア評価設定")]
-    public int minStepsToClear;                    // 最短ステップ数
-    public int marginSteps;                         //
-    public int stepsTaken = 0;                          // 現在のステップ数
-
-    [Header("ゲージ評価設定")]
-    [Tooltip("noRetryFastClear を許容するゲージ増加回数（例: 3）")]
-    public int allowedGaugeCount = 3;
-
-    //public bool wasEat;
-    public int wasEat =0;
+    [Header("ゲーム評価データ")]
+    [Tooltip("現在のステージ番号。")]
+    public int currentStage = 1;
+    public int stepsTaken = 0;
+    public int wasEat = 0;
     public bool wasMaked = false;
 
+    public List<StageCondition> stageConditions; 
 
-    //お菓子が作られた記録するを追加
-    public bool hasPannacotta = false;
-    public bool hasThiramisu = false;
+    [HideInInspector]
+    public List<string> madeSweets;
 
-    public int star = 3;
     private void Awake()
     {
-        if (clear == null) clear = this;
-        else if (clear != null) Destroy(this.gameObject);
+        if (clear == null) 
+        {
+            clear = this; 
+        }
+        else if (clear != this)
+        {
+            Destroy(this.gameObject); 
+        }
+
     }
 
     private void Start()
     {
+        // 他のスクリプトへの参照を取得
         cc = CursorController.cc;
-        //v wasEat = false;
+        // リストを初期化
+        madeSweets = new List<string>();
+        stepsTaken = 0;
+        wasEat = 0;
         wasMaked = false;
-        //増やしました
-        hasPannacotta = false;
-        hasThiramisu = false;
     }
-    //お菓子が作られたときに呼び出すwを追加
+
+    /// <summary>
+    /// お菓子が作られたときに呼び出すメソッド
+    /// </summary>
     public void MadeSweets(string sweetsName)
     {
-       if(sweetsName =="pannacotta")
+        if (!madeSweets.Contains(sweetsName))
         {
-            hasPannacotta = true;
+            madeSweets.Add(sweetsName);
         }
-       else if(sweetsName =="thiramisu")
-        {
-            hasThiramisu = true;
-        }
-            
     }
-    
 
-    // ステップ数を加算する
+    /// <summary>
+    /// ステップ数を加算する
+    /// </summary>
     public void AddStep()
     {
         stepsTaken++;
     }
 
-    // クリア演出を実行
-    public void ShowClearResult(int retry)
+    /// <summary>
+    /// クリア演出を実行し、星の数を計算する
+    /// </summary>
+    public void  ShowClearResult(int retry)
     {
         clearImage.gameObject.SetActive(true);
-        AudioManager.Instance.PlaySE("Game clear");
+        // AudioManager.Instance.PlaySE("Game clear");
         cc.ChangeCursorEnable(true);
 
-        // ゲームクリア済みフラグを立てる → GameOverを防ぐ
+        // RemainingaircraftスクリプトのisGameClearedフラグを立てる
         if (Remainingaircraft.remain != null)
         {
             Remainingaircraft.remain.isGameCleared = true;
         }
 
-        ////ここから
-        //int star = 3;
-        //if (wasEat >= 1)
-        //{
-        //    star--;
-        //    //Debug.Log("eat");
-        //}
-        //if (stepsTaken > 4)
-        //{
-        //    star--;
-        //    //Debug.Log("step is over 4");
-        //}
-        //if (stepsTaken > 6)
-        //{
-        //    star--;
-        //    //Debug.Log("step is over 6");
-        //}
-        //switch (star)
-        //{
-        //    case 0:
-        //        clearImage.sprite = star0;
-        //        break;
-        //    case 1:
-        //        clearImage.sprite = star1;
-        //        break;
-        //    case 2:
-        //        clearImage.sprite = star2;
-        //        break;
-        //    case 3:
-        //        clearImage.sprite = star3;
-        //        break;
-        //    default:
-        //        clearImage.sprite = null;
-        //        break;
-        //}
+        int star = 3;
+        int stageIndex = currentStage - 1;
 
-        if (!hasPannacotta)
+        if (stageIndex >= 0 && stageIndex < stageConditions.Count)
         {
-            star--;
-            //Debug.Log("eat");
+            StageCondition currentCondition = stageConditions[stageIndex];
+
+            // 必須のお菓子の減点
+            foreach (string requiredSweet in currentCondition.requiredSweets)
+            {
+                if (!madeSweets.Contains(requiredSweet))
+                {
+                    star--;
+                }
+            }
+
+            // wasEatの減点
+            if (wasEat > currentCondition.maxEat)
+            {
+                star--;
+            }
+
+            // ステップ数の減点
+            foreach (int penaltyStep in currentCondition.stepPenalties)
+            {
+                if (stepsTaken > penaltyStep)
+                {
+                    star--;
+                }
+            }
         }
-        if (!hasThiramisu)
+
+        // 星の数が0未満にならないように調整
+        if (star < 0)
         {
-            star--;
-            //Debug.Log("step is over 4");
+            star = 0;
         }
-        if (wasEat >= 3)
-        {
-            star--;
-            //Debug.Log("step is over 6");
-        }
+
         switch (star)
         {
             case 0:
@@ -155,7 +152,9 @@ public class GameClear : MonoBehaviour
         }
     }
 
-    // リザルトシーンに移動
+    /// <summary>
+    /// リザルトシーンに移動
+    /// </summary>
     public void LoadResultScene()
     {
         SceneManager.LoadScene("RetryScene");

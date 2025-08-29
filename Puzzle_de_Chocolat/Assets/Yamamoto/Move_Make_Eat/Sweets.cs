@@ -202,6 +202,7 @@ public class Sweets : MonoBehaviour
             //食べたフラグを更新
             //sm.clear.wasEat = true;
             sm.clear.wasEat++;
+            Debug.Log("食べた回数: " + sm.clear.wasEat);
         }
         else Debug.Log("this sweets is can not eat");
     }
