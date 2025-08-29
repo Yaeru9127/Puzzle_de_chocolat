@@ -1180,6 +1180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderLabelPairs: []
+  firstSelectObject: {fileID: 0}
 --- !u!1 &1911833363
 GameObject:
   m_ObjectHideFlags: 0

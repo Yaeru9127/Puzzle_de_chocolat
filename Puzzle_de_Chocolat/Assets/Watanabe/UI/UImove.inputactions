@@ -1,0 +1,45 @@
+{
+    "name": "UImove",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "423e7eb2-0fb6-47cd-b5a6-51f23cef1669",
+            "actions": [
+                {
+                    "name": "UImove",
+                    "type": "Value",
+                    "id": "62c0333d-3100-42ce-9b5d-1f77989c1846",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "7cb534e9-cb65-45d0-8985-84755746659a",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UImove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db00d5c1-b21a-4c10-be96-7f7e842e0ce5",
+                    "path": "<Keyboard>/arrowKeys",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UImove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

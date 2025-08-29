@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class UIButtonOutlineSelector : MonoBehaviour
 {
@@ -10,15 +11,17 @@ public class UIButtonOutlineSelector : MonoBehaviour
     [System.Serializable]
     public class SliderLabelPair
     {
-        public Slider slider;   // BGM / SE のスライダー
-        public Text label;      // スライダーの横にあるラベルText
+        public Slider slider;
+        public Text label;
     }
 
     [SerializeField]
     private List<SliderLabelPair> sliderLabelPairs = new List<SliderLabelPair>();
 
     [SerializeField]
-    private GameObject firstSelectObject; // 最初に選択させたいオブジェクト（インスペクタで指定）
+    private GameObject firstSelectObject;
+
+    private GameObject lastSelected; // ← 追加
 
     void Start()
     {
@@ -33,7 +36,23 @@ public class UIButtonOutlineSelector : MonoBehaviour
 
     void Update()
     {
+        //bool deviceCheck = Gamepad.all.Count > 0;
+        //if (deviceCheck) return;
+
+        if (EventSystem.current == null) return;
+
         var selectedObj = EventSystem.current.currentSelectedGameObject;
+
+        // 選択が外れてしまった時 → 最後の選択に戻す
+        if (selectedObj == null && lastSelected != null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+            selectedObj = lastSelected;
+        }
+        else
+        {
+            lastSelected = selectedObj;
+        }
 
         // ① ボタン
         foreach (var btn in buttons)
@@ -56,19 +75,16 @@ public class UIButtonOutlineSelector : MonoBehaviour
     private void SelectFirst()
     {
         if (EventSystem.current == null) return;
-
         GameObject target = firstSelectObject;
-
-        // firstSelectObject が指定されていない場合はボタン[0]を使う
         if (target == null && buttons.Count > 0)
         {
             target = buttons[0].gameObject;
         }
-
         if (target != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(target);
+            lastSelected = target;
         }
     }
 
