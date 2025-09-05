@@ -29,15 +29,31 @@ public class UIButtonOutlineSelector : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
+    private StageManager sm;
 
 
     void Start()
     {
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        sm = StageManager.stage;
 
         buttons.AddRange(GetComponentsInChildren<Button>());
         SelectFirst();
+
+        if (sm.phase != StageManager.Phase.Game)
+        {
+            if (Gamepad.all.Count > 0)
+            {
+                manager.GamePadOn();
+                manager.MouseOff();
+            }
+            else
+            {
+                manager.MouseOn();
+                manager.GamePadOff();
+            }
+        }
     }
 
     void OnEnable()

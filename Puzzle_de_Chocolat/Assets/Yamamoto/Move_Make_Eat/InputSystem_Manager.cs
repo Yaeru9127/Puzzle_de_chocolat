@@ -20,16 +20,6 @@ public class InputSystem_Manager : MonoBehaviour
         //‰Šú‰»
         DontDestroyOnLoad(this.gameObject);
         GetActions();
-        if (Gamepad.all.Count > 0)
-        {
-            GamePadOn();
-            MouseOff();
-        }
-        else
-        {
-            MouseOn();
-            GamePadOff();
-        }
     }
 
     /// <summary>
