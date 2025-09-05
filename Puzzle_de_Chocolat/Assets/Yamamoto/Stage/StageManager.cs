@@ -30,11 +30,7 @@ public class StageManager : MonoBehaviour
     {
         phase = Phase.Title;
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    public void SetStageNum(int i)
-    {
-        stagenum = i;
+        Cursor.visible = false;
     }
 
     private void OnDestroy()
@@ -46,6 +42,11 @@ public class StageManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //非常時にカーソルの表示 or 非表示させる
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            if (Cursor.visible) Cursor.visible = false;
+            else if (!Cursor.visible) Cursor.visible = true;
+        }
     }
 }

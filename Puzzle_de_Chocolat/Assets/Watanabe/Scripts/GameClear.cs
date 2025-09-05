@@ -15,7 +15,6 @@ public class GameClear : MonoBehaviour
     }
 
     public static GameClear clear { get; private set; }
-    private CursorController cc;
 
     [Header("UI")]
     public Image clearImage;
@@ -51,13 +50,12 @@ public class GameClear : MonoBehaviour
 
     private void Start()
     {
-        // 他のスクリプトへの参照を取得
-        cc = CursorController.cc;
         // リストを初期化
         madeSweets = new List<string>();
         stepsTaken = 0;
         wasEat = 0;
         wasMaked = false;
+        currentStage = StageManager.stage.stagenum;
     }
 
     /// <summary>
@@ -86,7 +84,6 @@ public class GameClear : MonoBehaviour
     {
         clearImage.gameObject.SetActive(true);
         // AudioManager.Instance.PlaySE("Game clear");
-        cc.ChangeCursorEnable(true);
 
         // RemainingaircraftスクリプトのisGameClearedフラグを立てる
         if (Remainingaircraft.remain != null)
@@ -127,10 +124,7 @@ public class GameClear : MonoBehaviour
         }
 
         // 星の数が0未満にならないように調整
-        if (star < 0)
-        {
-            star = 0;
-        }
+        if (star < 0) star = 0;
 
         switch (star)
         {

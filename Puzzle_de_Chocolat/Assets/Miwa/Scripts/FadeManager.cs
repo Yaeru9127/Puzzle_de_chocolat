@@ -16,7 +16,6 @@ public class FadeManager : MonoBehaviour
     private InputSystem_Actions action;
     private InputSystem_Manager manager;
     private StageManager stage;
-    private CursorController cc;
 
     private void Awake()
     {
@@ -38,8 +37,6 @@ public class FadeManager : MonoBehaviour
 
         //action = manager.GetActions();
         stage = StageManager.stage;
-        cc = CursorController.cc;
-
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()

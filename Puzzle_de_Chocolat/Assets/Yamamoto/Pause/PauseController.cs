@@ -8,13 +8,11 @@ public class PauseController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
-    private CursorController cc;
-    private ReloadCountManager rm;
 
-    [SerializeField] private GameObject pauseobj;   //ポーズパネルオブジェクト
+    [SerializeField] private GameObject pauseParent;   //ポーズパネルオブジェクト
 
     //操作説明オブジェクト
-    [SerializeField] private GameObject Mouse;
+    [SerializeField] private GameObject Keyboard;
     [SerializeField] private GameObject GamePad;
 
     private void Awake()
@@ -27,14 +25,12 @@ public class PauseController : MonoBehaviour
     void Start()
     {
         //初期化
-        cc = CursorController.cc;
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
-        rm = ReloadCountManager.Instance;
         SetOperationObject();
 
         //もし表示状態なら非表示にする
-        if (pauseobj.activeSelf) pauseobj.SetActive(false);
+        if (pauseParent.activeSelf) pauseParent.SetActive(false);
     }
 
     /// <summary>
@@ -46,13 +42,11 @@ public class PauseController : MonoBehaviour
         GameObject operation = null;
         if (Gamepad.all.Count > 0)  //GamePad
         {
-            operation = Instantiate(GamePad,
-            new Vector2(6.4f, -2.7f), Quaternion.identity);
+            operation = Instantiate(GamePad);
         }
-        else
+        else  //Keyboard
         {
-            operation = Instantiate(Mouse,
-                new Vector2(6.4f, -2.7f), Quaternion.identity);
+            operation = Instantiate(Keyboard);
         }
 
         //場所を設定
@@ -64,7 +58,7 @@ public class PauseController : MonoBehaviour
     /// </summary>
     public void SetPause()
     {
-        //プレイヤー操作をオフ、UI操作をオン
+        //プレイヤー操作をオフ
         manager.PlayerOff();
 
         //bool deviceCheck = Gamepad.all.Count > 0;
@@ -72,12 +66,7 @@ public class PauseController : MonoBehaviour
         //else manager.MouseOn();
 
         //ポーズパネルを表示する
-        pauseobj.SetActive(true);
-
-        //カーソルの表示
-        bool deviceCheck = Gamepad.all.Count > 0;
-        if (deviceCheck) cc.ChangeCursorEnable(true);
-
+        pauseParent.SetActive(true);
     }
 
     /// <summary>
@@ -85,19 +74,11 @@ public class PauseController : MonoBehaviour
     /// </summary>
     public void ReturnGame()
     {
-        //カーソルを非表示
-        bool deviceCheck = Gamepad.all.Count > 0;
-        if (deviceCheck) cc.ChangeCursorEnable(false);
-
         //ポーズパネルを非表示にする
-        pauseobj.SetActive(false);
+        pauseParent.SetActive(false);
 
         //UI操作をオフ、プレイヤー操作をオン
-        //bool deviceCheck = Gamepad.all.Count > 0;
-        //if (deviceCheck) manager.GamePadOff();
-        //else manager.MouseOff();
-        //manager.PlayerOn();
-        
+        manager.PlayerOn();
     }
 
     /// <summary>
@@ -117,7 +98,6 @@ public class PauseController : MonoBehaviour
     {
         //現在のシーンのインデックスナンバーを取得してリロード
         int nowsceneindex = SceneManager.GetActiveScene().buildIndex;
-        rm.IncrementReloadCount();
 
         SceneManager.LoadScene(nowsceneindex);
     }

@@ -788,11 +788,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1761.64
+      value: -1761.67
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -648.36
+      value: -648.37
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2509,7 +2509,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -2671,12 +2671,12 @@ MonoBehaviour:
   star2: {fileID: 0}
   star1: {fileID: 0}
   star0: {fileID: 0}
-  minStepsToClear: 4
-  marginSteps: 6
+  currentStage: 1
   stepsTaken: 0
   wasEat: 0
   wasMaked: 0
-  allowedGaugeCount: 1
+  stageConditions: []
+  madeSweets: []
 --- !u!1001 &1056631700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2765,11 +2765,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1760.98
+      value: -1761
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -648.33
+      value: -648.37
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2834,7 +2834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1150791155
 Transform:
   m_ObjectHideFlags: 0
@@ -3675,7 +3675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1760.99
+      value: -1761
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4954,9 +4954,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebc76f84aecbcab42807e3cf51ca3b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseobj: {fileID: 844036412}
-  Mouse: {fileID: 4117216813479884074, guid: 999c13b19279ec648b4d6d1c1cf01ed5, type: 3}
-  GamePad: {fileID: 4056448203684580710, guid: 7055cf09e5365a44480ca5d0abbefcc7, type: 3}
+  pauseParent: {fileID: 844036412}
+  Keyboard: {fileID: 2302528179416954769, guid: a729c2b01a56cf149886f112540b266b, type: 3}
+  GamePad: {fileID: 8664840622666629334, guid: 527b575e6194233499f1e1aa9386e307, type: 3}
 --- !u!1 &1877481170
 GameObject:
   m_ObjectHideFlags: 0
@@ -5626,11 +5626,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1761.7
+      value: -1761.67
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -647.1
+      value: -647
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5767,11 +5767,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1761.7
+      value: -1761.67
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -647.73
+      value: -647.7
       objectReference: {fileID: 0}
     - target: {fileID: 6964369921857584551, guid: 7da43e3ad0bee6d4bb77ed66182a4b66, type: 3}
       propertyPath: m_LocalPosition.z
