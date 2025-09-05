@@ -6,16 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Main/TitleScene.unity
-    guid: 4490bbd8a8927ee488c9eaff4736146d
-  - enabled: 1
     path: Assets/Main/OpshonScene.unity
     guid: 586ea4140eac04a4ab761bffb055985f
+  - enabled: 1
+    path: Assets/Main/Stage01.unity
+    guid: 8b28f80ecbfb6e245b1f4ae749385a9d
   - enabled: 0
     path: Assets/Watanabe/Stage01.unity
     guid: 70862a69faadeba41a73a9c63c82f37d
   - enabled: 1
-    path: Assets/Main/Stage01.unity
+    path: Assets/Main/Stage0.unity
     guid: 9b65b8ff3cd4eb745842e9d2f83ca436
   - enabled: 1
     path: Assets/Main/RetryScene.unity
@@ -26,7 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Mori/scene/stageselect.unity
     guid: 6be2e57dfee28894cb1ab4111e38c486
-  - enabled: 1
+  - enabled: 0
     path: Assets/Mori/scene/tutorial/scene/tutoriaru1.unity
     guid: 16bd13a2a0b9caa4d9639dc43e31082d
   - enabled: 0
@@ -44,6 +44,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Mori/scene/tutorial/scene/tuto4.unity
     guid: af6a7ff99716f344d9c505fe85a92e17
+  - enabled: 1
+    path: Assets/Main/TitleScene.unity
+    guid: 4490bbd8a8927ee488c9eaff4736146d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7dfe699c6f5096449a10e40cf4230a00, type: 3}
   m_UseUCBPForAssetBundles: 0
