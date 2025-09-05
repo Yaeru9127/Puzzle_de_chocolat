@@ -33,6 +33,11 @@ public class StageManager : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void SetStageNum(int num)
+    {
+        stagenum = num;
+    }
+
     private void OnDestroy()
     {
         //ƒV[ƒ“‚ğŒ×‚®‚Æ‚«‚Éƒƒ‚ƒŠ‚©‚çÁ‚·

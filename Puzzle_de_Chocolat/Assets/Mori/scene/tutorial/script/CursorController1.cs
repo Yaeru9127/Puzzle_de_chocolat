@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CursorController1 : MonoBehaviour
 {
-    public static CursorController cc;
+    //public static CursorController cc;
 
     [SerializeField] private GameObject cursorObject; // カーソル表示を制御するオブジェクト（任意）
 
     private void Awake()
     {
-        cc = this;
+        //cc = this;
     }
 
     /// <summary>

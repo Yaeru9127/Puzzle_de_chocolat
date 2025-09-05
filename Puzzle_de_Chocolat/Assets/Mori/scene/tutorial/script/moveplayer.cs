@@ -14,7 +14,7 @@ public class moveplayer : MonoBehaviour
     private SweetsManager sm;
     private PauseController pause;
     private CanGoal cg;
-    private CursorController cc;
+    //private CursorController cc;
     private Remainingaircraft remain;
     private GameOverController goc;
     private ReloadCountManager rcm;
@@ -48,7 +48,7 @@ public class moveplayer : MonoBehaviour
         sm = SweetsManager.sm;
         pause = PauseController.pause;
         cg = CanGoal.cg;
-        cc = CursorController.cc;
+        //cc = CursorController.cc;
         remain = Remainingaircraft.remain;
         goc = GameOverController.over;
         rcm = ReloadCountManager.Instance;
@@ -534,7 +534,7 @@ public class moveplayer : MonoBehaviour
         {
             //Debug.Log("reach goal");
             //manager.PlayerOff();
-            cc.ChangeCursorEnable(true);
+            //cc.ChangeCursorEnable(true);
             clear.ShowClearResult(rcm.ReloadCount);
 
             return;
