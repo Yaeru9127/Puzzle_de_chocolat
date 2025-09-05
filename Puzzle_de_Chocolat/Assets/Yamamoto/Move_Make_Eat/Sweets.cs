@@ -132,7 +132,17 @@ public class Sweets : MonoBehaviour
             default:
                 return false;
         }
+        //お菓子が作られた時だけ実行を追加
+        if(name!=null)
+        {
+            if(GameClear.clear !=null)
+            {
+                //作ったお菓子の名前を伝える
+                GameClear.clear.MadeSweets(name);
+            }
+        }
 
+       
         //作れる材料ならここでreturn
         return true;
     }
@@ -190,7 +200,9 @@ public class Sweets : MonoBehaviour
             sm.SetEffect();
 
             //食べたフラグを更新
-            sm.clear.wasEat = true;
+            //sm.clear.wasEat = true;
+            sm.clear.wasEat++;
+            Debug.Log("食べた回数: " + sm.clear.wasEat);
         }
         else Debug.Log("this sweets is can not eat");
     }
