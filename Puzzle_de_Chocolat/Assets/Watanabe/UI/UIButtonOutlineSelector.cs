@@ -3,6 +3,10 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks.Triggers;
+using UnityEngine.Events;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem.UI;
 
 public class UIButtonOutlineSelector : MonoBehaviour
 {
@@ -23,8 +27,15 @@ public class UIButtonOutlineSelector : MonoBehaviour
 
     private GameObject lastSelected; // ← 追加
 
+    private InputSystem_Actions actions;
+    private InputSystem_Manager manager;
+
+
     void Start()
     {
+        manager = InputSystem_Manager.manager;
+        actions = manager.GetActions();
+
         buttons.AddRange(GetComponentsInChildren<Button>());
         SelectFirst();
     }
@@ -32,6 +43,11 @@ public class UIButtonOutlineSelector : MonoBehaviour
     void OnEnable()
     {
         SelectFirst();
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
     void Update()
@@ -58,7 +74,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         foreach (var btn in buttons)
         {
             bool isSelected = (btn.gameObject == selectedObj);
-            SetOutline(btn, isSelected);
+            SetOutlineButton(btn, isSelected);
         }
 
         // ② スライダー
@@ -67,8 +83,18 @@ public class UIButtonOutlineSelector : MonoBehaviour
             bool isSelected = (pair.slider != null && pair.slider.gameObject == selectedObj);
             if (pair.label != null)
             {
-                SetOutline(pair.label, isSelected);
+                SetOutlineText(pair.label, isSelected);
             }
+        }
+
+        //コントローラー入力でボタンクリック
+        if (Gamepad.all.Count > 0)
+        {
+            if (actions.GamePad.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
+        }
+        else if (Gamepad.all.Count == 0)
+        {
+            if (actions.Mouse.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
         }
     }
 
@@ -88,7 +114,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         }
     }
 
-    void SetOutline(Button btn, bool enable)
+    void SetOutlineButton(Button btn, bool enable)
     {
         Outline outline = btn.GetComponent<Outline>();
         if (outline == null)
@@ -100,7 +126,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         outline.enabled = enable;
     }
 
-    void SetOutline(Text txt, bool enable)
+    void SetOutlineText(Text txt, bool enable)
     {
         Outline outline = txt.GetComponent<Outline>();
         if (outline == null)
@@ -110,5 +136,21 @@ public class UIButtonOutlineSelector : MonoBehaviour
             outline.effectDistance = new Vector2(1, 1);
         }
         outline.enabled = enable;
+    }
+
+    private void ControllerClick(GameObject bt)
+    {
+        //選択されいるオブジェクトが存在しないときは無視
+        if (bt == null) return;
+
+        //Keyboard操作でないときは無視
+        if (Gamepad.all.Count == 0) return;
+
+        Button button = bt.GetComponent<Button>();
+
+        //選択されているUIがButtonじゃないときは無視
+        if (bt == null) return;
+
+        button.onClick.Invoke();
     }
 }

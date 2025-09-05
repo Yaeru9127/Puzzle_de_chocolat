@@ -485,6 +485,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""5b503ad5-56fa-433a-a6cf-a0a8651a75fb"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""7fd8e141-1722-4690-aea4-c8562dcca5b3"",
                     ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",

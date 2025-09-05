@@ -6553,11 +6553,11 @@ PrefabInstance:
       objectReference: {fileID: 6103109323417850391, guid: 2f304a6d43725b64aaca8d744452600e, type: 3}
     - target: {fileID: 7690047507812821948, guid: f1b6e5598d1835241a66259260d264db, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 12.01
+      value: 12.03
       objectReference: {fileID: 0}
     - target: {fileID: 7690047507812821948, guid: f1b6e5598d1835241a66259260d264db, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 12.01
+      value: 12.030373
       objectReference: {fileID: 0}
     - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
       propertyPath: hibi
