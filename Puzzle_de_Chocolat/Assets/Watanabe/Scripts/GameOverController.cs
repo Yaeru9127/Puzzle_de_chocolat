@@ -10,6 +10,7 @@ public class GameOverController : MonoBehaviour
 
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
+    private CursorController cc;
     private StageManager stage;
 
     public Image gameOverImage;
@@ -34,6 +35,7 @@ public class GameOverController : MonoBehaviour
 
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        cc = CursorController.cc;
         stage = StageManager.stage;
     }
 

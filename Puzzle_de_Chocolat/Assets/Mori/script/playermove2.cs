@@ -1,124 +1,104 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class playermove2 : MonoBehaviour
 {
-    public Transform[] nodes;
-    private Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
+    private FadeController fadeController;
+    private CharacterAnimation characterAnimation;
 
-    private int currentNodeIndex = 0;
+    public Transform[] nodes; // ƒm[ƒhÀ•W
+    public Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
+
+    public int currentNodeIndex = 0;
     private int targetNodeIndex = -1;
 
     public float moveSpeed = 5f;
     private bool isMoving = false;
-
     private Vector3 targetPosition;
 
-    // ğŸ‘‡ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã«å…¬é–‹
-    public bool IsMoving => isMoving;
-
-    public Vector3 MoveDirection
-    {
-        get
-        {
-            if (!isMoving) return Vector3.zero;
-            Vector3 dir = targetPosition - transform.position;
-            dir.y = 0;
-            return dir.normalized;
-        }
-    }
+    [Header("ƒV[ƒ“‚É’u‚¢‚½–îˆóƒIƒuƒWƒFƒNƒg")]
+    public GameObject arrowLeft;   // ¶–îˆóiƒV[ƒ“‚É”z’uÏ‚İj
+    public GameObject arrowRight;  // ‰E–îˆóiƒV[ƒ“‚É”z’uÏ‚İj
 
     void Start()
     {
-        // ãƒãƒ¼ãƒ‰æ¥ç¶šè¨­å®š
+        fadeController = Object.FindFirstObjectByType<FadeController>();
+        characterAnimation = GetComponent<CharacterAnimation>();
+
+        // ƒm[ƒhÚ‘±i’¼üˆÚ“®j
         nodeConnections[0] = new List<int> { 1 };
         nodeConnections[1] = new List<int> { 0, 2 };
         nodeConnections[2] = new List<int> { 1, 3 };
         nodeConnections[3] = new List<int> { 2 };
 
-        transform.position = new Vector3(6.75f, 2.73f, -1f);
+        // ‰ŠúˆÊ’u
+        transform.position = nodes[currentNodeIndex].position;
+
+        UpdateArrows();
     }
 
     void Update()
     {
+        // Esc / Bƒ{ƒ^ƒ“‚Åƒ^ƒCƒgƒ‹‚Ö–ß‚é
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1))
+        {
+            fadeController.FadeOutAndLoadScene("stag");
+        }
+
+        Vector2 input = Vector2.zero;
+
         if (!isMoving)
         {
-            HandleInput();
+#if ENABLE_INPUT_SYSTEM
+            Gamepad pad = Gamepad.current;
+            if (pad != null) input = pad.leftStick.ReadValue();
+#endif
+            if (input == Vector2.zero)
+            {
+                input.x = Input.GetAxisRaw("Horizontal");
+                input.y = Input.GetAxisRaw("Vertical");
+            }
+
+            if (Mathf.Abs(input.x) > 0.5f)
+            {
+                TryMove(input.x > 0 ? -1 : 1); // ‰EƒL[‚Í¶‚Éi‚Ş
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
+            {
+                SceneChange();
+            }
+
+            characterAnimation.SetMove(input.normalized, false);
         }
         else
         {
             MoveToTarget();
-        }
-    }
 
-    void HandleInput()
-    {
-        Gamepad pad = Gamepad.current;
-        bool padLeft = false, padRight = false, padUp = false, padDown = false;
+            float dirX = targetNodeIndex - currentNodeIndex;
+            if ((currentNodeIndex == 1 && targetNodeIndex == 2) ||
+                (currentNodeIndex == 2 && targetNodeIndex == 1))
+            {
+                dirX *= -1f;
+            }
 
-#if ENABLE_INPUT_SYSTEM
-        if (pad != null)
-        {
-            Vector2 stick = pad.leftStick.ReadValue();
-            padLeft = stick.x < -0.5f || pad.dpad.left.wasPressedThisFrame;
-            padRight = stick.x > 0.5f || pad.dpad.right.wasPressedThisFrame;
-            padUp = stick.y > 0.5f || pad.dpad.up.wasPressedThisFrame;
-            padDown = stick.y < -0.5f || pad.dpad.down.wasPressedThisFrame;
-        }
-#endif
-
-        // ãƒãƒ¼ãƒ‰ç§»å‹•æ–¹å‘
-        switch (currentNodeIndex)
-        {
-            case 0:
-                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
-                break;
-            case 1:
-                if (Input.GetKeyDown(KeyCode.DownArrow) || padDown) TryMove(1);
-                else if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
-                break;
-            case 2:
-                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
-                else if (Input.GetKeyDown(KeyCode.UpArrow) || padUp) TryMove(-1);
-                break;
-            case 3:
-                if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
-                break;
+            Vector2 dir = new Vector2(Mathf.Sign(dirX), 0f);
+            characterAnimation.SetMove(dir, true);
         }
 
-        // æ±ºå®šãƒœã‚¿ãƒ³ã§ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’é¸æŠ
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") ||
-            (pad != null && pad.buttonSouth.wasPressedThisFrame))
-        {
-            SceneChange();
-        }
+        UpdateArrows();
     }
 
     void SceneChange()
     {
         switch (currentNodeIndex)
         {
-            case 0:
-                StageManager.stage.SetStageNum(0);
-                SceneManager.LoadScene("tutoriaru1"); 
-                break;
-            case 1:
-                StageManager.stage.SetStageNum(1);
-                //SceneManager.LoadScene("");
-                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸2");
-                break;
-            case 2:
-                StageManager.stage.SetStageNum(2);
-                //SceneManager.LoadScene("");
-                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸3");
-                break;
-            case 3:
-                StageManager.stage.SetStageNum(3);
-                //SceneManager.LoadScene("");
-                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸4");
-                break;
+            case 0: fadeController.FadeOutAndLoadScene("stag"); break;
+            case 1: Debug.Log("ƒXƒe[ƒW2"); break;
+            case 2: Debug.Log("ƒXƒe[ƒW3"); break;
+            case 3: Debug.Log("ƒXƒe[ƒW4"); break;
         }
     }
 
@@ -131,11 +111,7 @@ public class playermove2 : MonoBehaviour
             if (connectedNode == currentNodeIndex + direction)
             {
                 targetNodeIndex = connectedNode;
-
-                // ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’èª¿æ•´ã—ã¦ãƒãƒ¼ãƒ‰ä½ç½®ã«ç§»å‹•
-                Vector3 basePos = nodes[targetNodeIndex].position;
-                targetPosition = new Vector3(basePos.x - 0.03f, basePos.y + 0.91f, -1f);
-
+                targetPosition = nodes[targetNodeIndex].position;
                 isMoving = true;
                 break;
             }
@@ -152,6 +128,30 @@ public class playermove2 : MonoBehaviour
             currentNodeIndex = targetNodeIndex;
             targetNodeIndex = -1;
             isMoving = false;
+        }
+    }
+
+    void UpdateArrows()
+    {
+        if (arrowLeft == null || arrowRight == null) return;
+
+        if (currentNodeIndex == 0)
+        {
+            // Å‰‚Ìƒm[ƒh ¨ ‰E–îˆó‚ğ”ñ•\¦
+            arrowLeft.SetActive(true);
+            arrowRight.SetActive(false);
+        }
+        else if (currentNodeIndex == nodes.Length - 1)
+        {
+            // ÅŒã‚Ìƒm[ƒh ¨ ¶–îˆó‚ğ”ñ•\¦
+            arrowLeft.SetActive(false);
+            arrowRight.SetActive(true);
+        }
+        else
+        {
+            // ’†ŠÔƒm[ƒh ¨ —¼•û•\¦
+            arrowLeft.SetActive(true);
+            arrowRight.SetActive(true);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections;
 public class FadeController : MonoBehaviour
 {
     public Image fadePanel;             // フェード用のUIパネル（Image）
-    public float fadeDuration = 2f;   // フェードの完了にかかる時間
+    public float fadeDuration = 1.0f;   // フェードの完了にかかる時間
 
     private void Start()
     {

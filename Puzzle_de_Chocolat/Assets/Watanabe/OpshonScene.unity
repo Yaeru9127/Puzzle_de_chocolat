@@ -1873,10 +1873,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderLabelPairs:
-  - slider: {fileID: 623773900}
-    label: {fileID: 616688621}
   - slider: {fileID: 1273894039}
     label: {fileID: 1969760903}
+  - slider: {fileID: 623773900}
+    label: {fileID: 616688621}
 --- !u!1 &1969760901
 GameObject:
   m_ObjectHideFlags: 0
