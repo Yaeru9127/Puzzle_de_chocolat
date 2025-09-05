@@ -1,13 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class playermove2 : MonoBehaviour
 {
-    private FadeController fadeController;  // ƒtƒF[ƒhƒRƒ“ƒgƒ[ƒ‰[‚ÌQÆ
-
-    public Transform[] nodes; // ƒm[ƒhÀ•W‚ğİ’è
+    public Transform[] nodes;
     private Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
 
     private int currentNodeIndex = 0;
@@ -18,52 +16,36 @@ public class playermove2 : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    // ğŸ‘‡ ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã«å…¬é–‹
+    public bool IsMoving => isMoving;
+
+    public Vector3 MoveDirection
+    {
+        get
+        {
+            if (!isMoving) return Vector3.zero;
+            Vector3 dir = targetPosition - transform.position;
+            dir.y = 0;
+            return dir.normalized;
+        }
+    }
+
     void Start()
     {
-        // ƒtƒF[ƒhƒRƒ“ƒgƒ[ƒ‰[‚ğæ“¾
-        fadeController = Object.FindFirstObjectByType<FadeController>();
+        // ãƒãƒ¼ãƒ‰æ¥ç¶šè¨­å®š
+        nodeConnections[0] = new List<int> { 1 };
+        nodeConnections[1] = new List<int> { 0, 2 };
+        nodeConnections[2] = new List<int> { 1, 3 };
+        nodeConnections[3] = new List<int> { 2 };
 
-        // À•W‚²‚Æ‚É‚¢‚¯‚é•ûŒü‚ğw’è
-        nodeConnections[0] = new List<int> { 1 };         // À•W1 ¨ À•W2
-        nodeConnections[1] = new List<int> { 0, 2 };      // À•W2 ¨ À•W1,3
-        nodeConnections[2] = new List<int> { 1, 3 };      // À•W3 ¨ À•W2,4
-        nodeConnections[3] = new List<int> { 2 };         // À•W4 ¨ À•W3
-
-        // ‰ŠúˆÊ’u‚ÉˆÚ“®
-        transform.position = nodes[currentNodeIndex].position;
+        transform.position = new Vector3(6.75f, 2.73f, -1f);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1)) //Esc‚ÆBƒ{ƒ^ƒ“(‰¼)‚Åƒ^ƒCƒgƒ‹‚Ö–ß‚é
-        {
-            Debug.Log("ƒ^ƒCƒgƒ‹‚Ö");
-            fadeController.FadeOutAndLoadScene("stag");  // ƒtƒF[ƒhƒAƒEƒg‚µ‚Äƒ^ƒCƒgƒ‹‚Ö
-        }
         if (!isMoving)
         {
-            // ƒL[ƒ{[ƒh‚âƒRƒ“ƒgƒ[ƒ‰[“ü—Íˆ—
-            Vector2 input = Vector2.zero;
-#if ENABLE_INPUT_SYSTEM
-            Gamepad pad = Gamepad.current;
-            if (pad != null)
-            {
-                input = pad.leftStick.ReadValue();
-            }
-#endif
-            
-            input.x -= Input.GetAxisRaw("Horizontal");
-            //input.x = -input.x;  // ‚±‚ê‚Å“ü—Í‚Ì•ûŒü‚ª‹t‚É‚È‚è‚Ü‚·
-
-            if (Mathf.Abs(input.x) > 0.5f)
-            {
-                TryMove(input.x > 0 ? 1 : -1);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))//ƒXƒy[ƒXƒL[‚ÆAƒ{ƒ^ƒ“(‰¼)‚ÅƒXƒe[ƒW‘I‘ğ
-            {
-                SceneChange();
-            }
+            HandleInput();
         }
         else
         {
@@ -71,39 +53,89 @@ public class playermove2 : MonoBehaviour
         }
     }
 
+    void HandleInput()
+    {
+        Gamepad pad = Gamepad.current;
+        bool padLeft = false, padRight = false, padUp = false, padDown = false;
+
+#if ENABLE_INPUT_SYSTEM
+        if (pad != null)
+        {
+            Vector2 stick = pad.leftStick.ReadValue();
+            padLeft = stick.x < -0.5f || pad.dpad.left.wasPressedThisFrame;
+            padRight = stick.x > 0.5f || pad.dpad.right.wasPressedThisFrame;
+            padUp = stick.y > 0.5f || pad.dpad.up.wasPressedThisFrame;
+            padDown = stick.y < -0.5f || pad.dpad.down.wasPressedThisFrame;
+        }
+#endif
+
+        // ãƒãƒ¼ãƒ‰ç§»å‹•æ–¹å‘
+        switch (currentNodeIndex)
+        {
+            case 0:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
+                break;
+            case 1:
+                if (Input.GetKeyDown(KeyCode.DownArrow) || padDown) TryMove(1);
+                else if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
+                break;
+            case 2:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || padLeft) TryMove(1);
+                else if (Input.GetKeyDown(KeyCode.UpArrow) || padUp) TryMove(-1);
+                break;
+            case 3:
+                if (Input.GetKeyDown(KeyCode.RightArrow) || padRight) TryMove(-1);
+                break;
+        }
+
+        // æ±ºå®šãƒœã‚¿ãƒ³ã§ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’é¸æŠ
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") ||
+            (pad != null && pad.buttonSouth.wasPressedThisFrame))
+        {
+            SceneChange();
+        }
+    }
+
     void SceneChange()
     {
-        if (currentNodeIndex == 0)
+        switch (currentNodeIndex)
         {
-            Debug.Log("ƒXƒe[ƒW1");
-            fadeController.FadeOutAndLoadScene("stag");
-        }
-        else if (currentNodeIndex == 1)
-        {
-            Debug.Log("ƒXƒe[ƒW2");
-            // fadeController.FadeOutAndLoadScene("");
-        }
-        else if (currentNodeIndex == 2)
-        {
-            Debug.Log("ƒXƒe[ƒW3");
-            // fadeController.FadeOutAndLoadScene("");
-        }
-        else if (currentNodeIndex == 3)
-        {
-            Debug.Log("ƒXƒe[ƒW4");
-            // fadeController.FadeOutAndLoadScene("");
+            case 0:
+                StageManager.stage.SetStageNum(0);
+                SceneManager.LoadScene("tutoriaru1"); 
+                break;
+            case 1:
+                StageManager.stage.SetStageNum(1);
+                //SceneManager.LoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸2");
+                break;
+            case 2:
+                StageManager.stage.SetStageNum(2);
+                //SceneManager.LoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸3");
+                break;
+            case 3:
+                StageManager.stage.SetStageNum(3);
+                //SceneManager.LoadScene("");
+                Debug.Log("ã‚¹ãƒ†ãƒ¼ã‚¸4");
+                break;
         }
     }
 
     void TryMove(int direction)
     {
         if (!nodeConnections.ContainsKey(currentNodeIndex)) return;
+
         foreach (int connectedNode in nodeConnections[currentNodeIndex])
         {
             if (connectedNode == currentNodeIndex + direction)
             {
                 targetNodeIndex = connectedNode;
-                targetPosition = nodes[targetNodeIndex].position;
+
+                // ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’èª¿æ•´ã—ã¦ãƒãƒ¼ãƒ‰ä½ç½®ã«ç§»å‹•
+                Vector3 basePos = nodes[targetNodeIndex].position;
+                targetPosition = new Vector3(basePos.x - 0.03f, basePos.y + 0.91f, -1f);
+
                 isMoving = true;
                 break;
             }
@@ -113,6 +145,7 @@ public class playermove2 : MonoBehaviour
     void MoveToTarget()
     {
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
         if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
         {
             transform.position = targetPosition;

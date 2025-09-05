@@ -39,7 +39,7 @@ public class scenereload : MonoBehaviour
             OnConfirmReload();
         }
 
-        if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton1))
+        if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             OnCancelReload();
         }
