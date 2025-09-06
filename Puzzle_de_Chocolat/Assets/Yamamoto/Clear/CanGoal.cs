@@ -10,7 +10,7 @@ public class CanGoal : MonoBehaviour
     private SweetsManager sm;
 
     [SerializeField] private TestPlayer playerscript;   //プレイヤー変数
-    public GameObject goal;           //ゴールマスオブジェクト
+    public GameObject goalmass;           //ゴールマスオブジェクト
 
     //ゴールできるかの判定時に使う検索済み格納関数
     public List<GameObject> searched = new List<GameObject>();
@@ -52,7 +52,7 @@ public class CanGoal : MonoBehaviour
             if (sweets != null) continue;
 
             //お菓子のない隣接マスがゴールマスなら
-            if (pair.Key == goal)
+            if (pair.Key == goalmass)
             {
                 //デバッグ
                 //Debug.Log($"Reached goal from {now.gameObject.name}");
@@ -82,10 +82,10 @@ public class CanGoal : MonoBehaviour
     // ゴールにいるかどうかのチェック関数
     public bool IsPlayerOnGoal()
     {
-        if (playerscript != null && goal != null)
+        if (playerscript != null && goalmass != null)
         {
             // プレイヤーの位置とゴールの位置が近ければゴールしたとみなす
-            return Vector2.Distance(playerscript.transform.position, goal.transform.position) < 0.1f;
+            return Vector2.Distance(playerscript.transform.position, goalmass.transform.position) < 0.1f;
         }
         return false;
     }

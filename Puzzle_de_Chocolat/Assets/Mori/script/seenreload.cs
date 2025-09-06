@@ -9,7 +9,7 @@ public class scenereload : MonoBehaviour
     void Start()
     {
         confirmationDialog.SetActive(false);
-        Debug.Log("現在のリロードカウント: " + ReloadCountManager.Instance.ReloadCount);
+        //Debug.Log("現在のリロードカウント: " + ReloadCountManager.Instance.ReloadCount);
     }
 
     void Update()

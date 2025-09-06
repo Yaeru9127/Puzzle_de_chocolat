@@ -515,7 +515,7 @@ public class moveplayer : MonoBehaviour
 
         //クリアチェック
         //現在の残り工程数が0 && 現在のマスがゴールでないなら
-        if (remain.currentLife == 0 && nowmass != cg.goal)
+        if (remain.currentLife == 0 && nowmass != cg.goalmass)
         {
             //ゴール判定リストの初期化
             cg.searched.Clear();
@@ -530,7 +530,7 @@ public class moveplayer : MonoBehaviour
         }
 
         //ゴールマスについたら
-        if (nowmass == cg.goal)
+        if (nowmass == cg.goalmass)
         {
             //Debug.Log("reach goal");
             //manager.PlayerOff();

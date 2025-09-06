@@ -722,7 +722,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 63e42be739274614e879b4db2f81294f, type: 3}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.size
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[3].loopBGM
@@ -733,11 +733,27 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[5].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[6].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[3].bgmIndex
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[4].bgmIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[5].bgmIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[6].bgmIndex
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
@@ -759,6 +775,14 @@ PrefabInstance:
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[4].sceneName
       value: RetryScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[5].sceneName
+      value: Stage02
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[6].sceneName
+      value: Stage03
       objectReference: {fileID: 0}
     - target: {fileID: 7819784571569621297, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: m_Name

@@ -7,6 +7,8 @@ public class playermove2 : MonoBehaviour
 {
     private FadeController fadeController;
     private CharacterAnimation characterAnimation;
+    private InputSystem_Actions actions;
+    private InputSystem_Manager manager;
 
     public Transform[] nodes; // ノード座標
     public Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
@@ -26,6 +28,8 @@ public class playermove2 : MonoBehaviour
     {
         fadeController = Object.FindFirstObjectByType<FadeController>();
         characterAnimation = GetComponent<CharacterAnimation>();
+        manager = InputSystem_Manager.manager;
+        actions = manager.GetActions();
 
         // ノード接続（直線移動）
         nodeConnections[0] = new List<int> { 1 };
@@ -66,9 +70,15 @@ public class playermove2 : MonoBehaviour
                 TryMove(input.x > 0 ? -1 : 1); // 右キーは左に進む
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1"))
+            //GamePad操作のとき
+            if (actions.GamePad.enabled && !actions.Mouse.enabled)
             {
-                SceneChange();
+                if (actions.GamePad.Click.WasPressedThisFrame()) SceneChange();
+            }
+            //Keyboard操作のとき
+            else if (!actions.GamePad.enabled && actions.Mouse.enabled)
+            {
+                if (actions.Mouse.Click.WasPressedThisFrame()) SceneChange(); 
             }
 
             characterAnimation.SetMove(input.normalized, false);
@@ -96,9 +106,9 @@ public class playermove2 : MonoBehaviour
         switch (currentNodeIndex)
         {
             case 0: fadeController.FadeOutAndLoadScene("stag"); break;
-            case 1: Debug.Log("ステージ2"); break;
-            case 2: Debug.Log("ステージ3"); break;
-            case 3: Debug.Log("ステージ4"); break;
+            case 1: fadeController.FadeOutAndLoadScene("Stage01"); break;
+            case 2: fadeController.FadeOutAndLoadScene("Stage02"); break;
+            case 3: fadeController.FadeOutAndLoadScene("Stage03"); break;
         }
     }
 
