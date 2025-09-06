@@ -104,11 +104,15 @@ public class Tile : MonoBehaviour
     {
         //壊れないマスならreturn
         if (!canBreak) return;
-
+        Debug.Log("no return");
         SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
 
         //Spriteがひびマスでないなら、ひびマスに設定
-        if (renderer.sprite != hibi && renderer != null) this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
+        if (renderer.sprite != hibi && renderer != null)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
+            Debug.Log("log");
+        }
         //Spriteがひびマスなら
         else if (renderer.sprite == hibi) Destroy(this.gameObject);
     }

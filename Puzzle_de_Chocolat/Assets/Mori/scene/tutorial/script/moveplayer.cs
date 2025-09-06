@@ -462,7 +462,7 @@ public class moveplayer : MonoBehaviour
         AudioManager.Instance.seAudioSource.Stop();
 
         //元のマスのひびチェック
-        //ReturnNowTileScript().ChangeSprite();
+        ReturnNowTileScript().ChangeSprite();
 
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
