@@ -2,6 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks.Triggers;
+using UnityEngine.Events;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem.UI;
 
 public class UIButtonOutlineSelector : MonoBehaviour
 {
@@ -10,63 +15,122 @@ public class UIButtonOutlineSelector : MonoBehaviour
     [System.Serializable]
     public class SliderLabelPair
     {
-        public Slider slider;   // BGM / SE のスライダー
-        public Text label;      // スライダーの横にあるラベルText
+        public Slider slider;
+        public Text label;
     }
 
     [SerializeField]
     private List<SliderLabelPair> sliderLabelPairs = new List<SliderLabelPair>();
 
+    [SerializeField]
+    private GameObject firstSelectObject;
+
+    private GameObject lastSelected; // ← 追加
+
+    private InputSystem_Actions actions;
+    private InputSystem_Manager manager;
+    private StageManager sm;
+
+
     void Start()
     {
-        // 子オブジェクトにある全てのButtonを登録
-        buttons.AddRange(GetComponentsInChildren<Button>());
+        manager = InputSystem_Manager.manager;
+        actions = manager.GetActions();
+        sm = StageManager.stage;
 
-        // 最初の選択を設定
+        buttons.AddRange(GetComponentsInChildren<Button>());
         SelectFirst();
+
+        if (sm.phase != StageManager.Phase.Game)
+        {
+            if (Gamepad.all.Count > 0)
+            {
+                manager.GamePadOn();
+                manager.MouseOff();
+            }
+            else
+            {
+                manager.MouseOn();
+                manager.GamePadOff();
+            }
+        }
     }
 
     void OnEnable()
     {
-        // シーン切替や再表示時にも必ず最初を選択する
         SelectFirst();
+    }
+
+    private void OnDisable()
+    {
+
     }
 
     void Update()
     {
+        //bool deviceCheck = Gamepad.all.Count > 0;
+        //if (deviceCheck) return;
+
+        if (EventSystem.current == null) return;
+
         var selectedObj = EventSystem.current.currentSelectedGameObject;
 
-        // ① ボタンの選択判定
+        // 選択が外れてしまった時 → 最後の選択に戻す
+        if (selectedObj == null && lastSelected != null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+            selectedObj = lastSelected;
+        }
+        else
+        {
+            lastSelected = selectedObj;
+        }
+
+        // ① ボタン
         foreach (var btn in buttons)
         {
             bool isSelected = (btn.gameObject == selectedObj);
-            SetOutline(btn, isSelected);
+            SetOutlineButton(btn, isSelected);
         }
 
-        // ② スライダーの選択判定
+        // ② スライダー
         foreach (var pair in sliderLabelPairs)
         {
             bool isSelected = (pair.slider != null && pair.slider.gameObject == selectedObj);
             if (pair.label != null)
             {
-                // ラベル自体は選択されないけど、見た目で枠を出す
-                SetOutline(pair.label, isSelected);
+                SetOutlineText(pair.label, isSelected);
             }
         }
-    }
 
-    // 最初のボタンを選択状態にする
-    private void SelectFirst()
-    {
-        if (buttons.Count > 0 && EventSystem.current != null)
+        //コントローラー入力でボタンクリック
+        if (Gamepad.all.Count > 0)
         {
-            EventSystem.current.SetSelectedGameObject(null); // いったんリセット
-            EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
-            SetOutline(buttons[0], true);
+            if (actions.GamePad.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
+        }
+        else if (Gamepad.all.Count == 0)
+        {
+            if (actions.Mouse.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
         }
     }
 
-    void SetOutline(Button btn, bool enable)
+    private void SelectFirst()
+    {
+        if (EventSystem.current == null) return;
+        GameObject target = firstSelectObject;
+        if (target == null && buttons.Count > 0)
+        {
+            target = buttons[0].gameObject;
+        }
+        if (target != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(target);
+            lastSelected = target;
+        }
+    }
+
+    void SetOutlineButton(Button btn, bool enable)
     {
         Outline outline = btn.GetComponent<Outline>();
         if (outline == null)
@@ -78,7 +142,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         outline.enabled = enable;
     }
 
-    void SetOutline(Text txt, bool enable)
+    void SetOutlineText(Text txt, bool enable)
     {
         Outline outline = txt.GetComponent<Outline>();
         if (outline == null)
@@ -88,5 +152,21 @@ public class UIButtonOutlineSelector : MonoBehaviour
             outline.effectDistance = new Vector2(1, 1);
         }
         outline.enabled = enable;
+    }
+
+    private void ControllerClick(GameObject bt)
+    {
+        //選択されいるオブジェクトが存在しないときは無視
+        if (bt == null) return;
+
+        //Keyboard操作でないときは無視
+        if (Gamepad.all.Count == 0) return;
+
+        Button button = bt.GetComponent<Button>();
+
+        //選択されているUIがButtonじゃないときは無視
+        if (bt == null) return;
+
+        button.onClick.Invoke();
     }
 }
