@@ -160,7 +160,7 @@ public class UIButtonOutlineSelector : MonoBehaviour
         if (bt == null) return;
 
         //Keyboard‘€ì‚Å‚È‚¢‚Æ‚«‚Í–³Ž‹
-        if (Gamepad.all.Count == 0) return;
+        if (Gamepad.all.Count > 0) return;
 
         Button button = bt.GetComponent<Button>();
 
