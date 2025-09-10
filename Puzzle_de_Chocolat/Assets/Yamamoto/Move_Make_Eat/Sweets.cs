@@ -7,6 +7,8 @@ public class Sweets : MonoBehaviour
      *お菓子は親オブジェクトをSweetsParentに設定して生成する*/
 
     private SweetsManager sm;
+    private StageManager stage;
+    private GameClear clear;
 
     //お菓子材料enum
     public enum Material
@@ -24,6 +26,12 @@ public class Sweets : MonoBehaviour
     private new string name;    //製菓後の名前変数
     public bool canMove;        //移動できるかの判定用
     public bool canEat;         //食べれるかの判定用
+
+    private void Awake()
+    {
+        stage = StageManager.stage;
+        clear = GameClear.clear;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -72,13 +80,13 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (sm.stage.stagenum == 1)
+                if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Sugar) name = "pretzel";
                     else if (comparison.material == Material.Egg) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 2)
+                else if (stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "maritozzo";
@@ -88,12 +96,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
-                if (sm.stage.stagenum == 1)
+                if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "pretzel";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 2)
+                else if (stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Milk) name = "tiramisu";
                     else if (comparison.material == Material.Butter) name = "maritozzo";
@@ -103,12 +111,12 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
-                if (sm.stage.stagenum == 1)
+                if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "baumkuchen";
                     else return false;
                 }
-                else if (sm.stage.stagenum == 2)
+                else if (stage.stagenum == 2)
                 {
                     return false;
                 }
@@ -116,11 +124,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //牛乳
             case Material.Milk:
-                if (sm.stage.stagenum == 1)
+                if (stage.stagenum == 1)
                 {
                     return false;
                 }
-                else if (sm.stage.stagenum == 2)
+                else if (stage.stagenum == 2)
                 {
                     if (comparison.material == Material.Butter) name = "pannacotta";
                     else if (comparison.material == Material.Sugar) name = "tiramisu";
@@ -201,8 +209,8 @@ public class Sweets : MonoBehaviour
 
             //食べたフラグを更新
             //sm.clear.wasEat = true;
-            sm.clear.wasEat++;
-            Debug.Log("食べた回数: " + sm.clear.wasEat);
+            clear.wasEat++;
+            //Debug.Log("食べた回数: " + clear.wasEat);
         }
         else Debug.Log("this sweets is can not eat");
     }

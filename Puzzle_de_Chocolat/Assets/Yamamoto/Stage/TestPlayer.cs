@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -31,7 +32,6 @@ public class TestPlayer : MonoBehaviour
     public Direction direction;
 
     private Animator animator;
-    [SerializeField] private Sprite[] sprites = new Sprite[4];
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private bool inProcess;             //処理中フラグ
@@ -55,11 +55,26 @@ public class TestPlayer : MonoBehaviour
         animator = this.gameObject.GetComponent<Animator>();
 
         actions = manager.GetActions();
+        SetFirstPosition();
         manager.PlayerOn();
         nowmass = tm.GetNowMass(this.gameObject);
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
+    }
+
+    private void SetFirstPosition()
+    {
+        Collider2D[] col = Physics2D.OverlapPointAll(this.gameObject.transform.position);
+        foreach (Collider2D col2 in col)
+        {
+            if (col2.gameObject.GetComponent<Tile>())
+            {
+                float posx = col2.transform.position.x;
+                float posy = col2.transform.position.y;
+                this.gameObject.transform.position = new Vector3(posx, posy, -5);
+            }
+        }
     }
 
     /// <summary>
@@ -374,7 +389,7 @@ public class TestPlayer : MonoBehaviour
     {
         //自身の子オブジェクトを取得
         List<GameObject> children = new List<GameObject>();
-        foreach (Transform child in this.gameObject.transform)
+        foreach (UnityEngine.Transform child in this.gameObject.transform)
         {
             //Debug.Log(child.name);
             children.Add(child.gameObject);
@@ -458,7 +473,18 @@ public class TestPlayer : MonoBehaviour
         AudioManager.Instance.seAudioSource.Stop();
 
         //元のマスのひびチェック
-        //ReturnNowTileScript().ChangeSprite();
+        await ReturnNowTileScript().ChangeSprite();
+
+        //残ったマス情報を初期化
+        tm.GetAllMass();
+
+        //隣接マスの再取得
+        foreach (KeyValuePair<GameObject, Vector2> pair in tm.tiles)
+        {
+            GameObject obj = pair.Key;
+            Tile tile = obj.GetComponent<Tile>();
+            tile.GetNeighborTiles();
+        }
 
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
@@ -488,7 +514,7 @@ public class TestPlayer : MonoBehaviour
 
             /*残り工程数をひとつ減らす*/
             //Debug.Log("decrease remaining num");
-            //remain.ReduceLife();
+            remain.ReduceLife();
         }
 
         //お菓子の位置を更新
@@ -511,28 +537,30 @@ public class TestPlayer : MonoBehaviour
 
         //クリアチェック
         //現在の残り工程数が0 && 現在のマスがゴールでないなら
-        /*if (remain.currentLife == 0 && nowmass != cg.goal)
+        if (remain.currentLife == 0 && nowmass != cg.goalmass)
         {
             //ゴール判定リストの初期化
             cg.searched.Clear();
 
             //もしゴールできないなら、GameOverの設定
-            //if (!cg.CanMassThrough(ReturnNowTileScript()))
-            //{
-            //    Debug.Log("in can not goal");
-            //    goc.ShowGameOver();
-            //    stage.phase = StageManager.Phase.Result;
-            //}
-        }*/
+            if (!cg.CanMassThrough(ReturnNowTileScript()))
+            {
+                //Debug.Log("can not goal");
+                manager.PlayerOff();
+                goc.ShowGameOver();
+                stage.phase = StageManager.Phase.Result;
+            }
+        }
 
         //ゴールマスについたら
-        /*if (nowmass == cg.goal)
+        if (nowmass == cg.goalmass)
         {
             //Debug.Log("reach goal");
+            manager.PlayerOff();
             clear.ShowClearResult(rcm.ReloadCount);
 
             return;
-        }*/
+        }
 
         //アニメーション設定
         animator.speed = 0f;
@@ -540,7 +568,7 @@ public class TestPlayer : MonoBehaviour
         animator.SetFloat("MoveY", 0);
 
         //入力を受け付ける
-        manager.PlayerOn();
+        if (!goc.gameOverImage.IsActive()) manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
@@ -617,9 +645,6 @@ public class TestPlayer : MonoBehaviour
         }
 
         await eatnext.EatSweets();
-
-        //工程数をひとつ減らす
-        //remain.ReduceLife();
 
         //食料ゲージの増加
         sm.CallDecreaseFoodGauge();

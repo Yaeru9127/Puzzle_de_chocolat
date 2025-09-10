@@ -181,7 +181,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &149701900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 149701902}
   m_OnClick:
     m_PersistentCalls:
@@ -1206,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderLabelPairs: []
+  firstSelectObject: {fileID: 0}
 --- !u!1001 &6734324403070796658
 PrefabInstance:
   m_ObjectHideFlags: 0

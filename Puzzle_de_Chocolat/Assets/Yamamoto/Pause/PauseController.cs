@@ -77,7 +77,7 @@ public class PauseController : MonoBehaviour
         //ポーズパネルを非表示にする
         pauseParent.SetActive(false);
 
-        //UI操作をオフ、プレイヤー操作をオン
+        //プレイヤー操作をオン
         manager.PlayerOn();
     }
 

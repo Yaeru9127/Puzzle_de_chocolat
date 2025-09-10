@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 public class Tile : MonoBehaviour
 {
@@ -49,7 +51,6 @@ public class Tile : MonoBehaviour
 
                     //重複していなかったら追加
                     if (!neighbor.ContainsKey(hitobj2.gameObject)) neighbor.Add(hitobj2.gameObject, dir);
-
                 }
             }
         }
@@ -82,10 +83,10 @@ public class Tile : MonoBehaviour
         foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
             //位置関係が一致したときのオブジェクト
-            if (pair.Key.GetComponent<Tile>() && pair.Value == pos)
+            if (pair.Key.GetComponent<Tile>() && pair.Value == pos && pair.Key != null)
             {
                 //デバッグ
-                //Debug.Log($"{pair.Key.name} : {pair.Value}");
+                //Debug.Log($"{this.gameObject.name} : {pair.Key.name} , {pair.Value}");
                 mass = pair.Key;
                 break;
             }
@@ -100,21 +101,25 @@ public class Tile : MonoBehaviour
     /// <summary>
     /// マスのひび入れ、マスの削除関数
     /// </summary>
-    public void ChangeSprite()
+    public async UniTask ChangeSprite()
     {
         //壊れないマスならreturn
         if (!canBreak) return;
-        Debug.Log("no return");
+
         SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();
 
         //Spriteがひびマスでないなら、ひびマスに設定
         if (renderer.sprite != hibi && renderer != null)
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = hibi;
-            Debug.Log("log");
+            //Debug.Log("log");
         }
         //Spriteがひびマスなら
-        else if (renderer.sprite == hibi) Destroy(this.gameObject);
+        else if (renderer.sprite == hibi)
+        {
+            Destroy(this.gameObject);
+            await UniTask.WaitUntil(() => this.gameObject == null);
+        }
     }
 
     // Update is called once per frame

@@ -245,6 +245,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -386,6 +390,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -697,6 +705,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1373,6 +1385,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (16)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1447,6 +1463,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (25)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1455,6 +1475,11 @@ PrefabInstance:
 --- !u!4 &810340726 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1477476961650256646, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+  m_PrefabInstance: {fileID: 810340725}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &810340727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7196274976007159402, guid: f1b6e5598d1835241a66259260d264db, type: 3}
   m_PrefabInstance: {fileID: 810340725}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &841212234
@@ -1638,6 +1663,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (22)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2043,6 +2072,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2736,6 +2769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2921,6 +2958,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3066,6 +3107,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3140,6 +3185,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (26)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3251,7 +3300,7 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ActionsAsset: {fileID: 0}
   m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
@@ -3360,6 +3409,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3510,8 +3563,12 @@ PrefabInstance:
       value: Tile (4)
       objectReference: {fileID: 0}
     - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
       propertyPath: canBreak
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4130,6 +4187,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4428,6 +4489,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (23)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4731,6 +4796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (21)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4805,6 +4874,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4879,6 +4952,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4934,8 +5011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3d5e5698c55c4545be21acdacf01fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerscript: {fileID: 0}
-  goalmass: {fileID: 0}
+  playerscript: {fileID: 1847295670156419567}
+  goalmass: {fileID: 810340727}
   searched: []
 --- !u!114 &1743189594
 MonoBehaviour:
@@ -5152,6 +5229,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5226,6 +5307,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5300,6 +5385,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5374,6 +5463,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (20)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5535,6 +5628,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5738,6 +5835,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5879,6 +5980,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5953,6 +6058,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 8763388214088072648, guid: f1b6e5598d1835241a66259260d264db, type: 3}
+      propertyPath: hibi
+      value: 
+      objectReference: {fileID: 6682011128216389247, guid: 4eaf6e44aa99cb347b15766c4622ab22, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6535,6 +6644,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b4003441e6698c4b93eb5d37f14a46b, type: 3}
+--- !u!114 &1847295670156419567 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5223529090894170325, guid: 1b4003441e6698c4b93eb5d37f14a46b, type: 3}
+  m_PrefabInstance: {fileID: 1847295670156419566}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7c92f684a89f5c4db3940facb56efc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3136121989119736650
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -14,9 +14,6 @@ public class SweetsManager : MonoBehaviour
 {
     public static SweetsManager sm { get; private set; }
 
-    [HideInInspector] public StageManager stage;
-    [HideInInspector] public GameClear clear;
-
     //お菓子オブジェクト格納のList<Dictionary<座標, スクリプト>>
     public Dictionary<Vector2, Sweets> sweets = new Dictionary<Vector2, Sweets>();
 
@@ -52,9 +49,6 @@ public class SweetsManager : MonoBehaviour
         //初期化
         if (sm == null) sm = this;
         else if (sm != null) Destroy(this.gameObject);
-
-        stage = StageManager.stage;
-        clear = GameClear.clear;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
