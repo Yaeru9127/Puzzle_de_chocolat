@@ -479,6 +479,9 @@ public class TestPlayer : MonoBehaviour
             {
                 sweetsscript.MakeSweets(beyond.gameObject);
                 clear.wasMaked = true;
+                /*if (clear == null) Debug.Log("NULL");
+                else if (clear != null) Debug.Log("NOT");
+                clear.wasMaked = true;*/
             }
             //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
             else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
