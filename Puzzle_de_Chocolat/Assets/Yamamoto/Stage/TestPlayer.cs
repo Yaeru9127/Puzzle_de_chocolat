@@ -692,9 +692,9 @@ public class TestPlayer : MonoBehaviour
         else if (!inProcess && vec2 == Vector2.zero)
         {
             // 移動がゼロのときは停止処理（最後の方向でフレーム停止）
-            /*animator.speed = 0f;        // アニメーション停止
+            animator.speed = 0f;        // アニメーション停止
             animator.SetFloat("MoveX", lastX);
-            animator.SetFloat("MoveY", lastY);*/
+            animator.SetFloat("MoveY", lastY);
 
 
             SpriteRenderer renderer = this.gameObject.GetComponent<SpriteRenderer>();

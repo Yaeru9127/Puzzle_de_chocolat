@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class playermove2 : MonoBehaviour
 {
@@ -30,6 +29,18 @@ public class playermove2 : MonoBehaviour
         characterAnimation = GetComponent<CharacterAnimation>();
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
+        manager.PlayerOff();
+
+        if (Gamepad.all.Count > 0)
+        {
+            manager.MouseOff();
+            manager.GamePadOn();
+        }
+        else if (Gamepad.all.Count == 0)
+        {
+            manager.GamePadOff();
+            manager.MouseOn();
+        }
 
         // ノード接続（直線移動）
         nodeConnections[0] = new List<int> { 1 };
@@ -46,9 +57,9 @@ public class playermove2 : MonoBehaviour
     void Update()
     {
         // Esc / Bボタンでタイトルへ戻る
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton1))
+        if (actions.Mouse.Back.WasPressedThisFrame() || actions.GamePad.Back.WasPressedThisFrame())
         {
-            fadeController.FadeOutAndLoadScene("stag");
+            fadeController.FadeOutAndLoadScene("TitleScene");
         }
 
         Vector2 input = Vector2.zero;
@@ -105,7 +116,7 @@ public class playermove2 : MonoBehaviour
     {
         switch (currentNodeIndex)
         {
-            case 0: fadeController.FadeOutAndLoadScene("stag"); break;
+            case 0: fadeController.FadeOutAndLoadScene("Tutorial1"); break;
             case 1: fadeController.FadeOutAndLoadScene("Stage01"); break;
             case 2: fadeController.FadeOutAndLoadScene("Stage02"); break;
             case 3: fadeController.FadeOutAndLoadScene("Stage03"); break;

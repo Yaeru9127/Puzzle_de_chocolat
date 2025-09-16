@@ -109,7 +109,7 @@ public class Sweets : MonoBehaviour
             case Material.Sugar:
                 if (stage.stagenum == 0)
                 {
-                    if (SceneManager.GetActiveScene().name == "Tutorial2") name = "canulé";
+                    if (comparison.material == Material.Egg) name = "canulé";
                     else return false;
                 }
                 else if (stage.stagenum == 1)
@@ -134,7 +134,7 @@ public class Sweets : MonoBehaviour
             case Material.Egg:
                 if (stage.stagenum == 0)
                 {
-                    if (SceneManager.GetActiveScene().name == "Tutorial2") name = "canulé";
+                    if (comparison.material == Material.Sugar) name = "canulé";
                     else return false;
                 }
                 else if (stage.stagenum == 1)
