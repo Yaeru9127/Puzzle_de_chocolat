@@ -655,6 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   phase: 0
   stagenum: 0
+  gamescene: 
   stageGaugeMaxValues: 06000000080000000a000000
 --- !u!1001 &1040951404
 PrefabInstance:
@@ -814,7 +815,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[8].sceneName
-      value: Tutorial1
+      value: Tutorial2
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[9].sceneName

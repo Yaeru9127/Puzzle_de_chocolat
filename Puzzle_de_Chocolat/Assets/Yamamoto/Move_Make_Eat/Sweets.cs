@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class Sweets : MonoBehaviour
 {
@@ -96,13 +97,20 @@ public class Sweets : MonoBehaviour
                     else if (comparison.material == Material.Sugar) name = "maritozzo";
                     else return false;
                 }
+                else if (stage.stagenum == 3)
+                {
+                    if (comparison.material == Material.Egg) name = "madeleine";
+                    else if (comparison.material == Material.Milk) name = "macaroon";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
                 if (stage.stagenum == 0)
                 {
-                    return false;
+                    if (SceneManager.GetActiveScene().name == "Tutorial2") name = "canulé";
+                    else return false;
                 }
                 else if (stage.stagenum == 1)
                 {
@@ -115,13 +123,19 @@ public class Sweets : MonoBehaviour
                     else if (comparison.material == Material.Butter) name = "maritozzo";
                     else return false;
                 }
+                else if (stage.stagenum == 3)
+                {
+                    if (comparison.material == Material.Egg) name = "canulé";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
                 if (stage.stagenum == 0)
                 {
-                    return false;
+                    if (SceneManager.GetActiveScene().name == "Tutorial2") name = "canulé";
+                    else return false;
                 }
                 else if (stage.stagenum == 1)
                 {
@@ -131,6 +145,12 @@ public class Sweets : MonoBehaviour
                 else if (stage.stagenum == 2)
                 {
                     return false;
+                }
+                else if (stage.stagenum == 3)
+                {
+                    if (comparison.material == Material.Butter) name = "madeleine";
+                    else if (comparison.material == Material.Sugar) name = "canulé";
+                    else return false;
                 }
                 break;
             //-----------------------------------------------------------------------
@@ -150,6 +170,11 @@ public class Sweets : MonoBehaviour
                     else if (comparison.material == Material.Sugar) name = "tiramisu";
                     else return false;
                 }
+                else if (stage.stagenum == 3)
+                {
+                    if (comparison.material == Material.Butter) name = "macaroon";
+                    else return false;
+                }
                 break;
             //-----------------------------------------------------------------------
             //それ以外
@@ -165,7 +190,6 @@ public class Sweets : MonoBehaviour
                 GameClear.clear.MadeSweets(name);
             }
         }
-
        
         //作れる材料ならここでreturn
         return true;
