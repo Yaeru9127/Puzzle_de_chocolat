@@ -178,6 +178,9 @@ public class GameClear : MonoBehaviour
             case 4:
                 scenename = "Tutorial4";
                     break;
+            default:
+                scenename = "StageSelect";
+                break;
         }
 
         //ÉVÅ[Éìì«Ç›çûÇ›
