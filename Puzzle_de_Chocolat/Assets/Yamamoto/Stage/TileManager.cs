@@ -56,14 +56,14 @@ public class TileManager : MonoBehaviour
     /// <param name="obj"></param> 比較するオブジェクト
     public GameObject GetNowMass(GameObject obj)
     {
-        Debug.Log("GetNowMass() called");
-        Debug.Log(obj.name +" : " + obj.transform.position);
+        //Debug.Log("GetNowMass() called");
+        //Debug.Log(obj.name +" : " + obj.transform.position);
         GameObject nowmass = null;
 
         //オブジェクトの座標が一致しているか
         foreach (KeyValuePair<GameObject, Vector2> pair in tiles)
         {
-            Debug.Log(pair.Key.transform.position);
+            //Debug.Log(pair.Key.transform.position);
             if((Vector2)obj.transform.position == (Vector2)pair.Key.transform.position)
             {
                 nowmass = pair.Key;

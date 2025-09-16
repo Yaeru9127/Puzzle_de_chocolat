@@ -14,10 +14,9 @@ public class moveplayer : MonoBehaviour
     private SweetsManager sm;
     private PauseController pause;
     private CanGoal cg;
-    //private CursorController cc;
     private Remainingaircraft remain;
     private GameOverController goc;
-    private ReloadCountManager rcm;
+    //private ReloadCountManager rcm;
     private StageManager stage;
     private GameClear clear;
 
@@ -32,7 +31,6 @@ public class moveplayer : MonoBehaviour
     public Direction direction;
 
     private Animator animator;
-    [SerializeField] private Sprite[] sprites = new Sprite[4];
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private bool inProcess;             //処理中フラグ
@@ -48,22 +46,39 @@ public class moveplayer : MonoBehaviour
         sm = SweetsManager.sm;
         pause = PauseController.pause;
         cg = CanGoal.cg;
-        //cc = CursorController.cc;
         remain = Remainingaircraft.remain;
         goc = GameOverController.over;
-        rcm = ReloadCountManager.Instance;
+        //rcm = ReloadCountManager.Instance;
         stage = StageManager.stage;
         clear = GameClear.clear;
         animator = this.gameObject.GetComponent<Animator>();
 
         actions = manager.GetActions();
+        SetFirstPosition();
+        manager.PlayerOn();
         nowmass = tm.GetNowMass(this.gameObject);
-        //manager.PlayerOn();
-        //manager.GamePadOff();
-        //cc.ChangeCursorEnable(false);
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
+    }
+
+    /// <summary>
+    /// 初期位置を決める関数
+    /// </summary>
+    private void SetFirstPosition()
+    {
+        //当たり判定で取得
+        Collider2D[] col = Physics2D.OverlapPointAll(this.gameObject.transform.position);
+        foreach (Collider2D col2 in col)
+        {
+            if (col2.gameObject.GetComponent<Tile>())
+            {
+                //座標の調整
+                float posx = col2.transform.position.x;
+                float posy = col2.transform.position.y;
+                this.gameObject.transform.position = new Vector3(posx, posy, -5);
+            }
+        }
     }
 
     /// <summary>
@@ -378,7 +393,7 @@ public class moveplayer : MonoBehaviour
     {
         //自身の子オブジェクトを取得
         List<GameObject> children = new List<GameObject>();
-        foreach (Transform child in this.gameObject.transform)
+        foreach (UnityEngine.Transform child in this.gameObject.transform)
         {
             //Debug.Log(child.name);
             children.Add(child.gameObject);
@@ -462,7 +477,18 @@ public class moveplayer : MonoBehaviour
         AudioManager.Instance.seAudioSource.Stop();
 
         //元のマスのひびチェック
-        ReturnNowTileScript().ChangeSprite();
+        await ReturnNowTileScript().ChangeSprite();
+
+        //残ったマス情報を初期化
+        tm.GetAllMass();
+
+        //隣接マスの再取得
+        foreach (KeyValuePair<GameObject, Vector2> pair in tm.tiles)
+        {
+            GameObject obj = pair.Key;
+            Tile tile = obj.GetComponent<Tile>();
+            tile.GetNeighborTiles();
+        }
 
         //現在地を更新
         nowmass = tm.GetNowMass(this.gameObject);
@@ -479,6 +505,9 @@ public class moveplayer : MonoBehaviour
             {
                 sweetsscript.MakeSweets(beyond.gameObject);
                 clear.wasMaked = true;
+                /*if (clear == null) Debug.Log("NULL");
+                else if (clear != null) Debug.Log("NOT");
+                clear.wasMaked = true;*/
             }
             //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
             else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
@@ -521,21 +550,21 @@ public class moveplayer : MonoBehaviour
             cg.searched.Clear();
 
             //もしゴールできないなら、GameOverの設定
-            //if (!cg.CanMassThrough(ReturnNowTileScript()))
-            //{
-            //    Debug.Log("in can not goal");
-            //    goc.ShowGameOver();
-            //    stage.phase = StageManager.Phase.Result;
-            //}
+            if (!cg.CanMassThrough(ReturnNowTileScript()))
+            {
+                //Debug.Log("can not goal");
+                manager.PlayerOff();
+                goc.ShowGameOver();
+                stage.phase = StageManager.Phase.Result;
+            }
         }
 
         //ゴールマスについたら
         if (nowmass == cg.goalmass)
         {
             //Debug.Log("reach goal");
-            //manager.PlayerOff();
-            //cc.ChangeCursorEnable(true);
-            clear.ShowClearResult(rcm.ReloadCount);
+            manager.PlayerOff();
+            clear.ShowClearResult();
 
             return;
         }
@@ -546,7 +575,7 @@ public class moveplayer : MonoBehaviour
         animator.SetFloat("MoveY", 0);
 
         //入力を受け付ける
-        manager.PlayerOn();
+        if (!goc.gameOverImage.IsActive()) manager.PlayerOn();
 
         //処理フラグ更新
         inProcess = false;
@@ -624,9 +653,6 @@ public class moveplayer : MonoBehaviour
 
         await eatnext.EatSweets();
 
-        //工程数をひとつ減らす
-        //remain.ReduceLife();
-
         //食料ゲージの増加
         sm.CallDecreaseFoodGauge();
 
@@ -693,7 +719,7 @@ public class moveplayer : MonoBehaviour
         //リトライ
         if (!inProcess && r > 0.5f)
         {
-            rcm.IncrementReloadCount();     //リロードカウントを増やす
+            //rcm.IncrementReloadCount();     //リロードカウントを増やす
             manager.Retry();
         }
 
@@ -705,3 +731,4 @@ public class moveplayer : MonoBehaviour
         }*/
     }
 }
+

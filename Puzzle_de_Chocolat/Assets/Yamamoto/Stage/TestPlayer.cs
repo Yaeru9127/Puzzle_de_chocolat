@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using static UnityEngine.RuleTile.TilingRuleOutput;
+using UnityEngine.SceneManagement;
 
 public class TestPlayer : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class TestPlayer : MonoBehaviour
     private CanGoal cg;
     private Remainingaircraft remain;
     private GameOverController goc;
-    private ReloadCountManager rcm;
+    //private ReloadCountManager rcm;
     private StageManager stage;
     private GameClear clear;
 
@@ -49,7 +49,7 @@ public class TestPlayer : MonoBehaviour
         cg = CanGoal.cg;
         remain = Remainingaircraft.remain;
         goc = GameOverController.over;
-        rcm = ReloadCountManager.Instance;
+        //rcm = ReloadCountManager.Instance;
         stage = StageManager.stage;
         clear = GameClear.clear;
         animator = this.gameObject.GetComponent<Animator>();
@@ -61,15 +61,21 @@ public class TestPlayer : MonoBehaviour
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
+        stage.gamescene = SceneManager.GetActiveScene().name;
     }
 
+    /// <summary>
+    /// 初期位置を決める関数
+    /// </summary>
     private void SetFirstPosition()
     {
+        //当たり判定で取得
         Collider2D[] col = Physics2D.OverlapPointAll(this.gameObject.transform.position);
         foreach (Collider2D col2 in col)
         {
             if (col2.gameObject.GetComponent<Tile>())
             {
+                //座標の調整
                 float posx = col2.transform.position.x;
                 float posy = col2.transform.position.y;
                 this.gameObject.transform.position = new Vector3(posx, posy, -5);
@@ -560,7 +566,7 @@ public class TestPlayer : MonoBehaviour
         {
             //Debug.Log("reach goal");
             manager.PlayerOff();
-            clear.ShowClearResult(rcm.ReloadCount);
+            clear.ShowClearResult();
 
             return;
         }
@@ -699,7 +705,8 @@ public class TestPlayer : MonoBehaviour
         }
 
         //食べる
-        if (!inProcess && actions.Player.Eat.WasPressedThisFrame())
+        if (SceneManager.GetActiveScene().name != "Tutorial1" && SceneManager.GetActiveScene().name != "Tutorial2"
+            && !inProcess  && actions.Player.Eat.WasPressedThisFrame())
         {
             TryEat(direction);
         }
@@ -715,8 +722,9 @@ public class TestPlayer : MonoBehaviour
         //リトライ
         if (!inProcess && r > 0.5f)
         {
-            rcm.IncrementReloadCount();     //リロードカウントを増やす
+            //rcm.IncrementReloadCount();     //リロードカウントを増やす
             manager.Retry();
+            stage.gamescene = SceneManager.GetActiveScene().name;
         }
 
         //GameOver or GameClear

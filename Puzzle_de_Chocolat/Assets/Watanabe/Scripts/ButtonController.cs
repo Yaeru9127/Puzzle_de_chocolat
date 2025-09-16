@@ -4,11 +4,18 @@ using System.Collections;
 
 public class ButtonController : MonoBehaviour
 {
+    private StageManager stage;
+
     public FadeUI fadePanel; // Inspector ‚ÅŠ„‚è“–‚Ä‚é
+
+    private void Start()
+    {
+        stage = StageManager.stage;
+    }
 
     public void GoToGameScene()
     {
-        StartCoroutine(FadeAndLoadScene("Stage01"));
+        StartCoroutine(FadeAndLoadScene(stage.gamescene));
     }
 
     public void GoToStageSelect()

@@ -12,7 +12,8 @@ public class StageManager : MonoBehaviour
     }
     public Phase phase;
 
-    public int stagenum;    //ステージナンバー
+    public int stagenum;        //ステージナンバー
+    public string gamescene;    //最後にプレイしたゲームシーン
 
     // ステージごとのゲージ最大値設定
     // stage0の時最初0

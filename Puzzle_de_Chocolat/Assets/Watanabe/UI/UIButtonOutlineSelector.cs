@@ -104,13 +104,9 @@ public class UIButtonOutlineSelector : MonoBehaviour
         }
 
         //コントローラー入力でボタンクリック
-        if (Gamepad.all.Count > 0)
+        if (actions.GamePad.Click.WasPressedThisFrame() && Gamepad.all.Count > 0)
         {
-            if (actions.GamePad.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
-        }
-        else if (Gamepad.all.Count == 0)
-        {
-            if (actions.Mouse.Click.WasPressedThisFrame()) ControllerClick(selectedObj);
+            ControllerClick(selectedObj);
         }
     }
 
@@ -156,17 +152,17 @@ public class UIButtonOutlineSelector : MonoBehaviour
 
     private void ControllerClick(GameObject bt)
     {
-        //選択されいるオブジェクトが存在しないときは無視
+        //選択されているオブジェクトが存在しないときは無視
         if (bt == null) return;
 
-        //Keyboard操作でないときは無視
-        if (Gamepad.all.Count > 0) return;
+        //Keyboard操作のときは無視
+        if (Gamepad.all.Count == 0) return;
 
         Button button = bt.GetComponent<Button>();
 
         //選択されているUIがButtonじゃないときは無視
         if (bt == null) return;
-
+        
         button.onClick.Invoke();
     }
 }

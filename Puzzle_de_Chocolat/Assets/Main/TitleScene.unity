@@ -722,7 +722,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 63e42be739274614e879b4db2f81294f, type: 3}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.size
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[3].loopBGM
@@ -741,6 +741,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[7].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[8].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[9].loopBGM
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[3].bgmIndex
       value: 0
       objectReference: {fileID: 0}
@@ -754,6 +766,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[6].bgmIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[7].bgmIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[8].bgmIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[9].bgmIndex
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
@@ -783,6 +807,18 @@ PrefabInstance:
     - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: sceneBGMEntries.Array.data[6].sceneName
       value: Stage03
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[7].sceneName
+      value: Tutorial1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[8].sceneName
+      value: Tutorial1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149076801329612869, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
+      propertyPath: sceneBGMEntries.Array.data[9].sceneName
+      value: Tutorial3
       objectReference: {fileID: 0}
     - target: {fileID: 7819784571569621297, guid: e4ace22ab53ea8c4583381c34bc9805e, type: 3}
       propertyPath: m_Name
@@ -1433,7 +1469,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: StageSelect
+          m_StringArgument: Tutorial1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2142779445

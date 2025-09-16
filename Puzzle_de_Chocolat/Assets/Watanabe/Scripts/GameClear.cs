@@ -79,7 +79,7 @@ public class GameClear : MonoBehaviour
     /// <summary>
     /// クリア演出を実行し、星の数を計算する
     /// </summary>
-    public void  ShowClearResult(int retry)
+    public void  ShowClearResult()
     {
         clearImage.gameObject.SetActive(true);
         // AudioManager.Instance.PlaySE("Game clear");
@@ -154,5 +154,33 @@ public class GameClear : MonoBehaviour
     public void LoadResultScene()
     {
         SceneManager.LoadScene("RetryScene");
+    }
+
+    /// <summary>
+    /// チュートリアル専用シーン読み込み関数
+    /// </summary>
+    /// <param name="num"></param>
+    public void TutorialSceneLoad(int num)
+    {
+        //数字で判断
+        string scenename = "";
+        switch (num)
+        {
+            case 1:
+                scenename = "Tutorial1";
+                break;
+            case 2:
+                scenename = "Tutorial2";
+                break;
+            case 3:
+                scenename = "Tutorial3";
+                break;
+            case 4:
+                scenename = "Tutorial4";
+                    break;
+        }
+
+        //シーン読み込み
+        SceneManager.LoadScene(scenename);
     }
 }

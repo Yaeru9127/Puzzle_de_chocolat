@@ -27,7 +27,7 @@ public class PauseController : MonoBehaviour
         //‰Šú‰»
         manager = InputSystem_Manager.manager;
         actions = manager.GetActions();
-        SetOperationObject();
+        //SetOperationObject();
 
         //‚à‚µ•\¦ó‘Ô‚È‚ç”ñ•\¦‚É‚·‚é
         if (pauseParent.activeSelf) pauseParent.SetActive(false);

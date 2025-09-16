@@ -80,7 +80,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //バター
             case Material.Butter:
-                if (stage.stagenum == 1)
+                if (stage.stagenum == 0)
+                {
+                    return false;
+                }
+                else if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Sugar) name = "pretzel";
                     else if (comparison.material == Material.Egg) name = "baumkuchen";
@@ -96,7 +100,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //砂糖
             case Material.Sugar:
-                if (stage.stagenum == 1)
+                if (stage.stagenum == 0)
+                {
+                    return false;
+                }
+                else if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "pretzel";
                     else return false;
@@ -111,7 +119,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //卵
             case Material.Egg:
-                if (stage.stagenum == 1)
+                if (stage.stagenum == 0)
+                {
+                    return false;
+                }
+                else if (stage.stagenum == 1)
                 {
                     if (comparison.material == Material.Butter) name = "baumkuchen";
                     else return false;
@@ -124,7 +136,11 @@ public class Sweets : MonoBehaviour
             //-----------------------------------------------------------------------
             //牛乳
             case Material.Milk:
-                if (stage.stagenum == 1)
+                if (stage.stagenum == 0)
+                {
+                    return false;
+                }
+                else if (stage.stagenum == 1)
                 {
                     return false;
                 }
@@ -184,7 +200,7 @@ public class Sweets : MonoBehaviour
             if (pair != null) Destroy(pair);
             Destroy(this.gameObject);
         }
-        else Debug.Log("dont get sprite");
+        //else Debug.Log("dont get sprite");
     }
 
     /// <summary>

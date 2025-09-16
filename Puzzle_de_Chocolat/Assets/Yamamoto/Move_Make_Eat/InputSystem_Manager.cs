@@ -75,7 +75,7 @@ public class InputSystem_Manager : MonoBehaviour
 
     public void Retry()
     {
-        SceneManager.LoadScene("Stage01");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Update is called once per frame
