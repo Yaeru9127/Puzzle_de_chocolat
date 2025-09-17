@@ -28,17 +28,13 @@ public class Sweets : MonoBehaviour
     public bool canMove;        //移動できるかの判定用
     public bool canEat;         //食べれるかの判定用
 
-    private void Awake()
-    {
-        stage = StageManager.stage;
-        clear = GameClear.clear;
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //初期化
         sm = SweetsManager.sm;
+        stage = StageManager.stage;
+        clear = GameClear.clear;
         name = null;
         SetPosition();
     }
@@ -248,11 +244,10 @@ public class Sweets : MonoBehaviour
             sm.SetEffect();
 
             //食べたフラグを更新
-            //sm.clear.wasEat = true;
-            clear.wasEat++;
+            clear.AddWasEat();
             //Debug.Log("食べた回数: " + clear.wasEat);
         }
-        else Debug.Log("this sweets is can not eat");
+        //else Debug.Log("this sweets is can not eat");
     }
 
     // Update is called once per frame

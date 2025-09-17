@@ -30,11 +30,15 @@ public class FadeUI : MonoBehaviour
             fadeImage.color = c;
             yield return null;
 
-            if (fadeImage.color.a >= 1) Debug.Log("end fade");  break;
+            if (fadeImage.color.a >= 1)
+            {
+                //Debug.Log("end fade");
+                break;
+            }
         }
 
-        //c.a = 1f;
-        //fadeImage.color = c;
+        c.a = 1f;
+        fadeImage.color = c;
     }
 
     public IEnumerator FadeIn()

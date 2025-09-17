@@ -8,6 +8,7 @@ public class playermove2 : MonoBehaviour
     private CharacterAnimation characterAnimation;
     private InputSystem_Actions actions;
     private InputSystem_Manager manager;
+    private StageManager stage;
 
     public Transform[] nodes; // ÉmÅ[Éhç¿ïW
     public Dictionary<int, List<int>> nodeConnections = new Dictionary<int, List<int>>();
@@ -28,6 +29,7 @@ public class playermove2 : MonoBehaviour
         fadeController = Object.FindFirstObjectByType<FadeController>();
         characterAnimation = GetComponent<CharacterAnimation>();
         manager = InputSystem_Manager.manager;
+        stage = StageManager.stage;
         actions = manager.GetActions();
         manager.PlayerOff();
 
@@ -116,10 +118,18 @@ public class playermove2 : MonoBehaviour
     {
         switch (currentNodeIndex)
         {
-            case 0: fadeController.FadeOutAndLoadScene("Tutorial1"); break;
-            case 1: fadeController.FadeOutAndLoadScene("Stage01"); break;
-            case 2: fadeController.FadeOutAndLoadScene("Stage02"); break;
-            case 3: fadeController.FadeOutAndLoadScene("Stage03"); break;
+            case 0: fadeController.FadeOutAndLoadScene("Tutorial1");
+                stage.stagenum = 0;
+                break;
+            case 1: fadeController.FadeOutAndLoadScene("Stage01");
+                stage.stagenum = 1;
+                break;
+            case 2: fadeController.FadeOutAndLoadScene("Stage02");
+                stage.stagenum = 2;
+                break;
+            case 3: fadeController.FadeOutAndLoadScene("Stage03");
+                stage.stagenum = 3;
+                break;
         }
     }
 

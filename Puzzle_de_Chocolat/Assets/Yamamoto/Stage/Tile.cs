@@ -16,17 +16,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private Sprite hibi;   //ひびマスSprite
     public bool canBreak;                   //壊れるマス設定変数
 
-    private void Awake()
-    {
-        
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
     /// <summary>
     /// 隣接するマスの取得関数
     /// </summary>
@@ -82,6 +71,7 @@ public class Tile : MonoBehaviour
         //位置関係からオブジェクトを探す
         foreach (KeyValuePair<GameObject, Vector2> pair in neighbor)
         {
+            if (pair.Key == null) continue;
             //位置関係が一致したときのオブジェクト
             if (pair.Key.GetComponent<Tile>() && pair.Value == pos && pair.Key != null)
             {
@@ -118,7 +108,7 @@ public class Tile : MonoBehaviour
         else if (renderer.sprite == hibi)
         {
             Destroy(this.gameObject);
-            await UniTask.WaitUntil(() => this.gameObject == null);
+            await UniTask.Yield(PlayerLoopTiming.Update);
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ public class GameClear : MonoBehaviour
     {
         public List<int> stepPenalties;
         public List<string> requiredSweets;
-        public int maxEat = 2;
+        public int eatNum;
     }
 
     public static GameClear clear { get; private set; }
@@ -30,7 +31,7 @@ public class GameClear : MonoBehaviour
     public int wasEat = 0;
     public bool wasMaked = false;
 
-    public List<StageCondition> stageConditions; 
+    public StageCondition stageConditions; 
 
     [HideInInspector]
     public List<string> madeSweets;
@@ -55,6 +56,14 @@ public class GameClear : MonoBehaviour
         stepsTaken = 0;
         wasEat = 0;
         wasMaked = false;
+    }
+
+    /// <summary>
+    /// 食べた回数を増やす関数
+    /// </summary>
+    public void AddWasEat()
+    {
+        wasEat++;
     }
 
     /// <summary>
@@ -91,43 +100,39 @@ public class GameClear : MonoBehaviour
         }
 
         int star = 3;
-        int stageIndex = currentStage - 1;
 
-        if (stageIndex >= 0 && stageIndex < stageConditions.Count)
+        //ステージごとに設定しておく
+        /*チュートリアルステージは評価条件を無視*/
+        if (StageManager.stage.stagenum != 0)
         {
-            StageCondition currentCondition = stageConditions[stageIndex];
+            // ステップ数の減点
+            foreach (int penaltyStep in stageConditions.stepPenalties)
+            {
+                //Debug.Log(penaltyStep);
+                if (stepsTaken > penaltyStep) star--;
+            }
 
             // 必須のお菓子の減点
-            foreach (string requiredSweet in currentCondition.requiredSweets)
+            if (stageConditions.requiredSweets != null && madeSweets != null
+                && stageConditions.requiredSweets.Count == madeSweets.Count)
             {
-                if (!madeSweets.Contains(requiredSweet))
-                {
-                    star--;
-                }
+                //作ったお菓子と評価するお菓子の個数と種類を厳密に判断
+                bool check = stageConditions.requiredSweets.OrderBy(x => x).SequenceEqual(madeSweets.OrderBy(x => x));
+
+                if (!check) star--;
             }
 
             // wasEatの減点
-            if (wasEat > currentCondition.maxEat)
+            if (wasEat != stageConditions.eatNum)
             {
                 star--;
-            }
-
-            // ステップ数の減点
-            foreach (int penaltyStep in currentCondition.stepPenalties)
-            {
-                if (stepsTaken > penaltyStep)
-                {
-                    star--;
-                }
             }
         }
 
         // 星の数が0未満にならないように調整
-        if (star < 0)
-        {
-            star = 0;
-        }
+        if (star < 0) star = 0;
 
+        //画像の設定
         switch (star)
         {
             case 0:

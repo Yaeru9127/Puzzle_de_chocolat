@@ -62,6 +62,7 @@ public class TestPlayer : MonoBehaviour
         speed = 0.4f;
         inProcess = false;
         stage.gamescene = SceneManager.GetActiveScene().name;
+        Debug.Log(stage.stagenum);
     }
 
     /// <summary>
@@ -422,7 +423,7 @@ public class TestPlayer : MonoBehaviour
                 //= 移動処理なし
                 if (beyond != null && !sweetsscript.TryMake(beyond))
                 {
-                    Debug.Log("can not make");
+                    //Debug.Log("can not make");
 
                     //親子関係をリセット
                     ResetParent(children);
