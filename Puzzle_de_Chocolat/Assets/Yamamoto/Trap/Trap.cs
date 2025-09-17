@@ -14,7 +14,7 @@ public class Trap : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        SetPosition();   
+        SetPosition();
     }
 
     /// <summary>
@@ -22,26 +22,28 @@ public class Trap : MonoBehaviour
     /// </summary>
     private void SetPosition()
     {
-        //Rayで自身のマスを探す
+        //Rayで自身がいるマスを探す
         Vector3 origin = this.gameObject.transform.position;
         origin.z -= 1;
-        Ray ray = new(origin, Vector3.forward);
-        RaycastHit[] hits = Physics.RaycastAll(ray);
+        Collider2D[] col = Physics2D.OverlapPointAll(origin);
 
         //ヒットした中からマスを探す
-        foreach (RaycastHit hit in hits )
+        foreach (Collider2D hit in col)
         {
-            Tile tile = hit.collider.gameObject.GetComponent<Tile>();
+            Tile tile = hit.gameObject.GetComponent<Tile>();
             if (tile == null) continue; //マススクリプトをもってなかったら次へ
 
             //マスを見つけたら
             if (tile != null)
             {
-                //自身の位置を調整
+                //位置の調整
                 Vector3 pos = tile.transform.position;
-                pos.z = -5;
+                pos.z = -3;
                 this.gameObject.transform.position = pos;
-                Debug.Log(this.gameObject.transform.position);
+
+                //デバッグ
+                //Debug.Log($"mass : {tile.gameObject.transform.position}");
+                //Debug.Log($"trap : {this.gameObject.transform.position}");
                 break;
             }
         }

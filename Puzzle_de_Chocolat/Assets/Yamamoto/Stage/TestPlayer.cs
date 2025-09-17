@@ -521,8 +521,7 @@ public class TestPlayer : MonoBehaviour
             //親子関係をリセット
             ResetParent(children);
 
-            /*残り工程数をひとつ減らす*/
-            //Debug.Log("decrease remaining num");
+            //工程数をひとつ減らす
             remain.ReduceLife();
         }
 
@@ -530,8 +529,10 @@ public class TestPlayer : MonoBehaviour
         sm.SearchSweets();
         sm.SetEffect();
 
-        //もし生クリームを踏んだ時の処理   
-        Collider2D[] col = Physics2D.OverlapPointAll(nowmass.transform.position);
+        //もし生クリームを踏んだ時の処理
+        Vector3 trappos = nowmass.transform.position;
+        trappos.z = -3;
+        Collider2D[] col = Physics2D.OverlapPointAll(trappos);
         foreach (Collider2D col2 in col)
         {
             if (col2.gameObject.GetComponent<Trap>() && col2.gameObject.GetComponent<Trap>().type == Trap.Type.FrischeSahne)
