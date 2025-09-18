@@ -62,13 +62,15 @@ public class TestPlayer : MonoBehaviour
         tm.GetAllMass();
         await UniTask.DelayFrame(1);
         await UniTask.WaitUntil(() => tm.isInitialized);
+        await UniTask.DelayFrame(1);
 
-        manager.PlayerOn();
+        sm.SearchSweets();
         nowmass = tm.GetNowMass(this.gameObject);
         stage.phase = StageManager.Phase.Game;
         speed = 0.4f;
         inProcess = false;
         stage.gamescene = SceneManager.GetActiveScene().name;
+        manager.PlayerOn();
         Debug.Log(stage.stagenum);
     }
 
