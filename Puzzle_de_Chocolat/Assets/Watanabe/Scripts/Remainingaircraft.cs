@@ -18,7 +18,7 @@ public class Remainingaircraft : MonoBehaviour
     public Image numberDisplay;
 
     // GameOverを管理するスクリプトへの参照
-    public GameOverController gameOverController;
+    private GameOverController over;
 
     // 現在の残機数
     public int currentLife;
@@ -36,6 +36,7 @@ public class Remainingaircraft : MonoBehaviour
     void Start()
     {
         clear = GameClear.clear;
+        over = GameOverController.over;
 
         // 残機数を初期化
         currentLife = lifeSprites.Count;
@@ -68,10 +69,10 @@ public class Remainingaircraft : MonoBehaviour
                 }
 
                 // GameOver処理
-                if (gameOverController != null)
+                if (over != null)
                 {
                     numberDisplay.gameObject.SetActive(false);
-                    gameOverController.ShowGameOver();
+                    over.ShowGameOver();
                 }
                 else
                 {

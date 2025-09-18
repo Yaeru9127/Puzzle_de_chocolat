@@ -5326,7 +5326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -61.79004, y: 60.51}
+  m_AnchoredPosition: {x: -68, y: 59.5}
   m_SizeDelta: {x: 105.21, y: 105.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1500469344
@@ -6272,7 +6272,7 @@ MonoBehaviour:
   stageConditions:
     stepPenalties: 
     requiredSweets:
-    - 
+    - "canul\xE9"
     eatNum: 3
   madeSweets: []
 --- !u!114 &1962387594
@@ -6308,7 +6308,7 @@ MonoBehaviour:
   remainingAircraft: {fileID: 1962387596}
   increaseDuration: 0.5
   defaultIncreaseAmount: 1
-  maxValue: 2
+  maxValue: 3
   currentValue: 0
   gaugeIncreased: 0
 --- !u!114 &1962387596

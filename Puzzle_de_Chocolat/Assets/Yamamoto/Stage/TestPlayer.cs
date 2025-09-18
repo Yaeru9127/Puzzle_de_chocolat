@@ -29,7 +29,7 @@ public class TestPlayer : MonoBehaviour
         Left,
         Right
     }
-    public Direction direction;
+    [HideInInspector] public Direction direction;
 
     private Animator animator;
     private GameObject nowmass;         //今いるマス
@@ -235,7 +235,7 @@ public class TestPlayer : MonoBehaviour
         if (sweetsscript != null) Debug.Log($"{sweetsscript.gameObject.name}");
         else Debug.Log("sweetsscript is null");*/
 
-        GameObject newnextmass = null;     //マスオブジェクト
+        GameObject newnextmass = null;     //プレイヤーの移動先マスオブジェクト
         Sweets nextnextsweets = null;      //お菓子スクリプト
         Sweets pairnextsweets = null;      //ペアのお菓子スクリプト
 
@@ -306,12 +306,18 @@ public class TestPlayer : MonoBehaviour
                         }
                     }
                 }
-
                 //----------------------------------------------------
                 //向いている方向とは逆方向に移動する
                 //後ろのマス変数がnull以外 => 後ろのマスにお菓子がある
                 else if (backmass != null)
                 {
+                    //お菓子の移動先のマスが壊れるマスならreturn => 壊れた後のマスにお菓子が移動してしまうため
+                    if (ReturnNowTileScript().canBreak)
+                    {
+                        inProcess = false;
+                        return;
+                    }
+
                     //自分の後ろのマスを取得
                     newnextmass = backmass;
                 }
@@ -708,7 +714,7 @@ public class TestPlayer : MonoBehaviour
 
         //食べる
         if (SceneManager.GetActiveScene().name != "Tutorial1" && SceneManager.GetActiveScene().name != "Tutorial2"
-            && !inProcess  && actions.Player.Eat.WasPressedThisFrame())
+            && !inProcess && actions.Player.Eat.WasPressedThisFrame())
         {
             TryEat(direction);
         }

@@ -15,8 +15,8 @@ public class GaugeController : MonoBehaviour
     [SerializeField] private Image gaugeFillImage; // ゲージの進行度を表すUI Image
     [Tooltip("ゲージ残り回数を数字スプライトで表示するUI Image")]
     [SerializeField] private Image gaugeNumberDisplay; // 残り回数を表示するUI
-    [SerializeField] private GameOverController gameOverController; // ゲームオーバー処理クラスへの参照
-    [SerializeField] private Remainingaircraft remainingAircraft; // 残機UIなどの処理クラスへの参照
+    private GameOverController over; // ゲームオーバー処理クラスへの参照
+    private Remainingaircraft remain; // 残機UIなどの処理クラスへの参照
 
     [Header("ゲージ設定")]
     [SerializeField] private float increaseDuration = 0.5f; // ゲージが増加するアニメーションの所要時間
@@ -32,6 +32,9 @@ public class GaugeController : MonoBehaviour
 
     void Start()
     {
+        over = GameOverController.over;
+        remain = Remainingaircraft.remain;
+
         gaugeIncreased = false;
         gaugeIncreaseCount = 0; // ステージ開始時にリセット
         UpdateGaugeNumberDisplay(); // 初期の残り回数表示更新
@@ -40,10 +43,10 @@ public class GaugeController : MonoBehaviour
     /// <summary>
     /// オブジェクト破壊時に呼ばれる（増加量デフォルト）
     /// </summary>
-    public void OnObjectDestroyed()
-    {
-        OnObjectDestroyed(defaultIncreaseAmount);
-    }
+    //public void OnObjectDestroyed()
+    //{
+    //    OnObjectDestroyed(defaultIncreaseAmount);
+    //}
 
     /// <summary>
     /// オブジェクト破壊時に呼ばれる（指定量の増加）
@@ -101,16 +104,16 @@ public class GaugeController : MonoBehaviour
         gaugeFillImage.fillAmount = endFill;
         UpdateGaugeNumberDisplay(); // 数字UI更新
 
-        if (remainingAircraft != null)
+        if (remain != null)
         {
-            remainingAircraft.ReduceLife(); // 残機を1減らす
+            remain.ReduceLife(); // 残機を1減らす
         }
 
         // ゲージが最大値に達したらゲームオーバー表示
-        //if (currentValue >= maxValue && gameOverController != null)
-        //{
-        //    gameOverController.ShowGameOver();
-        //}
+        if (currentValue >= maxValue && over != null)
+        {
+            over.ShowGameOver();
+        }
     }
 
     /// <summary>
@@ -118,11 +121,11 @@ public class GaugeController : MonoBehaviour
     /// </summary>
     private void UpdateGaugeNumberDisplay()
     {
-        if (gaugeNumberDisplay == null || remainingAircraft == null)
+        if (gaugeNumberDisplay == null || remain == null)
             return;
 
         int remaining = Mathf.Clamp(maxValue - currentValue, 0, 99);
-        Sprite sprite = remainingAircraft.GetNumberSprite(remaining);
+        Sprite sprite = remain.GetNumberSprite(remaining);
 
         if (sprite != null)
         {
