@@ -32,11 +32,18 @@ public class TestPlayer : MonoBehaviour
     [HideInInspector] public Direction direction;
 
     private Animator animator;
+
     private GameObject nowmass;         //今いるマス
     private float speed;                //マス間の移動速度
     private bool inProcess;             //処理中フラグ
     private float lastX;
     private float lastY;
+    private bool initialization;        //初期化処理フラグ
+
+    private void Awake()
+    {
+        initialization = false;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
@@ -66,6 +73,7 @@ public class TestPlayer : MonoBehaviour
 
         await UniTask.Yield();
         Debug.Log("end of player");
+        initialization = true;
     }
 
     /// <summary>
@@ -689,6 +697,9 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //初期化処理が終わっていない場合はreturn
+        if (!initialization) return;
+
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift
