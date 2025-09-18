@@ -27,20 +27,18 @@ public class SweetsManager : MonoBehaviour
 
     [SerializeField] private GaugeController gaugeCC;
 
-    /*レシピ　メモ
-     *Stage1
-     *プレッツェル : pretzel    バター + 砂糖
-     *バームクーヘン : baumkuchen バター + 卵
-     *
-     *Stage2
-     *パンナコッタ : pannacotta バター + 牛乳
-     *ティラミス : tiramisu     砂糖 + 牛乳
-     *マリトッツォ : maritozzo  バター + 砂糖
-     *
-     *else
-     *カヌレ : canulé           砂糖 + 卵
-     *マカロン : macaroon  バター + 牛乳
-     *マドレーヌ : madeleine    バター + 卵
+    /*Inspecter メモ
+     *プレッツェル : pretzel
+     *バームクーヘン : baumkuchen
+     *ティラミス : tiramisu
+     *パンナコッタ : pannacotta
+     *マカロン : macaroon 
+     *カヌレ : canulé
+     *マリトッツォ : maritozzo
+     *マドレーヌ : madeleine
+     *スコーン : scone
+     *アップルパイ : applepie
+     *ショートブレッド : shortbread
      *
      *Inspecterのstringには上記の名前で設定すること*/
 
@@ -153,7 +151,7 @@ public class SweetsManager : MonoBehaviour
                 returnobject = pair.makedSweets;
             }
         }
-
+        Debug.Log(returnobject.GetComponent<SpriteRenderer>().sprite.name);
         return returnobject;
     }
 

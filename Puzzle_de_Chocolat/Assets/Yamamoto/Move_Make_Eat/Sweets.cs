@@ -79,7 +79,9 @@ public class Sweets : MonoBehaviour
             case Material.Butter:
                 if (stage.stagenum == 0)
                 {
-                    return false;
+                    if (comparison.material == Material.Sugar) name = "scone";
+                    else if (comparison.material == Material.Milk) name = "shortbread";
+                    else return false;
                 }
                 else if (stage.stagenum == 1)
                 {
@@ -105,7 +107,8 @@ public class Sweets : MonoBehaviour
             case Material.Sugar:
                 if (stage.stagenum == 0)
                 {
-                    if (comparison.material == Material.Egg) name = "canulé";
+                    if (comparison.material == Material.Butter) name = "scone";
+                    //else if (comparison.material == Material.Egg) name = "canulé";
                     else return false;
                 }
                 else if (stage.stagenum == 1)
@@ -154,7 +157,8 @@ public class Sweets : MonoBehaviour
             case Material.Milk:
                 if (stage.stagenum == 0)
                 {
-                    return false;
+                    if (comparison.material == Material.Butter) name = "shortbread";
+                    else return false;
                 }
                 else if (stage.stagenum == 1)
                 {

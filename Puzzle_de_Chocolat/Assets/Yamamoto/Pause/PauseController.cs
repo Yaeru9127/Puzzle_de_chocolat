@@ -11,10 +11,6 @@ public class PauseController : MonoBehaviour
 
     [SerializeField] private GameObject pauseParent;   //ポーズパネルオブジェクト
 
-    //操作説明オブジェクト
-    [SerializeField] private GameObject Keyboard;
-    [SerializeField] private GameObject GamePad;
-
     private void Awake()
     {
         if (pause == null) pause = this;
@@ -36,22 +32,22 @@ public class PauseController : MonoBehaviour
     /// <summary>
     /// 操作方法によって表示するオブジェクトを変える
     /// </summary>
-    private void SetOperationObject()
-    {
-        //操作方法によって判別
-        GameObject operation = null;
-        if (Gamepad.all.Count > 0)  //GamePad
-        {
-            operation = Instantiate(GamePad);
-        }
-        else  //Keyboard
-        {
-            operation = Instantiate(Keyboard);
-        }
+    //private void SetOperationObject()
+    //{
+    //    //操作方法によって判別
+    //    GameObject operation = null;
+    //    if (Gamepad.all.Count > 0)  //GamePad
+    //    {
+    //        operation = Instantiate(GamePad);
+    //    }
+    //    else  //Keyboard
+    //    {
+    //        operation = Instantiate(Keyboard);
+    //    }
 
-        //場所を設定
-        operation.transform.position = new Vector3(6.45f, -2.5f, 0);
-    }
+    //    //場所を設定
+    //    operation.transform.position = new Vector3(6.45f, -2.5f, 0);
+    //}
 
     /// <summary>
     /// ユーザー入力でポーズにする関数

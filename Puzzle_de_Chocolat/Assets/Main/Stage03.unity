@@ -4468,6 +4468,14 @@ MonoBehaviour:
     makedName: baumkuchen
   - makedSweets: {fileID: 731327806972827388, guid: f6216d4337f20234794a9abf4d9917a6, type: 3}
     makedName: "canul\xE9"
+  - makedSweets: {fileID: 1229217850999343624, guid: fef76010a776c7645b29481569c1d32a, type: 3}
+    makedName: maritozzo
+  - makedSweets: {fileID: 4314835860632487070, guid: fab5134ac985e4349b244c61c2bbf04e, type: 3}
+    makedName: scone
+  - makedSweets: {fileID: 7547628227173561615, guid: 78bab14ecbec32745aef050c8995dd13, type: 3}
+    makedName: applepie
+  - makedSweets: {fileID: 5370270919063454567, guid: b49666e560b58664cb629bcc6dcac3cc, type: 3}
+    makedName: shortbread
   ZairyouEffect: {fileID: 2798761608580405818, guid: cfa95775ea836264a9a08bf22fc9252c, type: 3}
   EatEffect: {fileID: 4491990148530286681, guid: a62789475c3c58c44aeda06a807e7bf2, type: 3}
   gaugeCC: {fileID: 1962387595}
@@ -4662,8 +4670,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseParent: {fileID: 300186071}
-  Keyboard: {fileID: 2302528179416954769, guid: a729c2b01a56cf149886f112540b266b, type: 3}
-  GamePad: {fileID: 8664840622666629334, guid: 527b575e6194233499f1e1aa9386e307, type: 3}
 --- !u!114 &1343344380
 MonoBehaviour:
   m_ObjectHideFlags: 0
