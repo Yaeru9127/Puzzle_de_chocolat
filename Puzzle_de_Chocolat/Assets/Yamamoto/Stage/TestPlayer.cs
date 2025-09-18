@@ -38,12 +38,6 @@ public class TestPlayer : MonoBehaviour
     private bool inProcess;             //処理中フラグ
     private float lastX;
     private float lastY;
-    private bool initialization;        //初期化処理フラグ
-
-    private void Awake()
-    {
-        initialization = false;
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
@@ -63,6 +57,12 @@ public class TestPlayer : MonoBehaviour
 
         actions = manager.GetActions();
         SetFirstPosition();
+
+        //TileManagerのGetAllMass()が終わるまで待つ
+        tm.GetAllMass();
+        await UniTask.DelayFrame(1);
+        await UniTask.WaitUntil(() => tm.isInitialized);
+
         manager.PlayerOn();
         nowmass = tm.GetNowMass(this.gameObject);
         stage.phase = StageManager.Phase.Game;
@@ -70,10 +70,6 @@ public class TestPlayer : MonoBehaviour
         inProcess = false;
         stage.gamescene = SceneManager.GetActiveScene().name;
         Debug.Log(stage.stagenum);
-
-        await UniTask.Yield();
-        Debug.Log("end of player");
-        initialization = true;
     }
 
     /// <summary>
@@ -211,7 +207,6 @@ public class TestPlayer : MonoBehaviour
         //目の前のマスにあるお菓子を取得
         Sweets sweetsscript;
         sweetsscript = sm.GetSweets(next.transform.position);
-        if (sweetsscript != null) { Debug.Log(sweetsscript.gameObject.name); }
 
         //目の前にお菓子がない場合、後ろのマスを検索する
         GameObject backmass = null;
@@ -611,6 +606,8 @@ public class TestPlayer : MonoBehaviour
     {
         foreach (GameObject ch in child)
         {
+            if (ch == null) continue;
+
             ch.transform.SetParent(sm.gameObject.transform);
             //Debug.Log(ch.name);
         }
@@ -697,9 +694,6 @@ public class TestPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //初期化処理が終わっていない場合はreturn
-        if (!initialization) return;
-
         //ユーザー入力を受け取る
         Vector2 vec2 = actions.Player.Move.ReadValue<Vector2>();        //移動入力値
         float xvalue = actions.Player.SweetsMove.ReadValue<float>();    //GamePad.X or KeyCode.Shift

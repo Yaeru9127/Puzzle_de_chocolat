@@ -8,17 +8,12 @@ public class TileManager : MonoBehaviour
     //マスオブジェクト格納のDictionary(オブジェクト, "位置関係")
     public Dictionary<GameObject, Vector2> tiles = new Dictionary<GameObject, Vector2>();
 
+    public bool isInitialized;
+
     private void Awake()
     {
         if (tm == null) tm = this;
         else if (tm != null) Destroy(this.gameObject);
-        GetAllMass();
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
     }
 
     /// <summary>
@@ -26,6 +21,8 @@ public class TileManager : MonoBehaviour
     /// </summary>
     public void GetAllMass()
     {
+        isInitialized = false;
+
         //初期化
         tiles.Clear();
 
@@ -48,6 +45,8 @@ public class TileManager : MonoBehaviour
         //{
         //    Debug.Log($"{dictionary.Key.name}, {dictionary.Value}");
         //}
+
+        isInitialized = true;
     }
 
     /// <summary>
@@ -67,9 +66,10 @@ public class TileManager : MonoBehaviour
             if((Vector2)obj.transform.position == (Vector2)pair.Key.transform.position)
             {
                 nowmass = pair.Key;
+                break;
             }
         }
-
+        if (nowmass == null) Debug.LogError("nowmass is null");
         return nowmass;
     }
 

@@ -56,7 +56,6 @@ public class SweetsManager : MonoBehaviour
     {
         SearchSweets();
         SetEffect();
-        Debug.Log("end of SM");
     }
 
     /// <summary>
