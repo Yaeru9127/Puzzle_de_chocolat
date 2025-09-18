@@ -195,7 +195,7 @@ public class Sweets : MonoBehaviour
     /// お菓子を作る関数
     /// </summary>
     /// <param name="comparison"></param> 移動先のお菓子のオブジェクト
-    public void MakeSweets(GameObject comparison)
+    public async UniTask MakeSweets(GameObject comparison)
     {
         //製菓後のGameObjectを取得
         GameObject changed = sm.GetMakedSweets(name);
@@ -221,6 +221,8 @@ public class Sweets : MonoBehaviour
             Destroy(this.gameObject);
         }
         //else Debug.Log("dont get sprite");
+
+        await UniTask.Yield();
     }
 
     /// <summary>

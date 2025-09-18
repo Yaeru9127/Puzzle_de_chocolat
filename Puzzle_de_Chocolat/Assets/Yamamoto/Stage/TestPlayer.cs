@@ -39,7 +39,7 @@ public class TestPlayer : MonoBehaviour
     private float lastY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    async void Start()
     {
         //初期化
         manager = InputSystem_Manager.manager;
@@ -63,6 +63,9 @@ public class TestPlayer : MonoBehaviour
         inProcess = false;
         stage.gamescene = SceneManager.GetActiveScene().name;
         Debug.Log(stage.stagenum);
+
+        await UniTask.Yield();
+        Debug.Log("end of player");
     }
 
     /// <summary>
@@ -200,6 +203,7 @@ public class TestPlayer : MonoBehaviour
         //目の前のマスにあるお菓子を取得
         Sweets sweetsscript;
         sweetsscript = sm.GetSweets(next.transform.position);
+        if (sweetsscript != null) { Debug.Log(sweetsscript.gameObject.name); }
 
         //目の前にお菓子がない場合、後ろのマスを検索する
         GameObject backmass = null;
@@ -512,7 +516,7 @@ public class TestPlayer : MonoBehaviour
             //-> 移動先にお菓子が存在していてペアのお菓子が存在していないとき
             if (sweetsscript != null && beyond != null && pairsweets == null)
             {
-                sweetsscript.MakeSweets(beyond.gameObject);
+                await sweetsscript.MakeSweets(beyond.gameObject);
                 clear.wasMaked = true;
                 /*if (clear == null) Debug.Log("NULL");
                 else if (clear != null) Debug.Log("NOT");
@@ -521,7 +525,7 @@ public class TestPlayer : MonoBehaviour
             //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
             else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
             {
-                pairsweets.MakeSweets(pairbeyond.gameObject);
+                await pairsweets.MakeSweets(pairbeyond.gameObject);
                 clear.wasMaked = true;
             }
 
@@ -731,6 +735,7 @@ public class TestPlayer : MonoBehaviour
         if (!inProcess && r > 0.5f)
         {
             //rcm.IncrementReloadCount();     //リロードカウントを増やす
+            manager.PlayerOff();
             manager.Retry();
             stage.gamescene = SceneManager.GetActiveScene().name;
         }

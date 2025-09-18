@@ -503,7 +503,7 @@ public class moveplayer : MonoBehaviour
             //-> 移動先にお菓子が存在していてペアのお菓子が存在していないとき
             if (sweetsscript != null && beyond != null && pairsweets == null)
             {
-                sweetsscript.MakeSweets(beyond.gameObject);
+                await sweetsscript.MakeSweets(beyond.gameObject);
                 clear.wasMaked = true;
                 /*if (clear == null) Debug.Log("NULL");
                 else if (clear != null) Debug.Log("NOT");
@@ -512,7 +512,7 @@ public class moveplayer : MonoBehaviour
             //-> 移動先にお菓子が存在していないがペアのお菓子の移動先にお菓子が存在しているとき
             else if (sweetsscript != null && beyond == null && pairsweets != null && pairbeyond != null)
             {
-                pairsweets.MakeSweets(pairbeyond.gameObject);
+                await pairsweets.MakeSweets(pairbeyond.gameObject);
                 clear.wasMaked = true;
             }
 
