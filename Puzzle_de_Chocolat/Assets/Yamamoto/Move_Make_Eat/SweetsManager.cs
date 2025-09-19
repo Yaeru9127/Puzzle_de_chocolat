@@ -151,7 +151,7 @@ public class SweetsManager : MonoBehaviour
                 returnobject = pair.makedSweets;
             }
         }
-        Debug.Log(returnobject.GetComponent<SpriteRenderer>().sprite.name);
+
         return returnobject;
     }
 

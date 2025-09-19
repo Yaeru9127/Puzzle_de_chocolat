@@ -190,10 +190,10 @@ TextureImporter:
       name: number_2_0
       rect:
         serializedVersion: 2
-        x: 50
-        y: 1135
-        width: 550
-        height: 514
+        x: 37
+        y: 1160
+        width: 483
+        height: 448
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -212,10 +212,10 @@ TextureImporter:
       name: number_2_1
       rect:
         serializedVersion: 2
-        x: 780
-        y: 1135
-        width: 550
-        height: 514
+        x: 794
+        y: 1160
+        width: 556
+        height: 448
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,10 +234,10 @@ TextureImporter:
       name: number_2_2
       rect:
         serializedVersion: 2
-        x: 1510
-        y: 1135
-        width: 550
-        height: 514
+        x: 1535
+        y: 1143
+        width: 544
+        height: 465
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -256,10 +256,10 @@ TextureImporter:
       name: number_2_3
       rect:
         serializedVersion: 2
-        x: 2240
-        y: 1135
-        width: 550
-        height: 514
+        x: 2262
+        y: 1160
+        width: 244
+        height: 448
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -278,10 +278,10 @@ TextureImporter:
       name: number_2_4
       rect:
         serializedVersion: 2
-        x: 50
-        y: 551
-        width: 550
-        height: 514
+        x: 2460
+        y: 1163
+        width: 305
+        height: 420
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -300,10 +300,10 @@ TextureImporter:
       name: number_2_5
       rect:
         serializedVersion: 2
-        x: 780
-        y: 551
-        width: 550
-        height: 514
+        x: 37
+        y: 573
+        width: 499
+        height: 460
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -322,10 +322,10 @@ TextureImporter:
       name: number_2_6
       rect:
         serializedVersion: 2
-        x: 1510
-        y: 551
-        width: 550
-        height: 514
+        x: 794
+        y: 582
+        width: 244
+        height: 449
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -344,10 +344,10 @@ TextureImporter:
       name: number_2_7
       rect:
         serializedVersion: 2
-        x: 2240
-        y: 551
-        width: 550
-        height: 514
+        x: 1013
+        y: 571
+        width: 315
+        height: 462
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -358,6 +358,138 @@ TextureImporter:
       bones: []
       spriteID: bd06bb51fe8ac30479a8de2cb0cff119
       internalID: 1210119792
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_8
+      rect:
+        serializedVersion: 2
+        x: 1586
+        y: 585
+        width: 244
+        height: 448
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb338cd037cb86540a8d740f0563c7fe
+      internalID: 1592443612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_9
+      rect:
+        serializedVersion: 2
+        x: 1789
+        y: 580
+        width: 291
+        height: 447
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 769bc6d3d24f56c4dbe96374d73815c0
+      internalID: 1393690426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_10
+      rect:
+        serializedVersion: 2
+        x: 2251
+        y: 586
+        width: 244
+        height: 448
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b81f71360d6876458d90b3bd64abde9
+      internalID: 2069342619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_11
+      rect:
+        serializedVersion: 2
+        x: 2474
+        y: 580
+        width: 293
+        height: 462
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c597f35b7607df4eab2fc241e28086f
+      internalID: -409151964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_12
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 30
+        width: 545
+        height: 449
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8a843deead796f46a81b14d74f974a8
+      internalID: 1763496228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: number_2_13
+      rect:
+        serializedVersion: 2
+        x: 859
+        y: 30
+        width: 608
+        height: 442
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e587df0805e0195498aee747cd499014
+      internalID: 1260162167
       vertices: []
       indices: 
       edges: []
@@ -378,12 +510,18 @@ TextureImporter:
     nameFileIdTable:
       number_2_0: -682840348
       number_2_1: 1509829984
+      number_2_10: 2069342619
+      number_2_11: -409151964
+      number_2_12: 1763496228
+      number_2_13: 1260162167
       number_2_2: -737907346
       number_2_3: 1177155438
       number_2_4: 640809680
       number_2_5: -1328709794
       number_2_6: 241595672
       number_2_7: 1210119792
+      number_2_8: 1592443612
+      number_2_9: 1393690426
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

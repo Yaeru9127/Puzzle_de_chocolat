@@ -121,7 +121,11 @@ public class GameClear : MonoBehaviour
 
                 if (!check) star--;
             }
-
+            else if (stageConditions.requiredSweets != null && madeSweets != null
+                && stageConditions.requiredSweets.Count != madeSweets.Count)
+            {
+                star--;
+            }
             // wasEat‚ÌŒ¸“_
             if (wasEat != stageConditions.eatNum)
             {
