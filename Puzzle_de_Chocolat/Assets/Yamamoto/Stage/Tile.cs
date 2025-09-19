@@ -21,6 +21,9 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void GetNeighborTiles()
     {
+        //‰Šú‰»
+        neighbor.Clear();
+
         foreach (var dir in direction)
         {
             //“–‚½‚è”»’è‚Åæ“¾
@@ -108,7 +111,7 @@ public class Tile : MonoBehaviour
         else if (renderer.sprite == hibi)
         {
             Destroy(this.gameObject);
-            await UniTask.Yield(PlayerLoopTiming.Update);
+            await UniTask.NextFrame();
         }
     }
 

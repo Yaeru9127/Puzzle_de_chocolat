@@ -496,6 +496,7 @@ public class TestPlayer : MonoBehaviour
 
         //元のマスのひびチェック
         await ReturnNowTileScript().ChangeSprite();
+        await UniTask.NextFrame();
 
         //残ったマス情報を初期化
         tm.GetAllMass();
@@ -568,6 +569,11 @@ public class TestPlayer : MonoBehaviour
             //ゴール判定リストの初期化
             cg.searched.Clear();
 
+            tm.GetAllMass();
+            nowmass = tm.GetNowMass(this.gameObject);
+            if (nowmass == null) Debug.Log("nowmass is null");
+            await UniTask.WaitUntil(() => tm.isInitialized);
+            
             //もしゴールできないなら、GameOverの設定
             if (!cg.CanMassThrough(ReturnNowTileScript()))
             {
