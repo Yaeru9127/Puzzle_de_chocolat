@@ -115,13 +115,10 @@ public class GameClear : MonoBehaviour
             // 必須のお菓子の減点
             if (stageConditions.requiredSweets != null && madeSweets != null)
             {
-                // 重複を除いて種類のみを比較（個数は無視）
-                var requiredSet = new HashSet<string>(stageConditions.requiredSweets);
-                var madeSet = new HashSet<string>(madeSweets);
-
-                // 種類だけを厳密に一致させたい場合（個数無視）
-                bool check = requiredSet.IsSubsetOf(madeSet);
-                if (!check) star--;
+                foreach (string sweet in stageConditions.requiredSweets)
+                {
+                    if (!madeSweets.Contains(sweet) && madeSweets.Count <= 0) star--;
+                }
             }
 
             // 食べた回数の減点
