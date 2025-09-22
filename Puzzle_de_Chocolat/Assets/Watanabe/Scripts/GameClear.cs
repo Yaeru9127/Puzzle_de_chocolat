@@ -1,17 +1,18 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static GameClear;
 
 public class GameClear : MonoBehaviour
 {
     [Serializable]
     public class StageCondition
     {
-        public List<int> stepPenalties;
-        public List<string> requiredSweets;
+        public List<int> stepPenalties = new List<int>();
+        public List<string> requiredSweets = new List<string>();
         public int eatNum;
     }
 
@@ -24,14 +25,14 @@ public class GameClear : MonoBehaviour
     public Sprite star1;
     public Sprite star0;
 
-    [Header("ƒQ[ƒ€•]‰¿ƒf[ƒ^")]
-    [Tooltip("Œ»İ‚ÌƒXƒe[ƒW”Ô†B")]
+    [Header("ã‚²ãƒ¼ãƒ è©•ä¾¡ãƒ‡ãƒ¼ã‚¿")]
+    [Tooltip("ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå·ã€‚")]
     public int currentStage = 1;
     public int stepsTaken = 0;
     public int wasEat = 0;
     public bool wasMaked = false;
 
-    public StageCondition stageConditions; 
+    public Dictionary<int, StageCondition> stageConditions; 
 
     [HideInInspector]
     public List<string> madeSweets;
@@ -51,15 +52,49 @@ public class GameClear : MonoBehaviour
 
     private void Start()
     {
-        // ƒŠƒXƒg‚ğ‰Šú‰»
+        // ãƒªã‚¹ãƒˆã‚’åˆæœŸåŒ–
         madeSweets = new List<string>();
         stepsTaken = 0;
         wasEat = 0;
         wasMaked = false;
+
+        SetStageConditions();
     }
 
     /// <summary>
-    /// H‚×‚½‰ñ”‚ğ‘‚â‚·ŠÖ”
+    /// ã‚¯ãƒªã‚¢æ¡ä»¶è¨­å®šé–¢æ•°
+    /// </summary>
+    private void SetStageConditions()
+    {
+        stageConditions = new Dictionary<int, StageCondition>();
+
+        //ã‚¹ãƒ†ãƒ¼ã‚¸1
+        stageConditions[1] = new StageCondition
+        {
+            stepPenalties = new List<int> { 4, 6 },
+            requiredSweets = new List<string>(),
+            eatNum = 0
+        };
+
+        //ã‚¹ãƒ†ãƒ¼ã‚¸2
+        stageConditions[2] = new StageCondition
+        {
+            stepPenalties = new List<int>(),
+            requiredSweets = new List<string> { "pannacotta", "tiramisu" },
+            eatNum = 2
+        };
+
+        //ã‚¹ãƒ†ãƒ¼ã‚¸3
+        stageConditions[3] = new StageCondition
+        {
+            stepPenalties = new List<int> { 14 },
+            requiredSweets = new List<string> { "canulÃ©" },
+            eatNum = 3
+        };
+    }
+
+    /// <summary>
+    /// é£Ÿã¹ãŸå›æ•°ã‚’å¢—ã‚„ã™é–¢æ•°
     /// </summary>
     public void AddWasEat()
     {
@@ -67,7 +102,7 @@ public class GameClear : MonoBehaviour
     }
 
     /// <summary>
-    /// ‚¨‰Ùq‚ªì‚ç‚ê‚½‚Æ‚«‚ÉŒÄ‚Ño‚·ƒƒ\ƒbƒh
+    /// ãŠè“å­ãŒä½œã‚‰ã‚ŒãŸã¨ãã«å‘¼ã³å‡ºã™ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     public void MadeSweets(string sweetsName)
     {
@@ -78,7 +113,7 @@ public class GameClear : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒXƒeƒbƒv”‚ğ‰ÁZ‚·‚é
+    /// ã‚¹ãƒ†ãƒƒãƒ—æ•°ã‚’åŠ ç®—ã™ã‚‹
     /// </summary>
     public void AddStep()
     {
@@ -86,14 +121,14 @@ public class GameClear : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒNƒŠƒA‰‰o‚ğÀs‚µA¯‚Ì”‚ğŒvZ‚·‚é
+    /// ã‚¯ãƒªã‚¢æ¼”å‡ºã‚’å®Ÿè¡Œã—ã€æ˜Ÿã®æ•°ã‚’è¨ˆç®—ã™ã‚‹
     /// </summary>
     public void  ShowClearResult()
     {
         clearImage.gameObject.SetActive(true);
         // AudioManager.Instance.PlaySE("Game clear");
 
-        // RemainingaircraftƒXƒNƒŠƒvƒg‚ÌisGameClearedƒtƒ‰ƒO‚ğ—§‚Ä‚é
+        // Remainingaircraftã‚¹ã‚¯ãƒªãƒ—ãƒˆã®isGameClearedãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
         if (Remainingaircraft.remain != null)
         {
             Remainingaircraft.remain.isGameCleared = true;
@@ -101,37 +136,39 @@ public class GameClear : MonoBehaviour
 
         int star = 3;
 
-        //ƒXƒe[ƒW‚²‚Æ‚Éİ’è‚µ‚Ä‚¨‚­
-        /*ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒXƒe[ƒW‚Í•]‰¿ğŒ‚ğ–³‹*/
+        //ã‚¹ãƒ†ãƒ¼ã‚¸ã”ã¨ã«è¨­å®šã—ã¦ãŠã
+        /*ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚¹ãƒ†ãƒ¼ã‚¸ã¯è©•ä¾¡æ¡ä»¶ã‚’ç„¡è¦–*/
         if (StageManager.stage.stagenum != 0)
         {
-            // ƒXƒeƒbƒv”‚ÌŒ¸“_
-            foreach (int penaltyStep in stageConditions.stepPenalties)
+            StageCondition stageCondition = stageConditions[StageManager.stage.stagenum];
+
+            // ã‚¹ãƒ†ãƒƒãƒ—æ•°ã®æ¸›ç‚¹
+            foreach (int step in stageCondition.stepPenalties)
             {
                 //Debug.Log(penaltyStep);
-                if (stepsTaken > penaltyStep) star--;
+                if (stepsTaken > step) star--;
             }
 
-            // •K{‚Ì‚¨‰Ùq‚ÌŒ¸“_
-            if (stageConditions.requiredSweets != null && madeSweets != null)
+            // å¿…é ˆã®ãŠè“å­ã®æ¸›ç‚¹
+            if (stageCondition.requiredSweets != null && stageCondition.requiredSweets.Count > 0)
             {
-                foreach (string sweet in stageConditions.requiredSweets)
+                foreach (string sweet in stageCondition.requiredSweets)
                 {
-                    if (!madeSweets.Contains(sweet) && madeSweets.Count <= 0) star--;
+                    if (!madeSweets.Contains(sweet)) star--;
                 }
             }
 
-            // H‚×‚½‰ñ”‚ÌŒ¸“_
-            if (wasEat != stageConditions.eatNum)
+            // é£Ÿã¹ãŸå›æ•°ã®æ¸›ç‚¹
+            if (wasEat != stageCondition.eatNum)
             {
                 star--;
             }
         }
 
-        // ¯‚Ì”‚ª0–¢–‚É‚È‚ç‚È‚¢‚æ‚¤‚É’²®
+        // æ˜Ÿã®æ•°ãŒ0æœªæº€ã«ãªã‚‰ãªã„ã‚ˆã†ã«èª¿æ•´
         if (star < 0) star = 0;
 
-        //‰æ‘œ‚Ìİ’è
+        //ç”»åƒã®è¨­å®š
         switch (star)
         {
             case 0:
@@ -153,7 +190,7 @@ public class GameClear : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒŠƒUƒ‹ƒgƒV[ƒ“‚ÉˆÚ“®
+    /// ãƒªã‚¶ãƒ«ãƒˆã‚·ãƒ¼ãƒ³ã«ç§»å‹•
     /// </summary>
     public void LoadResultScene()
     {
@@ -161,12 +198,12 @@ public class GameClear : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ`ƒ…[ƒgƒŠƒAƒ‹ê—pƒV[ƒ““Ç‚İ‚İŠÖ”
+    /// ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«å°‚ç”¨ã‚·ãƒ¼ãƒ³èª­ã¿è¾¼ã¿é–¢æ•°
     /// </summary>
     /// <param name="num"></param>
     public void TutorialSceneLoad(int num)
     {
-        //”š‚Å”»’f
+        //æ•°å­—ã§åˆ¤æ–­
         string scenename = "";
         switch (num)
         {
@@ -187,7 +224,7 @@ public class GameClear : MonoBehaviour
                 break;
         }
 
-        //ƒV[ƒ““Ç‚İ‚İ
+        //ã‚·ãƒ¼ãƒ³èª­ã¿è¾¼ã¿
         SceneManager.LoadScene(scenename);
     }
 }
